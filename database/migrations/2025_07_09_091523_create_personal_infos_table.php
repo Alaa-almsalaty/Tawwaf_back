@@ -27,7 +27,7 @@ return new class extends Migration
             $table->enum('medical_status', ['healthy', 'sick', 'disabled'])->default('healthy');
             $table->string('phone', 20)->nullable();
             $table->string('note')->nullable(); // Optional note field for additional information
-            $table->foreignId('passport_no')->nullable()
+            $table->foreignId('passport_no')
                 ->constrained('passports')
                 ->onUpdate('cascade')
                 ->onDelete('cascade'); // Foreign key to the passport, if applicable

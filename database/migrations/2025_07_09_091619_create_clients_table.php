@@ -25,9 +25,9 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade'); // Foreign key to the Muhram client
             $table->enum('Muhram_relation', ['father', 'husband', 'brother', 'son', 'other'])->default('other'); // Type of Muhram relationship
-            $table->foreignId('branch_id')->constrained('branches')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('branch_id')->nullable()->constrained('branches')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('family_id')->nullable()
-                ->constrained('clients')
+                ->constrained('families')
                 ->onUpdate('cascade')
                 ->onDelete('cascade'); // Foreign key to the family client, if applicable
             $table->foreignId('tenant_id')->constrained('tenants')->onUpdate('cascade')->onDelete('cascade');

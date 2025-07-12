@@ -55,4 +55,25 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Tenant::class, 'tenant_id');
     }
+
+    public function IsSuperAdmin(): bool
+    {
+        // Assuming 'super' is the role for super admins
+        return $this->role === 'super';
+    }
+
+    public function isActive()
+    {
+        return $this->is_Active;
+    }
+
+    public function IsManager()
+    {
+        return $this->role === 'manager';
+    }
+
+    public function IsEmployee()
+    {
+        return $this->role === 'employee';
+    }
 }
