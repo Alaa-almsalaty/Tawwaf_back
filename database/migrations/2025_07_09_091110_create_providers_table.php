@@ -18,11 +18,10 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('phone', 20)->nullable();
             $table->string('contact_info', 100)->nullable(); // Contact person's name or info
-            $table->string('tenant_id');
             $table->boolean('is_deal')->default(false); // Indicates if the provider is a deal or not
             $table->string('address', 255)->nullable();
             $table->string('note')->nullable();
-            $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('tenant_id')->constrained('tenants')->onUpdate('cascade')->onDelete('cascade');
 
             $table->timestamps();
             $table->softDeletes();

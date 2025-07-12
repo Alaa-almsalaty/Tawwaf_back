@@ -19,9 +19,8 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('phone', 20)->nullable();
             $table->string('manager_name', 100)->nullable();
-            $table->string('tenant_id');
             $table->string('note')->nullable();
-            $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('tenant_id')->constrained('tenants')->onUpdate('cascade')->onDelete('cascade');
 
             $table->timestamps();
             $table->softDeletes();

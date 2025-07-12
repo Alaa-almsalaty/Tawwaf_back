@@ -30,7 +30,6 @@ return new class extends Migration
                 ->constrained('clients')
                 ->onUpdate('cascade')
                 ->onDelete('cascade'); // Foreign key to the family client, if applicable
-            $table->foreignId('visa_id')->nullable()->constrained('visas');
             $table->foreignId('tenant_id')->constrained('tenants')->onUpdate('cascade')->onDelete('cascade');
             $table->string('note')->nullable(); // Optional note field for additional information
             $table->timestamps();

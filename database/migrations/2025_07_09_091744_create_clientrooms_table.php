@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('clientrooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->nullable()->constrained('clients'); // Foreign key to the client
+            $table->foreignId('client_id')->nullable()->constrained('clients')->onDelete('cascade'); // Foreign key to the client
             $table->foreignId('room_id')->constrained('rooms');
             $table->date('check_in');
             $table->date('check_out')->nullable(); // Optional check-out date

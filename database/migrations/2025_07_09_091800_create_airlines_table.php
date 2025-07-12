@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('airline_type');
             $table->integer('capacity')->default(0); // Capacity of the airline
             $table->decimal('price_dinar', 10, 2)->default(0.00); // Price in Dinar
-            $table->foreign('provider_id')->constrained('providers'); // Foreign key to the provider
+            $table->foreignId('provider_id')->constrained('providers'); // Foreign key to the provider
             $table->string('note')->nullable(); // Optional note field for additional information
 
             $table->timestamps();
