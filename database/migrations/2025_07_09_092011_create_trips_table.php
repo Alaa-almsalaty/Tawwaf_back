@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('season');
             $table->string('description')->nullable(); // Optional description field for additional information
             $table->string('note')->nullable(); // Optional note field for additional information
+            $table->foreignId('tenant_id')->constrained('tenants')->onUpdate('cascade')->onDelete('cascade'); // Foreign key to the tenant
 
             $table->timestamps();
             $table->softDeletes(); // Soft delete support

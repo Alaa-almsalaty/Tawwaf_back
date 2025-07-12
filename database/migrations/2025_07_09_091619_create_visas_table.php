@@ -18,7 +18,8 @@ return new class extends Migration
             $table->date('issue_date'); // Date when the visa was issued
             $table->date('expiry_date'); // Date when the visa expires
             $table->integer('duration_days'); // Duration of the visa in days
-            $table->foreignId('muhram_id')->nullable()->constrained('clients')->onDelete('cascade'); // Foreign key to the muhram, if applicable
+            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade'); // Foreign key to the client
+            $table->foreignId('provider_id')->nullable()->constrained('providers')->onDelete('cascade'); // Foreign key to the provider, if applicable
             $table->enum('state', ['pending', 'approved', 'rejected'])->default('pending'); // State of the visa, default is pending
             $table->string('border_number', 50)->nullable(); // Optional border number for the visa
             $table->string('note')->nullable(); // Optional note field for additional information
