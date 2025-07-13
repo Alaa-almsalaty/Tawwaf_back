@@ -23,7 +23,7 @@ class CreateCompanyRequest extends FormRequest
             'company_name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:100',
-            'email' => 'required|email|unique:tenants,email',
+            'email' => 'required|email',
             'status' => 'required|in:active,inactive,trial,free',
             'balance' => 'required|numeric|min:0',
             'manager_name' => 'nullable|string|max:100',
@@ -49,8 +49,8 @@ class CreateCompanyRequest extends FormRequest
             'phone' => $this->validated('phone'),
             'note' => $this->validated('note'),
             'logo' => $this->validated('logo'),
-            'data' => $this->validated('data'),
-            'created_by' => $this->validated('created_by')
+            'created_by' => $this->validated('created_by'),
+             ...($this->validated('data') ?? []),
         ];
     }
 }

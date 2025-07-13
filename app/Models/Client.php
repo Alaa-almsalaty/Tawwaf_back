@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Client extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes, HasFactory , BelongsToTenant;
 
     protected $fillable = [
         'name',
@@ -16,14 +17,15 @@ class Client extends Model
         'phone',
         'address',
         'city',
-        'country',
         'note',
         'is_family_master', // Indicates if this client is the family master
         'register_date', // Date of registration
         'register_state', // State of registration (e.g., pending, completed)
         'family_id', // Foreign key to the family client, if applicable
-        'visa_id', // Foreign key to the visa, if applicable
         'tenant_id', // Foreign key to the tenant
+        'personal_info_id', // Foreign key to the personal info
+        'MuhramID', // Foreign key to the Muhram client
+        'Muhram_relation', // Type of Muhram relationship
     ];
     protected $hidden = [
         'id',
@@ -61,6 +63,11 @@ class Client extends Model
     public function tenant()
     {
         return $this->belongsTo(Tenant::class, 'tenant_id');
+    }
+
+    public function personalInfo()
+    {
+        return $this->belongsTo(PersonalInfo::class, 'personal_info_id');
     }
     public function rooms()
     {

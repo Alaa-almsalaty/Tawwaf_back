@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('families', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('tenant_id');
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('family_master_id')
                 ->constrained('clients')
                 ->onUpdate('cascade')

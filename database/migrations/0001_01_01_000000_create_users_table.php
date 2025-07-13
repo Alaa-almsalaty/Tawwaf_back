@@ -21,7 +21,8 @@ return new class extends Migration
                 $table->string('phone');
                 $table->boolean('is_Active')->default(true);
                 $table->enum('role',['employee','manager','super']);
-                $table->foreignId('tenant_id')->nullable()->constrained('tenants')->onUpdate('cascade')->onDelete('cascade');
+                $table->string('tenant_id')->nullable(); // Nullable to allow for non-tenant users
+                $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
                 $table->rememberToken();
                 $table->timestamps();
                 $table->softDeletes();

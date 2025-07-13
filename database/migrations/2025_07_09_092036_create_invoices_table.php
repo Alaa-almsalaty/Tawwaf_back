@@ -23,7 +23,8 @@ return new class extends Migration
             $table->string('note')->nullable(); // Optional note field for additional information
 
             // Foreign keys
-            $table->foreignId('tenant_id')->constrained('tenants'); // Foreign key to the company
+            $table->string('tenant_id');
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('provider_id')->constrained('providers'); // Foreign key to the provider
             $table->timestamps();
             $table->softDeletes(); // Soft delete support

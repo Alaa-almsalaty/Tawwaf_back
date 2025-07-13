@@ -24,12 +24,29 @@ class TenantController extends Controller
     public function store(CreateCompanyRequest $request)
     {
         Log::info('Inside TenantController@store');
-        $tenantData = $request->toArrayForTenant();
-        $tenant = Tenant::create($tenantData);
 
+        // Create tenant with only ID and 'data' column
+        $tenant = Tenant::create([
+            'id' => (string) \Str::uuid(),
+            'data' => $request->toArrayForTenant(),
+        ]);
 
-        return response()->json(['message' => 'Tenant created successfully', 'tenant' => $tenant], 201);
+        // Generate domain using company name stored in data column
+        $companyName = $tenant->getAttribute('company_name');
+        $domain = strtolower(preg_replace('/\s+/', '', $companyName)) . '.localhost';
+
+        // Attach domain
+        $tenant->domains()->create([
+            'domain' => $domain,
+        ]);
+
+        return response()->json([
+            'message' => 'Tenant created successfully',
+            'tenant' => $tenant,
+            'domain' => $domain,
+        ], 201);
     }
+
 
     public function show(Tenant $tenant)
     {

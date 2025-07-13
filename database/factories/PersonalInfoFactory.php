@@ -26,7 +26,7 @@ class PersonalInfoFactory extends Factory
             'gender' => $this->faker->randomElement(['male', 'female']),
             'medical_status' => $this->faker->randomElement(['healthy', 'sick', 'disabled']),
             'phone' => $this->faker->phoneNumber,
-            'passport_id' => Passport::factory(),
+            'passport_no' => Passport::factory(),
         ];
     }
 }

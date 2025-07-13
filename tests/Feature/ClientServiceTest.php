@@ -19,6 +19,10 @@ class ClientServiceTest extends TestCase
     {
         $service = new ClientService();
 
+        // You may need to create related branch and tenant records first
+        \App\Models\Branch::factory()->create(['id' => 2]);
+        $tenant = \App\Models\Tenant::factory()->create();
+
         $data = [
             'passport' => [
                 'passport_number' => 'A1234567',
@@ -53,7 +57,7 @@ class ClientServiceTest extends TestCase
                 'register_date' => '2024-01-01',
                 'register_state' => 'completed',
                 'branch_id' => 2,
-                'tenant_id' => 2,
+                'tenant_id' => $tenant->id,
                 'family_id' => null,
                 'MuhramID' => null,
                 'Muhram_relation' => null,
@@ -61,9 +65,7 @@ class ClientServiceTest extends TestCase
             ],
         ];
 
-        // You may need to create related branch and tenant records first
-        \App\Models\Branch::factory()->create(['id' => 2]);
-        \App\Models\Tenant::factory()->create(['id' => 2]);
+
 
         $client = $service->store($data);
 
@@ -79,5 +81,78 @@ class ClientServiceTest extends TestCase
             'family_master_id' => $client->id,
             'family_size' => 1,
         ]);
+    }
+
+    /** @test */
+    public function it_updates_client_and_related_models()
+    {
+        $service = new ClientService();
+
+        // Create related branch and tenant records first
+        \App\Models\Branch::factory()->create(['id' => 2]);
+        $tenant = \App\Models\Tenant::factory()->create();
+
+        // Create initial client with related models
+        $passport = Passport::factory()->create([
+            'passport_number' => 'A1234567',
+        ]);
+        $personalInfo = PersonalInfo::factory()->create([
+            'passport_no' => $passport->id,
+            'first_name_en' => 'Ahmed',
+        ]);
+        $client = Client::factory()->create([
+            'personal_info_id' => $personalInfo->id,
+            'is_family_master' => true,
+            'branch_id' => 2,
+            'tenant_id' => $tenant->id,
+            'note' => 'Old note',
+        ]);
+        $family = Family::factory()->create([
+            'family_master_id' => $client->id,
+            'tenant_id' => $tenant->id,
+            'family_size' => 1,
+        ]);
+        $client->update(['family_id' => $family->id]);
+
+        // Prepare update data
+        $updateData = [
+            'passport' => [
+                'passport_number' => 'B7654321',
+                'nationality' => 'Moroccan',
+            ],
+            'personal' => [
+                'first_name_en' => 'Omar',
+                'medical_status' => 'sick',
+            ],
+            'client' => [
+                'note' => 'Updated note',
+                'register_state' => 'pending',
+            ],
+            'family' => [
+                'family_size' => 2,
+                'family_name_en' => 'UpdatedFamily',
+            ],
+        ];
+
+
+        dump($updateData);
+        $updatedClient = $service->update($client, $updateData);
+        dump($updatedClient->fresh()->toArray());
+
+        $this->assertEquals('Updated note', $updatedClient->note);
+        $this->assertEquals('pending', $updatedClient->register_state);
+        $this->assertEquals('Omar', $updatedClient->personalInfo->first_name_en);
+        $this->assertEquals('sick', $updatedClient->personalInfo->medical_status);
+        $this->assertEquals('B7654321', $updatedClient->personalInfo->passport->passport_number);
+        $this->assertEquals('Moroccan', $updatedClient->personalInfo->passport->nationality);
+        $this->assertEquals(2, $updatedClient->family->family_size);
+        $this->assertEquals('UpdatedFamily', $updatedClient->family->family_name_en);
+
+        $this->assertDatabaseHas('clients', ['note' => 'Updated note', 'register_state' => 'pending']);
+        $this->assertDatabaseHas('personal_infos', ['first_name_en' => 'Omar', 'medical_status' => 'sick']);
+        $this->assertDatabaseHas('passports', ['passport_number' => 'B7654321', 'nationality' => 'Moroccan']);
+        $this->assertDatabaseHas('families', ['family_size' => 2, 'family_name_en' => 'UpdatedFamily']);
+
+        dump($client->fresh()->toArray());
     }
 }

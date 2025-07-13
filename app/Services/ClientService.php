@@ -73,8 +73,7 @@ class ClientService
                 $client->update([
                     'family_id' => $family->id,
                 ]);
-            }
-            else {
+            } else {
                 // If not a family master, check if family_id is provided
                 if (isset($data['client']['family_id'])) {
                     $family = $client->family()->find($data['client']['family_id']);
@@ -86,6 +85,34 @@ class ClientService
 
 
             return $client;
+        });
+    }
+
+
+    public function update(Client $client, array $data): Client
+    {
+        return DB::transaction(function () use ($client, $data) {
+            // Update Passport if present
+            if (isset($data['passport'])) {
+                $client->personalInfo->passport->update($data['passport']);
+            }
+
+            // Update Personal Info if present
+            if (isset($data['personal'])) {
+                $client->personalInfo->update($data['personal']);
+            }
+
+            // Update Client fields if present
+            if (isset($data['client'])) {
+                $client->update($data['client']);
+            }
+
+            // Update Family if present
+            if (isset($data['family']) && $client->family) {
+                $client->family->update($data['family']);
+            }
+
+            return $client->fresh();
         });
     }
 }

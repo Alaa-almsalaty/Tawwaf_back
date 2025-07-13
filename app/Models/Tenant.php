@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Stancl\Tenancy\Database\Models\Domain;
+use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
-class Tenant extends Model
+class Tenant extends BaseTenant
 {
     use HasFactory, SoftDeletes;
 
@@ -28,5 +30,8 @@ class Tenant extends Model
         return $this->hasMany(Client::class, 'tenant_id');
     }
 
-
+    public function domains()
+    {
+        return $this->hasMany(Domain::class);
+    }
 }

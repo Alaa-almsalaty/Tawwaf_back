@@ -24,13 +24,14 @@ return new class extends Migration
                 ->constrained('clients')
                 ->onUpdate('cascade')
                 ->onDelete('cascade'); // Foreign key to the Muhram client
-            $table->enum('Muhram_relation', ['father', 'husband', 'brother', 'son', 'other'])->default('other'); // Type of Muhram relationship
+            $table->enum('Muhram_relation', ['father', 'husband', 'brother', 'son', 'other'])->nullable(); // Type of Muhram relationship
             $table->foreignId('branch_id')->nullable()->constrained('branches')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('family_id')->nullable()
                 ->constrained('families')
                 ->onUpdate('cascade')
                 ->onDelete('cascade'); // Foreign key to the family client, if applicable
-            $table->foreignId('tenant_id')->constrained('tenants')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('tenant_id');
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
             $table->string('note')->nullable(); // Optional note field for additional information
             $table->timestamps();
             $table->softDeletes(); // Soft delete support

@@ -16,7 +16,8 @@ class CreateTenantsTable extends Migration
     public function up(): void
     {
         Schema::create('tenants', function (Blueprint $table) {
-            $table->id();
+            $table->string('id')->primary(); // Use string ID for tenant
+            /*
             $table->string('company_name', 100)->unique();
             $table->string('address', 255)->nullable();
             $table->string('city', 100)->nullable();
@@ -27,8 +28,7 @@ class CreateTenantsTable extends Migration
             $table->decimal('balance', 20)->default('0.00');
             $table->string('note')->nullable();
             $table->string('logo')->nullable();
-            $table->string('created_by')->nullable();
-
+            $table->string('created_by')->nullable();*/
 
             $table->timestamps();
             $table->softDeletes();
