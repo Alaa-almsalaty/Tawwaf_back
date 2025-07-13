@@ -18,6 +18,9 @@ class Client extends Model
         'city',
         'country',
         'note',
+        'is_family_master', // Indicates if this client is the family master
+        'register_date', // Date of registration
+        'register_state', // State of registration (e.g., pending, completed)
         'family_id', // Foreign key to the family client, if applicable
         'visa_id', // Foreign key to the visa, if applicable
         'tenant_id', // Foreign key to the tenant
@@ -33,6 +36,7 @@ class Client extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'is_family_master' => 'boolean',
     ];
 
     public function family()

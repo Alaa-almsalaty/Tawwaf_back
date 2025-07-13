@@ -6,6 +6,7 @@ use App\Models\Tenant;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
+use Illuminate\Support\Facades\Log;
 
 class TenantController extends Controller
 {
@@ -22,8 +23,10 @@ class TenantController extends Controller
 
     public function store(CreateCompanyRequest $request)
     {
-        $tenantData = $request->CreateCompanyRequest();
+        Log::info('Inside TenantController@store');
+        $tenantData = $request->toArrayForTenant();
         $tenant = Tenant::create($tenantData);
+
 
         return response()->json(['message' => 'Tenant created successfully', 'tenant' => $tenant], 201);
     }

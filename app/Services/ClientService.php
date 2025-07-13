@@ -21,7 +21,6 @@ class ClientService
                 'expiry_date' => $data['passport']['expiry_date'],
                 'issue_place' => $data['passport']['issue_place'],
                 'birth_place' => $data['passport']['birth_place'],
-                //'birth_date' => $data['passport']['birth_date'],
                 'issue_authority' => $data['passport']['issue_authority'] ?? null,
                 'passport_img' => $data['passport']['passport_img'], // assuming file is already stored
             ]);
@@ -41,7 +40,7 @@ class ClientService
                 'gender' => $data['personal']['gender'],
                 'medical_status' => $data['personal']['medical_status'],
                 'phone' => $data['personal']['phone'] ?? null,
-                'passport_id' => $passport->id,
+                'passport_no' => $passport->id,
             ]);
 
             // Step 3: Create Client
@@ -74,6 +73,15 @@ class ClientService
                 $client->update([
                     'family_id' => $family->id,
                 ]);
+            }
+            else {
+                // If not a family master, check if family_id is provided
+                if (isset($data['client']['family_id'])) {
+                    $family = $client->family()->find($data['client']['family_id']);
+                    if ($family) {
+                        $family->increment('family_size'); // Increment family size
+                    }
+                }
             }
 
 

@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('families', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tenant_id')->constrained('tenants')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('family_master_id')->nullable()
+            $table->foreignId('family_master_id')
                 ->constrained('clients')
                 ->onUpdate('cascade')
                 ->onDelete('cascade'); // Foreign key to the family master client
-            $table->integer('family_size')->default(0); // Number of members in the family
+            $table->integer('family_size')->default(1); // Number of members in the family
             $table->string('family_name_ar', 100)->nullable(); // Family name in Arabic
             $table->string('family_name_en', 100)->nullable(); // Family name in English
             $table->string('note')->nullable(); // Optional note field for additional information

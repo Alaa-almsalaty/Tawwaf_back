@@ -3,18 +3,22 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+
 
 class CreateCompanyRequest extends FormRequest
 {
 
     public function authorize(): bool
     {
-        return auth()->user()->IsSuperAdmin();
+        //return auth()->user()->IsSuperAdmin();
+        return true;
     }
 
 
     public function rules(): array
     {
+        Log::info('CreateCompanyRequest rules called');
         return [
             'company_name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
@@ -31,8 +35,9 @@ class CreateCompanyRequest extends FormRequest
         ];
     }
 
-    public function CreateCompanyRequest(): array
+    public function toArrayForTenant(): array
     {
+        Log::info('CreateCompanyRequest toArrayForTenant called');
         return [
             'company_name' => $this->validated('company_name'),
             'address' => $this->validated('address'),
