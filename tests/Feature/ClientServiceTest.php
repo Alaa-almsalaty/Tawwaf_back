@@ -65,7 +65,7 @@ class ClientServiceTest extends TestCase
             ],
         ];
 
-
+        dump($data);
 
         $client = $service->store($data);
 

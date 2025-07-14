@@ -6,12 +6,14 @@ use App\Models\Client;
 use App\Models\Passport;
 use App\Models\PersonalInfo;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ClientService
 {
     public function store(array $data): Client
     {
         return DB::transaction(function () use ($data) {
+            Log::info('ClientService store method called with data:', $data);
             // Step 1: Create Passport
             $passport = Passport::create([
                 'passport_number' => $data['passport']['passport_number'],

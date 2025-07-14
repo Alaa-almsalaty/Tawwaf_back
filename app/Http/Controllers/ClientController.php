@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AddClientRequest;
 use App\Services\ClientService;
 use App\Http\Requests\UpdateClientRequest;
+use Log;
 
 class ClientController extends Controller
 {

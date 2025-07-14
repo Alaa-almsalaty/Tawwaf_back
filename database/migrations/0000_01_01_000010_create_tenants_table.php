@@ -29,10 +29,10 @@ class CreateTenantsTable extends Migration
             $table->string('note')->nullable();
             $table->string('logo')->nullable();
             $table->string('created_by')->nullable();*/
-
+            //$table->json('data');
             $table->timestamps();
             $table->softDeletes();
-            $table->json('data')->nullable();
+            $table->{DB::getDriverName() === 'sqlite' ? 'text' : 'json'}('data')->nullable();
         });
     }
 

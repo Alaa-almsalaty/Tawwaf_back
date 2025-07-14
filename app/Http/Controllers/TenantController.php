@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\CreateCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class TenantController extends Controller
 {
@@ -24,15 +25,21 @@ class TenantController extends Controller
     public function store(CreateCompanyRequest $request)
     {
         Log::info('Inside TenantController@store');
-
         // Create tenant with only ID and 'data' column
         $tenant = Tenant::create([
-            'id' => (string) \Str::uuid(),
-            'data' => $request->toArrayForTenant(),
+            'id' => (string) \Str::uuid()
         ]);
-
+        $tenant->info = $request->toArrayForTenant();
         // Generate domain using company name stored in data column
-        $companyName = $tenant->getAttribute('company_name');
+        $companyName = $tenant->info['company_name'] ?? 'default_company';
+        //$tenant->save();
+        Log::info('Inserted raw tenant record:', (array) \DB::table('tenants')->where('id', $tenant->id)->first());
+        $fromDb = \DB::table('tenants')->where('id', $tenant->id)->first();
+        //dd($fromDb);
+        //$tenant->refresh();
+        Log::info('Request: ', $request->toArrayForTenant());
+
+        Log::info('Tenant Data:'. $companyName);
         $domain = strtolower(preg_replace('/\s+/', '', $companyName)) . '.localhost';
 
         // Attach domain

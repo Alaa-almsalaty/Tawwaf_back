@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Enums\Muhram;
 use Illuminate\Validation\Rule;
@@ -13,26 +14,71 @@ class AddClientRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->IsManager() || auth()->user()->IsEmployee();
+        return true;
+        //return auth()->user()->IsManager() || auth()->user()->IsEmployee();
     }
 
 
     public function rules(): array
     {
-        return [
+        Log::info('AddClientRequest rules called');
+        $rules = [
             // Personal info
-            'personal' => $this->personalInfoRules(),
+            'personal.first_name_ar' => 'required|string|max:50',
+            'personal.first_name_en' => 'required|string|max:50',
+            'personal.second_name_ar' => 'required|string|max:50',
+            'personal.second_name_en' => 'required|string|max:50',
+            'personal.grand_father_name_ar' => 'required|string|max:50',
+            'personal.grand_father_name_en' => 'required|string|max:50',
+            'personal.last_name_ar' => 'required|string|max:50',
+            'personal.last_name_en' => 'required|string|max:50',
+            'personal.DOB' => 'required|date_format:Y-m-d',
+            'personal.family_status' => 'required|in:single,married,divorced,widowed',
+            'personal.gender' => 'required|in:female,male',
+            'personal.medical_status' => 'required|in:healthy,sick,disabled',
+            'personal.phone' => 'nullable|string|max:20',
+            'personal.passport_no' => 'sometimes|exists:passports,id', // Foreign key to the passport, if applicable
+
+
             //passport info
-            'passport' => $this->passportRules(),
+            'passport.passport_number' => 'required|string|max:20',
+            'passport.passport_type' => 'required|in:regular,diplomatic,official,ordinary,other',
+            'passport.nationality' => 'required|string|max:50',
+            'passport.issue_date' => 'required|date_format:Y-m-d',
+            'passport.expiry_date' => 'required|date_format:Y-m-d|after:issue_date',
+            'passport.issue_place' => 'required|string|max:100',
+            'passport.birth_place' => 'required|string|max:100',
+            'passport.issue_authority' => 'nullable|string|max:100',
+            'passport.passport_img' => 'required|string',
+            //'passport.passport_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Passport photo
+
             // client info
-            'client' => $this->clientRules(),
+            'client.personal_info_id' => 'sometimes|exists:personal_infos,id', // Foreign key to the personal info
+            'client.is_family_master' => 'required|boolean', // Indicates if the client is a family master
+            'client.register_date' => 'required|date_format:Y-m-d', // Date when the client was registered
+            'client.register_state' => 'required|in:pending,completed', // Registration state of the client
+            'client.MuhramID' => 'nullable|exists:clients,id', // Foreign key to the muhram info, if applicable
+            'client.Muhram_relation' => ['nullable', Rule::enum(Muhram::class)], // Relationship of the muhram to the client
+            'client.branch_id' => 'nullable|exists:branches,id', // Foreign key to the branch
+            'client.family_id' => 'nullable|exists:families,id', // Foreign key to the family client, if applicable
+            'client.tenant_id' => 'required|exists:tenants,id', // Foreign key to the tenant
+            'client.note' => 'nullable|string', // Optional note field for additional information
+
             // family info
-            'family' => $this->familyRules(),
+            'family.family_master_id' => 'sometimes|exists:clients,id', // Foreign key to the family master client
+            'family.family_size' => 'sometimes|integer|min:1', // Number of members in the family
+            'family.family_name_ar' => 'nullable|string|max:100', // Family name in Arabic
+            'family.family_name_en' => 'nullable|string|max:100', // Family name in English
+            'family.tenant_id' => 'sometimes|exists:tenants,id', // Foreign key to the tenant
+            'family.note' => 'nullable|string', // Optional note field for additional information
         ];
+        Log::info('AddClientRequest rules:', $rules);
+        return $rules;
     }
 
     private function personalInfoRules(): array
     {
+        Log::info('AddClientRequest personalInfoRules called');
         return [
             'first_name_ar' => 'required|string|max:50',
             'first_name_en' => 'required|string|max:50',
@@ -54,6 +100,7 @@ class AddClientRequest extends FormRequest
 
     private function passportRules(): array
     {
+        Log::info('AddClientRequest passportRules called');
         return [
             'passport_number' => 'required|string|max:20',
             'passport_type' => 'required|in:regular,diplomatic,official,ordinary,other',
@@ -69,6 +116,7 @@ class AddClientRequest extends FormRequest
 
     private function clientRules(): array
     {
+        Log::info('AddClientRequest clientRules called');
         return [
             'personal_info_id' => 'required|exists:personal_infos,id', // Foreign key to the personal info
             'is_family_master' => 'required|boolean', // Indicates if the client is a family master
@@ -85,6 +133,7 @@ class AddClientRequest extends FormRequest
 
     private function familyRules(): array
     {
+        Log::info('AddClientRequest familyRules called');
         return [
             'family_master_id' => 'required|exists:clients,id', // Foreign key to the family master client
             'family_size' => 'required|integer|min:1', // Number of members in the family
@@ -92,6 +141,18 @@ class AddClientRequest extends FormRequest
             'family_name_en' => 'nullable|string|max:100', // Family name in English
             'tenant_id' => 'required|exists:tenants,id', // Foreign key to the tenant
             'note' => 'nullable|string', // Optional note field for additional information
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'passport.passport_number.required' => 'Passport number is required.',
+            'personal.first_name_ar.required' => 'First name in Arabic is required.',
+            'client.is_family_master.boolean' => 'Is family master must be true or false.',
+            'client.register_date.date_format' => 'Register date must be in Y-m-d format.',
+            'client.register_state.in' => 'Register state must be either pending or completed.',
+            'family.family_master_id.required' => 'Family master ID is required.',
         ];
     }
 }

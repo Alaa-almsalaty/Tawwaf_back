@@ -39,7 +39,7 @@ class TenantDomainAccessTest extends TestCase
 
         $tenantId = $response->json('tenant.id');
         $domain = $response->json('domain');
-
+        //dd($tenantId, $domain);
         // Step 3: Fetch the created tenant model
         $tenant = Tenant::find($tenantId);
         $this->assertNotNull($tenant);
@@ -52,8 +52,10 @@ class TenantDomainAccessTest extends TestCase
             'role' => 'manager',
         ]);
         $this->actingAs($tenantUser, 'sanctum');
+        $tenantDomain = 'http://' . $domain;
+        //dd($tenantDomain);
         // Step 4: Setup HTTP_HOST to simulate tenant subdomain
-        $server = ['HTTP_HOST' => $domain];
+        $server = ['HTTP_HOST' => $tenantDomain];
 
         // Step 6: Prepare client data and POST
         $clientData = [
@@ -95,14 +97,14 @@ class TenantDomainAccessTest extends TestCase
                 'note' => 'Test client note',
             ],
         ];
-        dd($clientData);
+        //dd($clientData);
         // Step 7: Create client via tenant API route
-        $createClientResponse = $this->postJson('/api/clients', $clientData);
+        $createClientResponse = $this->postJson('/api/clients', $clientData , $server);
         $createClientResponse->assertStatus(201);
         $this->assertEquals('Client created successfully', $createClientResponse->json('message'));
 
         // Step 8: Fetch clients to confirm presence
-        $tenantRouteResponse = $this->getJson('/api/clients');
+        $tenantRouteResponse = $this->getJson('/api/clients' , $server);
         $tenantRouteResponse->assertStatus(200);
         $this->assertTrue(
             collect($tenantRouteResponse->json())->contains(
