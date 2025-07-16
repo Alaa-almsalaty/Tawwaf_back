@@ -9,15 +9,18 @@ use App\Http\Middleware\TenantPermissionMiddleware;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\UserController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::apiResource('tenants', TenantController::class);
+// Route::apiResource('users', UserController::class);
 
 // Central (super admin) routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tenants', TenantController::class);
     Route::apiResource('clients', ClientController::class);
+   Route::apiResource('users', UserController::class);
 });
 
 /*
