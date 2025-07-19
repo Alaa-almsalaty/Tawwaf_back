@@ -19,7 +19,7 @@ Route::apiResource('tenants', TenantController::class);
 
 // Central (super admin) routes
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('tenants', TenantController::class);
+    //Route::apiResource('tenants', TenantController::class);
     //Route::apiResource('clients', ClientController::class);
    Route::apiResource('users', UserController::class);
 });

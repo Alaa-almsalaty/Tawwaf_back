@@ -22,4 +22,6 @@ class FamilyFactory extends Factory
             'note' => $this->faker->sentence,
         ];
     }
+
+
 }

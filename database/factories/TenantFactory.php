@@ -24,6 +24,7 @@ class TenantFactory extends Factory
                 'manager_name' => $this->faker->name,
                 'phone' => $this->faker->phoneNumber,
                 'note' => $this->faker->sentence,
+                'season' => $this->faker->randomLetter()
                 //'created_by' => 1, // You may update this in your tests if needed
             ],
         ];
