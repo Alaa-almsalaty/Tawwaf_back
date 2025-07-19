@@ -13,13 +13,14 @@ use App\Http\Controllers\UserController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::apiResource('clients', ClientController::class);
 Route::apiResource('tenants', TenantController::class);
 // Route::apiResource('users', UserController::class);
 
 // Central (super admin) routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tenants', TenantController::class);
-    Route::apiResource('clients', ClientController::class);
+    //Route::apiResource('clients', ClientController::class);
    Route::apiResource('users', UserController::class);
 });
 
