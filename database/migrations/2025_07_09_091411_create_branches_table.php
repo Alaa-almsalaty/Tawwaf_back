@@ -17,10 +17,13 @@ return new class extends Migration
             $table->string('address', 255);
             $table->string('city', 100);
             $table->string('email')->unique()->nullable();
+            $table->string('subscription_status')->nullable();
+            $table->boolean('active')->default(true);
+            $table->decimal('Balance', 10, 2)->nullable();
             $table->string('phone', 20)->nullable();
             $table->string('manager_name', 100)->nullable();
             $table->string('note')->nullable();
-            $table->string('tenant_id');
+            $table->string('tenant_id')->nullable();
             $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

@@ -7,6 +7,7 @@ use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
 use App\Http\Middleware\TenantPermissionMiddleware;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\UserController;
@@ -19,8 +20,10 @@ Route::apiResource('tenants', TenantController::class);
 // Central (super admin) routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tenants', TenantController::class);
-    Route::apiResource('clients', ClientController::class);
+    Route::apiResource('passengers', ClientController::class);
    Route::apiResource('users', UserController::class);
+   Route::apiResource('companies', BranchController::class);
+
 });
 
 /*
