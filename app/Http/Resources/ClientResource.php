@@ -2,18 +2,27 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ClientResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request): array
+
+    public function toArray($request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'is_family_master' => $this->is_family_master,
+            'register_date' => $this->register_date,
+            'register_state' => $this->register_state,
+            //'branch' => new BranchResource($this->whenLoaded('branch')),
+            //'tenant_id' => new TenantResource($this->whenLoaded('tenant')),
+            'personal_info' => new PersonalResource($this->whenLoaded('personalInfo')),
+            'family' => new FamilyResource($this->whenLoaded('family')),
+            'MuhramID' => new ClientResource($this->whenLoaded('familyMaster')),
+            'Muhram_relation' => $this->Muhram_relation,
+            'note' => $this->note,
+
+        ];
     }
 }

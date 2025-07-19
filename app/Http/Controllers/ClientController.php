@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ClientResource;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddClientRequest;
@@ -14,8 +15,10 @@ class ClientController extends Controller
 
     public function index()
     {
-        $clients = Client::all();
-        return response()->json($clients);
+        $query = Client::with(['family' , 'personalInfo.passport' , 'muhram' , 'branch']);
+        $clients = $query->paginate(10);
+        return ClientResource::collection($clients);
+        dd($clients);
     }
 
     public function store(AddClientRequest $request, ClientService $service)
