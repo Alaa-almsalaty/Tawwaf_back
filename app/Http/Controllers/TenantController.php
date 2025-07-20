@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TenantResource;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateCompanyRequest;
@@ -24,22 +25,24 @@ class TenantController extends Controller
 
     public function store(CreateCompanyRequest $request)
     {
-        Log::info('Inside TenantController@store');
-        // Create tenant with only ID and 'data' column
         $tenant = Tenant::create([
-            'id' => (string) \Str::uuid()
+            'id' => (string) \Str::uuid(),
+            'company_name' => $request->validated('company_name'),
+            'address' => $request->validated('address'),
+            'city' => $request->validated('city'),
+            'email' => $request->validated('email'),
+            'status' => $request->validated('status'),
+            'balance' => $request->validated('balance'),
+            'manager_name' => $request->validated('manager_name'),
+            'phone' => $request->validated('phone'),
+            'note' => $request->validated('note'),
+            'logo' => $request->validated('logo'),
+            //'created_by' => $this->validated('created_by'),
         ]);
-        $tenant->info = $request->toArrayForTenant();
-        // Generate domain using company name stored in data column
-        $companyName = $tenant->info['company_name'] ?? 'default_company';
-        //$tenant->save();
-        Log::info('Inserted raw tenant record:', (array) \DB::table('tenants')->where('id', $tenant->id)->first());
-        $fromDb = \DB::table('tenants')->where('id', $tenant->id)->first();
-        //dd($fromDb);
-        //$tenant->refresh();
-        Log::info('Request: ', $request->toArrayForTenant());
 
-        Log::info('Tenant Data:'. $companyName);
+        // Generate domain using company name stored in data column
+        $companyName = $tenant->company_name ?? 'default_company';
+
         $domain = strtolower(preg_replace('/\s+/', '', $companyName)) . '.localhost';
 
         // Attach domain

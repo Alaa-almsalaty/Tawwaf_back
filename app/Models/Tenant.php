@@ -31,7 +31,18 @@ class Tenant extends BaseTenant
 
     protected $fillable = [
         'id',
-        'data'
+        'data',
+        'company_name',
+        'address',
+        'city',
+        'email',
+        'status',
+        'balance',
+        'manager_name',
+        'phone',
+        'note',
+        'created_by',
+        'season'
     ];
 
     public function reservations()
