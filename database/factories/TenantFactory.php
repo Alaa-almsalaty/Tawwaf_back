@@ -28,4 +28,14 @@ class TenantFactory extends Factory
 
         ];
     }
+
+    public function withDomain(): self
+{
+    return $this->afterCreating(function (Tenant $tenant) {
+        $tenant->domains()->create([
+            'domain' => Str::slug($tenant->company_name) . '.localhost',
+        ]);
+    });
+}
+
 }

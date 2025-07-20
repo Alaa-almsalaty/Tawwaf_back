@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Client;
 use App\Models\Family;
 use App\Models\Passport;
+use App\Models\Tenant;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,6 +19,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+        Tenant::factory()->count(5)->withDomain()->create();
 
         User::factory(10)->create();
         Branch::factory(10)->create();

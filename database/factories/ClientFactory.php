@@ -20,7 +20,7 @@ class ClientFactory extends Factory
             'register_date' => $this->faker->date('Y-m-d', '-1 years'),
             'register_state' => $this->faker->randomElement(['pending', 'completed']),
             'branch_id' => Branch::factory(),
-            'tenant_id' => Tenant::factory(),
+            'tenant_id' => Tenant::factory()->withDomain(),
             'personal_info_id' => PersonalInfo::factory(),
             'family_id' => null,
             'MuhramID' => null,
