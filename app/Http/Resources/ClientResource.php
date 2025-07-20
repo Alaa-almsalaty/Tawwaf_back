@@ -19,7 +19,7 @@ class ClientResource extends JsonResource
             //'tenant_id' => new TenantResource($this->whenLoaded('tenant')),
             'personal_info' => new PersonalResource($this->whenLoaded('personalInfo')),
             'family' => new FamilyResource($this->whenLoaded('family')),
-            'MuhramID' => new ClientResource($this->whenLoaded('familyMaster')),
+            'muhram' => new ClientResource($this->whenLoaded('muhram')),
             'Muhram_relation' => $this->Muhram_relation,
             'note' => $this->note,
 

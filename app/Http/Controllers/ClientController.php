@@ -18,7 +18,7 @@ class ClientController extends Controller
         $query = Client::with(['family' , 'personalInfo.passport' , 'muhram' , 'branch']);
         $clients = $query->paginate(10);
         return ClientResource::collection($clients);
-        dd($clients);
+       // dd($clients);
     }
 
     public function store(AddClientRequest $request, ClientService $service)
@@ -33,10 +33,11 @@ class ClientController extends Controller
 
 
 
-    public function show(Client $client)
+    public function show( $id)
     {
-        return response()->json($client);
-    }
+     $client = Client::with(['family', 'personalInfo.passport', 'muhram', 'branch'])->find($id);
+    return new ClientResource($client);
+   }
 
 
     public function update(UpdateClientRequest $request, ClientService $clientService, Client $client)

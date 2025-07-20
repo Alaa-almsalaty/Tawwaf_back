@@ -21,10 +21,15 @@ class DatabaseSeeder extends Seeder
 
         User::factory(10)->create();
         Branch::factory(10)->create();
-        User::factory(10)->create();
-        Client::factory(10)->create();
-        Family::factory(10)->create();
-        Passport::factory(10)->create();
+        //Client::factory(10)->create();
+         // Create 5 clients without families
+        Client::factory(5)->create();
+
+        // Create 5 clients with families
+        Client::factory(5)->withFamily()->create();
+
+        Client::factory(5)->withFamilyMembers(3)->create();
+
         // User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',

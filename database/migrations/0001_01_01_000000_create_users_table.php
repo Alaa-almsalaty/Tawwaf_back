@@ -23,6 +23,7 @@ return new class extends Migration
                 $table->enum('role',['employee','manager','super']);
                 $table->string('tenant_id')->nullable(); // Nullable to allow for non-tenant users
                 $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
+                $table->foreignId('branch_id')->nullable()->constrained('branches')->onDelete('cascade')->onUpdate('cascade');
                 $table->rememberToken();
                 $table->timestamps();
                 $table->softDeletes();
