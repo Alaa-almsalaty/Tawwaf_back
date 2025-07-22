@@ -13,32 +13,31 @@ use App\Http\Controllers\UserController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::apiResource('clients', ClientController::class);
-Route::apiResource('tenants', TenantController::class);
+//Route::apiResource('passengers', ClientController::class);
+//Route::apiResource('tenants', TenantController::class);
 // Route::apiResource('users', UserController::class);
 
 // Central (super admin) routes
-Route::middleware('auth:sanctum')->group(function () {
-    //Route::apiResource('tenants', TenantController::class);
-    //Route::apiResource('clients', ClientController::class);
-    Route::apiResource('users', UserController::class);
-});
+// Route::middleware('auth:sanctum')->group(function () {
+//     //Route::apiResource('tenants', TenantController::class);
+//     //Route::apiResource('clients', ClientController::class);
+// });
 
 
 // Tenant-scoped routes
 Route::middleware([
     'api',
     InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class
+    PreventAccessFromCentralDomains::class,
+    'auth:sanctum',  // هنا تأكد المستخدم مسجل دخول
 ])->group(function () {
-    Route::get(
-        '/test',
-        function () {
-            return response()->json(['message' => 'Tenant API is working! ']);
-        }
-    );
     Route::apiResource('passengers', ClientController::class);
+    Route::apiResource('companies', TenantController::class);
+    Route::apiResource('users', UserController::class);
 
+    Route::get('/test', function () {
+        return response()->json(['message' => 'Tenant API is working and secured!']);
+    });
 });
 
 
