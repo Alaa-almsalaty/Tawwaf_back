@@ -15,6 +15,7 @@ class FamilyResource extends JsonResource
     public function toArray( $request): array
     {
         return [
+            'family_id'=> $this->id,
             'family_master_id' => new ClientResource($this->whenLoaded('master')),
             'family_name_ar' => $this->family_name_ar,
             'family_name_en' => $this->family_name_en,
