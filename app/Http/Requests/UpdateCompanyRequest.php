@@ -19,14 +19,15 @@ class UpdateCompanyRequest extends FormRequest
             'company_name' => 'sometimes|string|max:255',
             'address' => 'sometimes|string|max:255',
             'city' => 'sometimes|string|max:100',
-            'email' => 'sometimes|email|unique:tenants,email',
-            'status' => 'sometimes|in:active,inactive,trial,free',
+            'email' => 'sometimes|email',
+            'status' => 'sometimes|in:monthly,year,trailer',
             'balance' => 'sometimes|numeric|min:0',
             'manager_name' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:20',
             'note' => 'nullable|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'data' => 'nullable|array',
+            'active' => 'sometimes|boolean',
             'created_by' => 'sometimes|exists:users,id',
         ];
     }

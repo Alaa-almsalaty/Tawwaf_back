@@ -17,11 +17,13 @@ Route::post('/login', [AuthController::class, 'login']);
 //Route::apiResource('tenants', TenantController::class);
 // Route::apiResource('users', UserController::class);
 
-// Central (super admin) routes
-// Route::middleware('auth:sanctum')->group(function () {
-//     //Route::apiResource('tenants', TenantController::class);
-//     //Route::apiResource('clients', ClientController::class);
-// });
+//Central (super admin) routes
+Route::middleware('auth:sanctum')->group(function () {
+    //Route::apiResource('tenants', TenantController::class);
+    //Route::apiResource('clients', ClientController::class);
+    Route::apiResource('tenants', TenantController::class);
+Route::apiResource('users', UserController::class);
+});
 
 
 // Tenant-scoped routes
@@ -32,8 +34,7 @@ Route::middleware([
     'auth:sanctum',  // هنا تأكد المستخدم مسجل دخول
 ])->group(function () {
     Route::apiResource('passengers', ClientController::class);
-    Route::apiResource('companies', TenantController::class);
-    Route::apiResource('users', UserController::class);
+   // Route::apiResource('users', UserController::class);
 
     Route::get('/test', function () {
         return response()->json(['message' => 'Tenant API is working and secured!']);

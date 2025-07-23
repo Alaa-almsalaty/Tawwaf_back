@@ -13,12 +13,28 @@ use Illuminate\Support\Str;
 class TenantController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         if (!auth()->user()->isSuperAdmin()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
-        $tenants = Tenant::all();
+
+            $query = Tenant::query();
+
+        if ($request->filled('q')) {
+        $search = $request->input('q');
+
+     $query->where('data->company_name', 'like', "%$search%")
+              ->orWhere('data->manager_name', 'like', "%$search%")
+              ->orWhere('data->email', 'like', "%$search%")
+              ->orWhere('data->phone', 'like', "%$search%");
+
+    }
+    if ($request->filled('season')) {
+        $query->where('data->season', $request->input('season'));
+    }
+       // $tenants = $query->get();
+        $tenants = $query->paginate(6); // يعيد 10 عناصر فقط لكل صفحة
         return response()->json($tenants);
     }
 
@@ -36,6 +52,7 @@ class TenantController extends Controller
             'manager_name' => $request->validated('manager_name'),
             'phone' => $request->validated('phone'),
             'note' => $request->validated('note'),
+            'active' => $request->validated('active'),
             'logo' => $request->validated('logo'),
             //'created_by' => $this->validated('created_by'),
         ]);
@@ -58,9 +75,11 @@ class TenantController extends Controller
     }
 
 
-    public function show(Tenant $tenant)
+    public function show( $id)
     {
-        return response()->json($tenant);
+        $client = Tenant::find($id);
+
+        return response()->json($client);
     }
 
 

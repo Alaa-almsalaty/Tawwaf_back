@@ -18,12 +18,13 @@ class TenantFactory extends Factory
             'address' => $this->faker->address,
             'city' => $this->faker->city,
             'email' => $this->faker->unique()->safeEmail,
-            'status' => $this->faker->randomElement(['active', 'inactive', 'trial', 'free']),
+            'status' => $this->faker->randomElement(['trailer', 'year', 'monthly']),
             'balance' => $this->faker->randomFloat(2, 0, 10000),
             'manager_name' => $this->faker->name,
             'phone' => $this->faker->phoneNumber,
             'note' => $this->faker->sentence,
-            'season' => $this->faker->randomLetter()
+            'active' => $this->faker->boolean,
+            'season' => $this->faker->numberBetween(2010, 2025),
             //'created_by' => 1, // You may update this in your tests if needed
 
         ];

@@ -24,13 +24,14 @@ class CreateCompanyRequest extends FormRequest
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:100',
             'email' => 'required|email',
-            'status' => 'required|in:active,inactive,trial,free',
+            'status' => 'sometimes|in:monthly,year,trailer',
             'balance' => 'required|numeric|min:0',
             'manager_name' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:20',
             'note' => 'nullable|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'data' => 'nullable|array',
+            'active' => 'required|boolean',
             //'created_by' => 'required|exists:users,id'
         ];
     }

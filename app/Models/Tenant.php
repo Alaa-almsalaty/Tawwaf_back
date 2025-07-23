@@ -12,6 +12,8 @@ use Stancl\Tenancy\Database\Concerns\HasDomains;
 class Tenant extends BaseTenant
 {
     use HasFactory, SoftDeletes, HasDomains;
+    public $incrementing = false;   // المفتاح الأساسي ليس رقمًا متزايدًا تلقائيًا
+    protected $keyType = 'string';  // المفتاح الأساسي هو نص (UUID)
 
     protected $table = 'tenants';
     protected $casts = [
@@ -42,7 +44,8 @@ class Tenant extends BaseTenant
         'phone',
         'note',
         'created_by',
-        'season'
+        'season',
+        'active'
     ];
 
     public function reservations()
