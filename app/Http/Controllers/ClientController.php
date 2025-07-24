@@ -13,13 +13,32 @@ use Log;
 class ClientController extends Controller
 {
 
-    public function index()
-    {
-        $query = Client::with(['family' , 'personalInfo.passport' , 'muhram' , 'branch']);
-        $clients = $query->paginate(10);
-        return ClientResource::collection($clients);
-       // dd($clients);
+public function index(Request $request)
+{
+   // $search = request()->input('search');
+
+   $query = Client::with(['family', 'personalInfo.passport', 'muhram', 'branch']);
+
+    if ($request->filled('q')) {
+        $search = $request->query('q');
+
+        $query->where(function($q) use ($search) {
+            $q->whereHas('personalInfo', function($q2) use ($search) {
+                $q2->where('first_name_ar', 'like', "%{$search}%")
+                   ->orWhere('last_name_ar', 'like', "%{$search}%");
+            })
+            ->orWhereHas('personalInfo.passport', function($q3) use ($search) {
+                // بحث داخل رقم الجواز
+                $q3->where('passport_number', 'like', "%{$search}%");
+            })
+            ->orWhere('id', $search);
+        });
     }
+
+    $clients = $query->get();
+
+    return ClientResource::collection($clients);
+}
 
     public function store(AddClientRequest $request, ClientService $service)
     {

@@ -20,7 +20,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
 Route::apiResource('tenants', TenantController::class);
     Route::apiResource('users', UserController::class);
-    Route::apiResource('passengers', ClientController::class);
+    Route::apiResource('clients', ClientController::class);
 
 
 });

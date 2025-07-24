@@ -10,7 +10,8 @@ class UpdateClientRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->user()->IsManager() || auth()->user()->IsEmployee();
+        return true;
+        //return auth()->user()->IsManager() || auth()->user()->IsEmployee();
     }
 
     public function rules(): array
