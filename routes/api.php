@@ -14,28 +14,13 @@ use App\Http\Controllers\UserController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-<<<<<<< HEAD
-//Route::apiResource('passengers', ClientController::class);
-//Route::apiResource('tenants', TenantController::class);
-=======
-Route::apiResource('tenants', TenantController::class);
->>>>>>> 65133738eb729ce22df01c68d3d8af37c0d7780f
-// Route::apiResource('users', UserController::class);
-    Route::apiResource('passengers', ClientController::class);
+
 
 //Central (super admin) routes
 Route::middleware('auth:sanctum')->group(function () {
-<<<<<<< HEAD
-    //Route::apiResource('tenants', TenantController::class);
-    //Route::apiResource('clients', ClientController::class);
-    Route::apiResource('tenants', TenantController::class);
-Route::apiResource('users', UserController::class);
-=======
-    Route::apiResource('tenants', TenantController::class);
-   Route::apiResource('users', UserController::class);
-   Route::apiResource('companies', BranchController::class);
+Route::apiResource('tenants', TenantController::class);
 
->>>>>>> 65133738eb729ce22df01c68d3d8af37c0d7780f
+
 });
 
 
@@ -44,10 +29,10 @@ Route::middleware([
     'api',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
-    'auth:sanctum',  // هنا تأكد المستخدم مسجل دخول
+    'auth:sanctum',
 ])->group(function () {
     Route::apiResource('passengers', ClientController::class);
-   // Route::apiResource('users', UserController::class);
+    Route::apiResource('users', UserController::class);
 
     Route::get('/test', function () {
         return response()->json(['message' => 'Tenant API is working and secured!']);

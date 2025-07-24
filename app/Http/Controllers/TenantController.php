@@ -22,17 +22,20 @@ class TenantController extends Controller
             $query = Tenant::query();
 
         if ($request->filled('q')) {
-        $search = $request->input('q');
+            $search = $request->input('q');
 
-     $query->where('data->company_name', 'like', "%$search%")
-              ->orWhere('data->manager_name', 'like', "%$search%")
-              ->orWhere('data->email', 'like', "%$search%")
-              ->orWhere('data->phone', 'like', "%$search%");
+            $query->where(function ($q) use ($search) {
+                $q->where('data->company_name', 'like', "%$search%")
+                ->orWhere('data->manager_name', 'like', "%$search%")
+                ->orWhere('data->email', 'like', "%$search%")
+                ->orWhere('data->phone', 'like', "%$search%");
+            });
+        }
 
-    }
-    if ($request->filled('season')) {
-        $query->where('data->season', $request->input('season'));
-    }
+        if ($request->filled('season')) {
+            $query->where('data->season', $request->input('season'));
+        }
+
        // $tenants = $query->get();
         $tenants = $query->paginate(6); // يعيد 10 عناصر فقط لكل صفحة
         return response()->json($tenants);
