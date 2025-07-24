@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateUserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -12,8 +12,6 @@ class CreateUserRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
-        //eturn auth()->check() && auth()->user()->role === 'admin';
-
     }
 
     /**
@@ -23,16 +21,23 @@ class CreateUserRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
-            'username'    => 'required|string|max:40|unique:users,username',
-            'password'    => 'required|string|min:6',
-            'email'       => 'required|email|unique:users,email',
+            'username'    => "required|string|max:40",
+            'password'    => 'nullable|string|min:6',
+            'email' => 'sometimes|email',
             'full_name'   => 'required|string|max:255',
             'phone'       => 'required|string|max:20',
             'role'        => 'required|in:employee,manager,super',
-            'tenant_id'   => 'required|exists:tenants,id',
             'is_Active'   => 'boolean',
+            'tenant_id'   => 'nullable|exists:tenants,id',
         ];
+    }
 
+        public function updateUser(): array
+    {
+        return collect($this->validated())
+            ->filter(fn ($value, $key) => $this->has($key))
+            ->toArray();
     }
 }

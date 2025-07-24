@@ -19,6 +19,8 @@ Route::post('/login', [AuthController::class, 'login']);
 //Central (super admin) routes
 Route::middleware('auth:sanctum')->group(function () {
 Route::apiResource('tenants', TenantController::class);
+    Route::apiResource('users', UserController::class);
+    Route::apiResource('passengers', ClientController::class);
 
 
 });
@@ -31,8 +33,8 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
     'auth:sanctum',
 ])->group(function () {
-    Route::apiResource('passengers', ClientController::class);
-    Route::apiResource('users', UserController::class);
+    //Route::apiResource('passengers', ClientController::class);
+   // Route::apiResource('users', UserController::class);
 
     Route::get('/test', function () {
         return response()->json(['message' => 'Tenant API is working and secured!']);
