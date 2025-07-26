@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             'description' => $this->description,
             'role' => $this->role,
             'created_at' => $this->created_at,
+            'tenant_id' => new TenantResource($this->whenLoaded('tenant')),
         ];
     }
 }
