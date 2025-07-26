@@ -13,7 +13,6 @@ class ClientService
     public function store(array $data): Client
     {
         return DB::transaction(function () use ($data) {
-            Log::info('ClientService store method called with data:', $data);
             // Step 1: Create Passport
             $passport = Passport::create([
                 'passport_number' => $data['passport']['passport_number'],
@@ -86,7 +85,19 @@ class ClientService
             }
 
 
+            // step 5 : adjust the tenant balance after creating the client
+            $tenant = $client->tenant;
+            if ($tenant) {
+                $tenant->balance -= 1.0;
+                $tenant->save();
+            } else {
+                Log::warning('Client created without a valid tenant', ['client_id' => $client->id]);
+            }
+            // step 6: return the client
+            $client->load(['family', 'personalInfo.passport', 'muhram', 'branch']);
             return $client;
+
+
         });
     }
 

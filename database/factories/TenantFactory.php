@@ -25,7 +25,7 @@ class TenantFactory extends Factory
             'note' => $this->faker->sentence,
             'active' => $this->faker->boolean,
             'season' => $this->faker->numberBetween(2010, 2025),
-            //'created_by' => 1, // You may update this in your tests if needed
+            'created_by' => 1, // You may update this in your tests if needed
 
         ];
     }

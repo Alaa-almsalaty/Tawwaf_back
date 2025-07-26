@@ -19,20 +19,6 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
 
-        if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            return [
-                'username' => 'sometimes|string|max:40|unique:users|regex:/^(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/',
-                'email' => 'sometimes|email|unique:users',
-                'password' => ['sometimes', 'string', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]).{8,20}$/', 'max:20'],
-                'full_name' => 'sometimes|string|min:8|max:20',
-                'phone' => 'sometimes|starts_with:09|digits:10',
-                'is_Active' => 'boolean',
-                'role' => ['sometimes', Rule::enum(UserRole::class)],
-                'tenant_id' => 'sometimes|exists:tenants,id',
-
-            ];
-        }
-
         return [
             'username' => 'required|string|max:40|unique:users|regex:/^(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/',
             'email' => 'required|email|unique:users',
@@ -54,17 +40,10 @@ class RegisterRequest extends FormRequest
             'full_name' => $this->validated('full_name'),
             'password' => Hash::make($this->validated('password')),
             'phone' => $this->validated('phone'),
-            'is_Active' => $this->validated('is_Active'),
+            'is_Active' => $this->validated('is_Active') ?? false,
             'role' => $this->validated('role'),
-            'tenant_id' => $this->validated('tenant_id'),
+            'tenant_id' => $this->validated('tenant_id') ?? null,
         ];
-    }
-
-    public function UpdateUser(): array
-    {
-        return collect($this->all())
-            ->filter(fn($value, $key) => $this->has($key) && $value !== null)
-            ->toArray();
     }
 
 }

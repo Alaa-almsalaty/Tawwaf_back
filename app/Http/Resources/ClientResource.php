@@ -15,7 +15,7 @@ class ClientResource extends JsonResource
             'is_family_master' => $this->is_family_master,
             'register_date' => $this->register_date,
             'register_state' => $this->register_state,
-            //'branch' => new BranchResource($this->whenLoaded('branch')),
+            'branch' => new BranchResource($this->whenLoaded('branch')),
             'tenant_id' => new TenantResource($this->whenLoaded('tenant')),
             'personal_info' => new PersonalResource($this->whenLoaded('personalInfo')),
             'family' => new FamilyResource($this->whenLoaded('family')),

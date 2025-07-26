@@ -19,16 +19,16 @@ class TenantController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-            $query = Tenant::query();
+        $query = Tenant::query();
 
         if ($request->filled('q')) {
             $search = $request->input('q');
 
             $query->where(function ($q) use ($search) {
                 $q->where('data->company_name', 'like', "%$search%")
-                ->orWhere('data->manager_name', 'like', "%$search%")
-                ->orWhere('data->email', 'like', "%$search%")
-                ->orWhere('data->phone', 'like', "%$search%");
+                    ->orWhere('data->manager_name', 'like', "%$search%")
+                    ->orWhere('data->email', 'like', "%$search%")
+                    ->orWhere('data->phone', 'like', "%$search%");
             });
         }
 
@@ -36,9 +36,8 @@ class TenantController extends Controller
             $query->where('data->season', $request->input('season'));
         }
 
-       // $tenants = $query->get();
-        $tenants = $query->paginate(6); // يعيد 10 عناصر فقط لكل صفحة
-        return response()->json($tenants);
+        $tenants = $query->paginate(6);
+        return TenantResource::collection($tenants);
     }
 
 
@@ -57,7 +56,7 @@ class TenantController extends Controller
             'note' => $request->validated('note'),
             'active' => $request->validated('active'),
             'logo' => $request->validated('logo'),
-            //'created_by' => $this->validated('created_by'),
+            'created_by' => $request->validated('created_by')
         ]);
 
         // Generate domain using company name stored in data column
@@ -78,11 +77,10 @@ class TenantController extends Controller
     }
 
 
-    public function show( $id)
+    public function show(Tenant $tenant)
     {
-        $client = Tenant::find($id);
-
-        return response()->json($client);
+        // The tenant is automatically injected by Laravel's route model binding
+        return new TenantResource($tenant);
     }
 
 

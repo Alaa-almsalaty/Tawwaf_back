@@ -32,7 +32,7 @@ class CreateCompanyRequest extends FormRequest
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'data' => 'nullable|array',
             'active' => 'required|boolean',
-            //'created_by' => 'required|exists:users,id'
+            'created_by' => 'required|exists:users,id'
         ];
     }
 
@@ -50,7 +50,7 @@ class CreateCompanyRequest extends FormRequest
             'phone' => $this->validated('phone'),
             'note' => $this->validated('note'),
             'logo' => $this->validated('logo'),
-            //'created_by' => $this->validated('created_by'),
+            'created_by' => $this->validated('created_by'),
         ];
     }
 }

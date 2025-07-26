@@ -20,6 +20,8 @@ class BranchFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'manager_name' => $this->faker->name,
             'tenant_id' => Tenant::factory()->withDomain(),
+            'capacity' => $this->faker->numberBetween(50, 500),
+            'note' => $this->faker->sentence,
 
         ];
     }

@@ -13,32 +13,27 @@ use Log;
 class ClientController extends Controller
 {
 
-public function index(Request $request)
-{
-   // $search = request()->input('search');
+    public function index(Request $request)
+    {
+        $query = Client::with(['family', 'personalInfo.passport', 'muhram', 'branch']);
 
-   $query = Client::with(['family', 'personalInfo.passport', 'muhram', 'branch']);
+        if ($request->filled('q')) {
+            $search = $request->query('q');
 
-    if ($request->filled('q')) {
-        $search = $request->query('q');
-
-        $query->where(function($q) use ($search) {
-            $q->whereHas('personalInfo', function($q2) use ($search) {
-                $q2->where('first_name_ar', 'like', "%{$search}%")
-                   ->orWhere('last_name_ar', 'like', "%{$search}%");
-            })
-            ->orWhereHas('personalInfo.passport', function($q3) use ($search) {
-                // بحث داخل رقم الجواز
-                $q3->where('passport_number', 'like', "%{$search}%");
-            })
-            ->orWhere('id', $search);
-        });
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('personalInfo', function ($q2) use ($search) {
+                    $q2->where('first_name_ar', 'like', "%{$search}%")
+                        ->orWhere('last_name_ar', 'like', "%{$search}%");
+                })
+                    ->orWhereHas('personalInfo.passport', function ($q3) use ($search) {
+                        // بحث داخل رقم الجواز
+                        $q3->where('passport_number', 'like', "%{$search}%");
+                    })
+                    ->orWhere('id', $search);
+            });
+        }
+        return ClientResource::collection($query->paginate(6));
     }
-
-    //$clients = $query->get();
-    $clients = $query->paginate(6);
-    return ClientResource::collection($clients);
-}
 
     public function store(AddClientRequest $request, ClientService $service)
     {
@@ -52,11 +47,11 @@ public function index(Request $request)
 
 
 
-    public function show( $id)
+    public function show(Client $client)
     {
-     $client = Client::with(['family', 'personalInfo.passport', 'muhram', 'branch'])->find($id);
-    return new ClientResource($client);
-   }
+        $client->load(['family', 'personalInfo.passport', 'muhram', 'branch']);
+        return new ClientResource($client);
+    }
 
 
     public function update(UpdateClientRequest $request, ClientService $clientService, Client $client)
