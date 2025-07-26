@@ -23,20 +23,20 @@ class AddClientRequest extends FormRequest
     {
         $rules = [
             // Personal info
-            'personal.first_name_ar' => 'required|string|max:50',
-            'personal.first_name_en' => 'required|string|max:50',
-            'personal.second_name_ar' => 'required|string|max:50',
-            'personal.second_name_en' => 'required|string|max:50',
-            'personal.grand_father_name_ar' => 'required|string|max:50',
-            'personal.grand_father_name_en' => 'required|string|max:50',
-            'personal.last_name_ar' => 'required|string|max:50',
-            'personal.last_name_en' => 'required|string|max:50',
-            'personal.DOB' => 'required|date_format:Y-m-d',
-            'personal.family_status' => 'required|in:single,married,divorced,widowed',
-            'personal.gender' => 'required|in:female,male',
-            'personal.medical_status' => 'required|in:healthy,sick,disabled',
-            'personal.phone' => 'nullable|string|max:20',
-            'personal.passport_no' => 'sometimes|exists:passports,id', // Foreign key to the passport, if applicable
+            'personal_info.first_name_ar' => 'required|string|max:50',
+            'personal_info.first_name_en' => 'required|string|max:50',
+            'personal_info.second_name_ar' => 'required|string|max:50',
+            'personal_info.second_name_en' => 'required|string|max:50',
+            'personal_info.grand_father_name_ar' => 'required|string|max:50',
+            'personal_info.grand_father_name_en' => 'required|string|max:50',
+            'personal_info.last_name_ar' => 'required|string|max:50',
+            'personal_info.last_name_en' => 'required|string|max:50',
+            'personal_info.DOB' => 'required|date_format:Y-m-d',
+            'personal_info.family_status' => 'required|in:single,married,divorced,widowed',
+            'personal_info.gender' => 'required|in:female,male',
+            'personal_info.medical_status' => 'required|in:healthy,sick,disabled',
+            'personal_info.phone' => 'nullable|string|max:20',
+            'personal_info.passport_no' => 'sometimes|exists:passports,id', // Foreign key to the passport, if applicable
 
 
             //passport info
@@ -78,7 +78,7 @@ class AddClientRequest extends FormRequest
     {
         return [
             'passport.passport_number.required' => 'Passport number is required.',
-            'personal.first_name_ar.required' => 'First name in Arabic is required.',
+            'personal_info.first_name_ar.required' => 'First name in Arabic is required.',
             'client.is_family_master.boolean' => 'Is family master must be true or false.',
             'client.register_date.date_format' => 'Register date must be in Y-m-d format.',
             'client.register_state.in' => 'Register state must be either pending or completed.',

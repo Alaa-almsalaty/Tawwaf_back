@@ -28,19 +28,19 @@ class ClientService
 
             // Step 2: Create Personal Info
             $personalInfo = PersonalInfo::create([
-                'first_name_ar' => $data['personal']['first_name_ar'],
-                'first_name_en' => $data['personal']['first_name_en'],
-                'second_name_ar' => $data['personal']['second_name_ar'],
-                'second_name_en' => $data['personal']['second_name_en'],
-                'grand_father_name_ar' => $data['personal']['grand_father_name_ar'],
-                'grand_father_name_en' => $data['personal']['grand_father_name_en'],
-                'last_name_ar' => $data['personal']['last_name_ar'],
-                'last_name_en' => $data['personal']['last_name_en'],
-                'DOB' => $data['personal']['DOB'],
-                'family_status' => $data['personal']['family_status'],
-                'gender' => $data['personal']['gender'],
-                'medical_status' => $data['personal']['medical_status'],
-                'phone' => $data['personal']['phone'] ?? null,
+                'first_name_ar' => $data['personal_info']['first_name_ar'],
+                'first_name_en' => $data['personal_info']['first_name_en'],
+                'second_name_ar' => $data['personal_info']['second_name_ar'],
+                'second_name_en' => $data['personal_info']['second_name_en'],
+                'grand_father_name_ar' => $data['personal_info']['grand_father_name_ar'],
+                'grand_father_name_en' => $data['personal_info']['grand_father_name_en'],
+                'last_name_ar' => $data['personal_info']['last_name_ar'],
+                'last_name_en' => $data['personal_info']['last_name_en'],
+                'DOB' => $data['personal_info']['DOB'],
+                'family_status' => $data['personal_info']['family_status'],
+                'gender' => $data['personal_info']['gender'],
+                'medical_status' => $data['personal_info']['medical_status'],
+                'phone' => $data['personal_info']['phone'] ?? null,
                 'passport_no' => $passport->id,
             ]);
 
@@ -106,13 +106,13 @@ class ClientService
     {
         return DB::transaction(function () use ($client, $data) {
             // Update Passport if present
-            if (isset($data['passport'])) {
-                $client->personalInfo->passport->update($data['passport']);
+            if (isset($data['passport_no'])) {
+                $client->personalInfo->passport->update($data['passport_no']);
             }
 
             // Update Personal Info if present
-            if (isset($data['personal'])) {
-                $client->personalInfo->update($data['personal']);
+            if (isset($data['personal_info'])) {
+                $client->personalInfo->update($data['personal_info']);
             }
 
             // Update Client fields if present
