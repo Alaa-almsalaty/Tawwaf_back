@@ -35,8 +35,8 @@ public function index(Request $request)
         });
     }
 
-    $clients = $query->get();
-
+    //$clients = $query->get();
+    $clients = $query->paginate(6);
     return ClientResource::collection($clients);
 }
 
