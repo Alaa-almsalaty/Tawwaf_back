@@ -9,7 +9,8 @@ class UpdateCompanyRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return auth()->user()->isSuperAdmin();
+        return true;
+        //return auth()->user()->isSuperAdmin();
     }
 
 
@@ -21,6 +22,7 @@ class UpdateCompanyRequest extends FormRequest
             'city' => 'sometimes|string|max:100',
             'email' => 'sometimes|email',
             'status' => 'sometimes|in:monthly,year,trailer',
+            'status' => 'sometimes|in:active,inactive,trial,free',
             'balance' => 'sometimes|numeric|min:0',
             'manager_name' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:20',
