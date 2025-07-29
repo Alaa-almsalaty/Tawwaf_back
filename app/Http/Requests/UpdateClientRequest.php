@@ -55,7 +55,7 @@ class UpdateClientRequest extends FormRequest
             'passport_no.issue_place' => 'sometimes|string|max:100',
             'passport_no.birth_place' => 'sometimes|string|max:100',
             'passport_no.issue_authority' => 'nullable|string|max:100',
-            'passport_no.passport_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'passport_no.passport_img' => 'nullable|string',
         ];
     }
 

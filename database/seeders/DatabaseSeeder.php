@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
         // Create 5 clients with families
         Client::factory(5)->withFamily()->create();
 
-        Client::factory(5)->withFamilyMembers(3)->create();
+       // Client::factory(5)->withFamilyMembers(3)->create();
 
         // User::factory()->create([
         //     'name' => 'Test User',

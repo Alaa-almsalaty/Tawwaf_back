@@ -40,15 +40,15 @@ class AddClientRequest extends FormRequest
 
 
             //passport info
-            'passport.passport_number' => 'required|string|max:20',
-            'passport.passport_type' => 'required|in:regular,diplomatic,official,ordinary,other',
-            'passport.nationality' => 'required|string|max:50',
-            'passport.issue_date' => 'required|date_format:Y-m-d',
-            'passport.expiry_date' => 'required|date_format:Y-m-d|after:issue_date',
-            'passport.issue_place' => 'required|string|max:100',
-            'passport.birth_place' => 'required|string|max:100',
-            'passport.issue_authority' => 'nullable|string|max:100',
-            'passport.passport_img' => 'required|string',
+            'passport_no.passport_number' => 'required|string|max:20',
+            'passport_no.passport_type' => 'required|in:regular,diplomatic,official,ordinary,other',
+            'passport_no.nationality' => 'required|string|max:50',
+            'passport_no.issue_date' => 'required|date_format:Y-m-d',
+            'passport_no.expiry_date' => 'required|date_format:Y-m-d|after:issue_date',
+            'passport_no.issue_place' => 'required|string|max:100',
+            'passport_no.birth_place' => 'required|string|max:100',
+            'passport_no.issue_authority' => 'nullable|string|max:100',
+            'passport_no.passport_img' => 'required|string',
             //'passport.passport_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Passport photo
 
             // client info
@@ -59,7 +59,7 @@ class AddClientRequest extends FormRequest
             'client.MuhramID' => 'nullable|exists:clients,id', // Foreign key to the muhram info, if applicable
             'client.Muhram_relation' => ['nullable', Rule::enum(Muhram::class)], // Relationship of the muhram to the client
             'client.branch_id' => 'nullable|exists:branches,id', // Foreign key to the branch
-            'client.family_id' => 'nullable|exists:families,id', // Foreign key to the family client, if applicable
+            'client.family_id' => 'nullable', // Foreign key to the family client, if applicable
             'client.tenant_id' => 'required|exists:tenants,id', // Foreign key to the tenant
             'client.note' => 'nullable|string', // Optional note field for additional information
 

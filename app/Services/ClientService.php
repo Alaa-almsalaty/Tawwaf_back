@@ -15,15 +15,15 @@ class ClientService
         return DB::transaction(function () use ($data) {
             // Step 1: Create Passport
             $passport = Passport::create([
-                'passport_number' => $data['passport']['passport_number'],
-                'passport_type' => $data['passport']['passport_type'],
-                'nationality' => $data['passport']['nationality'],
-                'issue_date' => $data['passport']['issue_date'],
-                'expiry_date' => $data['passport']['expiry_date'],
-                'issue_place' => $data['passport']['issue_place'],
-                'birth_place' => $data['passport']['birth_place'],
-                'issue_authority' => $data['passport']['issue_authority'] ?? null,
-                'passport_img' => $data['passport']['passport_img'], // assuming file is already stored
+                'passport_number' => $data['passport_no']['passport_number'],
+                'passport_type' => $data['passport_no']['passport_type'],
+                'nationality' => $data['passport_no']['nationality'],
+                'issue_date' => $data['passport_no']['issue_date'],
+                'expiry_date' => $data['passport_no']['expiry_date'],
+                'issue_place' => $data['passport_no']['issue_place'],
+                'birth_place' => $data['passport_no']['birth_place'],
+                'issue_authority' => $data['passport_no']['issue_authority'] ?? null,
+                'passport_img' => $data['passport_no']['passport_img'], // assuming file is already stored
             ]);
 
             // Step 2: Create Personal Info

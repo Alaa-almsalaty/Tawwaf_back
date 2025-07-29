@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nationality', 50); // e.g., 'libyan', or other nationalities
             $table->date('issue_date'); // Date when the passport was issued
             $table->date('expiry_date'); // Date when the passport expires
-            $table->string('Issue_place', 100); // Place where the passport was issued
+            $table->string('issue_place', 100); // Place where the passport was issued
             $table->string('birth_place',100); // Place of birth, e.g., 'Tripoli', 'Benghazi', etc.
             $table->string('issue_authority', 100)->nullable(); // Authority that issued the passport, e.g., 'Libyan Passport Authority'
             $table->string('passport_img'); // Path to the passport photo

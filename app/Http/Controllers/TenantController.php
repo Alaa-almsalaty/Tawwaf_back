@@ -56,6 +56,7 @@ class TenantController extends Controller
             'note' => $request->validated('note'),
             'active' => $request->validated('active'),
             'logo' => $request->validated('logo'),
+            'season' => $request->validated('season'),
             'created_by' => $request->validated('created_by')
         ]);
 

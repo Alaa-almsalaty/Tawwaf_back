@@ -32,6 +32,7 @@ class CreateCompanyRequest extends FormRequest
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'data' => 'nullable|array',
             'active' => 'required|boolean',
+            'season' => 'required|integer',
             'created_by' => 'required|exists:users,id'
         ];
     }

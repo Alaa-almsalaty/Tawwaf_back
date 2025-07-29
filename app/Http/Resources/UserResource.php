@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             'description' => $this->description,
             'role' => $this->role,
             'created_at' => $this->created_at,
+            'is_Active' => $this->is_Active,
         ];
     }
 }

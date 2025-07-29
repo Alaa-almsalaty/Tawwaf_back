@@ -29,6 +29,7 @@ class UpdateCompanyRequest extends FormRequest
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'data' => 'nullable|array',
             'active' => 'sometimes|boolean',
+            'season' => 'required|integer',
             'created_by' => 'sometimes|exists:users,id',
         ];
     }
