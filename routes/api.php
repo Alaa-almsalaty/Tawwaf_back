@@ -14,7 +14,6 @@ use App\Http\Controllers\UserController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-//Route::apiResource('branches', BranchController::class);
 
 
 //Central (super admin) routes
@@ -34,6 +33,7 @@ Route::middleware([
 ])->group(function () {
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('users', UserController::class);
+    Route::apiResource('branches', BranchController::class);
 
     Route::get('/test', function () {
         return response()->json(['message' => 'Tenant API is working and secured!']);

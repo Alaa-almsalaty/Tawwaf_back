@@ -19,7 +19,7 @@ class UpdateBranchRequest extends FormRequest
             'name' => 'sometimes|required|string|max:255',
             'city' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
-            'email' => 'nullable|email|unique:branches,email,',
+            'email' => 'nullable|email',
             'manager_name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
             'capacity' => 'nullable|integer',

@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        Tenant::factory()->count(5)->withDomain()->create();
+        Tenant::factory()->withDomain()->create();
 
         User::factory(10)->create();
         Branch::factory(10)->create();

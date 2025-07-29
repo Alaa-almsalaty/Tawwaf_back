@@ -6,6 +6,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\LoginRequest;
+use Stancl\Tenancy\Database\Models\Domain;
 
 class AuthController extends Controller
 {
@@ -22,9 +23,22 @@ class AuthController extends Controller
         $user = $request->authenticate();
 
         $token = $user->createToken('RehlatyApp')->plainTextToken;
+        $tenantId = $user->tenant_id;
 
-        return response()->json(['user' => $user, 'token' => $token]);
-    }
+        // جلب أول دومين مرتبط بالتينانت
+        $tenantDomain = null;
+        if ($tenantId) {
+            $tenantDomain = Domain::where('tenant_id', $tenantId)->value('domain');
+        }
+
+        return response()->json([
+            'user' => $user,
+            'token' => $token,
+            'tenant' => [
+                'domain' => $tenantDomain,
+            ],
+        ]);
+}
 
 
 }

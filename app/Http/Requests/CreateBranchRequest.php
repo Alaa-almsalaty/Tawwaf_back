@@ -19,7 +19,7 @@ class CreateBranchRequest extends FormRequest
             'name' => 'nullable|string|max:100',
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:100',
-            'email' => 'nullable|email|unique:branches,email',
+            'email' => 'nullable|email',
             'manager_name' => 'nullable|string|max:100',
             'capacity' => 'nullable|integer',
             'phone' => 'nullable|string|max:20',
