@@ -14,17 +14,13 @@ use App\Http\Controllers\UserController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::apiResource('clients', ClientController::class);
-Route::apiResource('users', UserController::class);
-Route::apiResource('branches', BranchController::class);
+//Route::apiResource('branches', BranchController::class);
 
 
 //Central (super admin) routes
 Route::middleware('auth:sanctum')->group(function () {
 Route::apiResource('tenants', TenantController::class);
-
-
-
+//Route::apiResource('users', UserController::class);
 
 });
 
@@ -36,8 +32,8 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
     'auth:sanctum',
 ])->group(function () {
-    //Route::apiResource('passengers', ClientController::class);
-   // Route::apiResource('users', UserController::class);
+    Route::apiResource('clients', ClientController::class);
+    Route::apiResource('users', UserController::class);
 
     Route::get('/test', function () {
         return response()->json(['message' => 'Tenant API is working and secured!']);
