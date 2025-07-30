@@ -38,6 +38,11 @@ class ClientController extends Controller
     public function store(AddClientRequest $request, ClientService $service)
     {
         $validated = $request->validated();
+        $tenant = tenant();
+        if ($tenant->balance === 0) {
+            Log::error('Tenant balance is zero, cannot create client', ['tenant_id' => $tenant->id]);
+            return response()->json(['message' => 'Tenant balance is zero, cannot create client'], 403);
+        }
         $client = $service->store($validated);
         return response()->json([
             'message' => 'Client created successfully',
