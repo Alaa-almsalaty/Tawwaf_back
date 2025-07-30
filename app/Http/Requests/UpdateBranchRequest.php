@@ -24,6 +24,7 @@ class UpdateBranchRequest extends FormRequest
             'phone' => 'nullable|string|max:20',
             'capacity' => 'nullable|integer',
             'note' => 'nullable|string',
+            'active' => 'sometimes|boolean',
             'tenant_id' => 'sometimes|exists:tenants,id'
         ];
     }

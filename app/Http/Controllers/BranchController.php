@@ -13,7 +13,7 @@ class BranchController extends Controller
 
     public function index(Request $request)
     {
-        $query = Branch::query();
+        $query = Branch::with('tenant');
 
         if ($request->filled('q')) {
             $search = $request->query('q');

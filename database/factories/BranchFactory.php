@@ -22,6 +22,7 @@ class BranchFactory extends Factory
             'tenant_id' => Tenant::factory()->withDomain(),
             'capacity' => $this->faker->numberBetween(50, 500),
             'note' => $this->faker->sentence,
+            'active' => true,
 
         ];
     }

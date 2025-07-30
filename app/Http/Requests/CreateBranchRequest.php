@@ -24,6 +24,7 @@ class CreateBranchRequest extends FormRequest
             'capacity' => 'nullable|integer',
             'phone' => 'nullable|string|max:20',
             'note' => 'nullable|string',
+            'active' => 'sometimes|boolean',
             'tenant_id' => 'required|exists:tenants,id',
         ];
     }

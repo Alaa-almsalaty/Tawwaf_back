@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('manager_name', 100)->nullable();
             $table->integer('capacity')->nullable();
             $table->string('note')->nullable();
+            $table->boolean('active')->default(true);
             $table->string('tenant_id');
             $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();

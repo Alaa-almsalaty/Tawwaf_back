@@ -22,8 +22,15 @@ class BranchResource extends JsonResource
             'phone' => $this->phone,
             'email' => $this->email,
             'capacity' => $this->capacity,
+            'active' => $this->active,
             'note' => $this->note,
-            'tenant_id' => new TenantResource($this->whenLoaded('tenant')),
+            //'tenant_id' => new TenantResource($this->whenLoaded('tenant')),
+            'tenant_id' => $this->tenant_id,
+            'tenant' => $this->whenLoaded('tenant', function () {
+            return [
+                'company_name' => $this->tenant->company_name,
+            ];
+        }),
             'manager_name' => $this->manager_name
         ];
     }
