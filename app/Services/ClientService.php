@@ -7,6 +7,8 @@ use App\Models\Passport;
 use App\Models\PersonalInfo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Notifications\PassportBalanceNotification;
+use App\Models\User;
 
 class ClientService
 {
@@ -90,6 +92,13 @@ class ClientService
             if ($tenant) {
                 $tenant->balance -= 1.0;
                 $tenant->save();
+$manager = User::where('tenant_id', $tenant->id)
+            ->where('role', 'manager')
+            ->first();
+
+if ($manager) {
+    $manager->notify(new PassportBalanceNotification($tenant->balance, $manager->id));
+}
             } else {
                 Log::warning('Client created without a valid tenant', ['client_id' => $client->id]);
             }
