@@ -75,4 +75,29 @@ class ClientController extends Controller
             'message' => 'Client deleted successfully'
         ]);
     }
+
+public function upload(Request $request)
+{
+    if (!$request->hasFile('file')) {
+        return response()->json(['error' => 'No file uploaded'], 400);
+    }
+
+    $file = $request->file('file');
+    $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+              $tenantId = auth()->user()?->tenant_id ?? $request->input('tenant_id') ?? 'default';
+
+    $destination = public_path("PassportsImages/$tenantId");
+    if (!file_exists($destination)) {
+        mkdir($destination, 0777, true);
+    }
+
+    $file->move($destination, $imageName);
+
+    // يعيد المسار للفرونت
+    return response()->json([
+        'path' => "/PassportsImages/$tenantId/$imageName"
+    ]);
+}
+
 }

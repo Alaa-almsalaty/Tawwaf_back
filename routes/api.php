@@ -34,9 +34,10 @@ Route::middleware([
     'auth:sanctum',
 ])->group(function () {
     Route::apiResource('clients', ClientController::class);
+
     Route::apiResource('users', UserController::class);
     Route::apiResource('branches', BranchController::class);
-   Route::get('/notifications', function (Request $request) {
+    Route::get('/notifications', function (Request $request) {
         // جلب إشعارات المستخدم المسجل
         return $request->user()->notifications()->latest()->get();
     });
@@ -44,11 +45,14 @@ Route::middleware([
         return ['count' => $request->user()->unreadNotifications()->count()];
     });
 
- Route::post('/notifications/{id}/mark-as-read', function ($id, Request $request) {
-    $notification = $request->user()->notifications()->findOrFail($id);
-    $notification->markAsRead();
-    return response()->noContent();
-});
+    Route::post('/notifications/{id}/mark-as-read', function ($id, Request $request) {
+        $notification = $request->user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+        return response()->noContent();
+    });
+
+    Route::post('/upload-passport-image', [ClientController::class, 'upload']);
+
     Route::get('/test', function () {
         return response()->json(['message' => 'Tenant API is working and secured!']);
     });
