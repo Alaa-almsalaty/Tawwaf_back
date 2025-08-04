@@ -28,6 +28,7 @@ class PersonalResource extends JsonResource
             'gender' => $this->gender,
             'medical_status' => $this->medical_status,
             'phone' => $this->phone,
+            'personal_img' => $this->personal_img,
             'passport_no' => new PassportResource($this->whenLoaded('passport')),
         ];
     }

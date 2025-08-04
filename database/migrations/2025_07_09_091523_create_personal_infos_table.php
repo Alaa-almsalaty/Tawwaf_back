@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('DOB');// Date of Birth
             $table->enum('family_status', ['single', 'married', 'divorced', 'widowed'])->default('single');
             $table->enum('gender', ['female','male']);
+            $table->string('personal_img');
             $table->enum('medical_status', ['healthy', 'sick', 'disabled'])->default('healthy');
             $table->string('phone', 20)->nullable();
             $table->string('note')->nullable(); // Optional note field for additional information

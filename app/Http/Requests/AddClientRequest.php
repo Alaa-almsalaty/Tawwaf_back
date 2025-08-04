@@ -36,6 +36,7 @@ class AddClientRequest extends FormRequest
             'personal_info.gender' => 'required|in:female,male',
             'personal_info.medical_status' => 'required|in:healthy,sick,disabled',
             'personal_info.phone' => 'nullable|string|max:20',
+            'personal_info.personal_img' => 'required|string',
             'personal_info.passport_no' => 'sometimes|exists:passports,id', // Foreign key to the passport, if applicable
 
 

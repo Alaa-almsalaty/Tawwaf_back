@@ -44,6 +44,7 @@ class ClientService
                 'medical_status' => $data['personal_info']['medical_status'],
                 'phone' => $data['personal_info']['phone'] ?? null,
                 'passport_no' => $passport->id,
+                'personal_img' => $data['personal_info']['personal_img'],
             ]);
 
             // Step 3: Create Client

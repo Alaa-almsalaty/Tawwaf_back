@@ -51,7 +51,8 @@ Route::middleware([
         return response()->noContent();
     });
 
-    Route::post('/upload-passport-image', [ClientController::class, 'upload']);
+    Route::post('/upload-passport-image', [ClientController::class, 'uploadPassportImage']);
+    Route::post('/upload-personal-image', [ClientController::class, 'uploadPersonalImage']);
 
     Route::get('/test', function () {
         return response()->json(['message' => 'Tenant API is working and secured!']);

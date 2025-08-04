@@ -40,6 +40,7 @@ class UpdateClientRequest extends FormRequest
             'personal_info.gender' => 'sometimes|in:female,male',
             'personal_info.medical_status' => 'sometimes|in:healthy,sick,disabled',
             'personal_info.phone' => 'nullable|string|max:20',
+            'personal_info.personal_img' => 'nullable|string',
             'personal_info.passport_no' => 'sometimes|exists:passports,id',
         ];
     }
