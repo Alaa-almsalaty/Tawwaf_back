@@ -20,7 +20,7 @@ class TenantController extends Controller
         }
 
         $query = Tenant::query();
-
+        // سيرش عادي
         if ($request->filled('q')) {
             $search = $request->input('q');
 
@@ -31,11 +31,14 @@ class TenantController extends Controller
                     ->orWhere('data->phone', 'like', "%$search%");
             });
         }
-
+        //تصفية حسب الموسم
         if ($request->filled('season')) {
             $query->where('data->season', $request->input('season'));
         }
-
+        // تصفية حسب الحالة نشط/غير نشط
+        if ($request->has('active')) {
+            $query->where('data->active', $request->boolean('active'));
+        }
         $tenants = $query->paginate(6);
         return TenantResource::collection($tenants);
     }
