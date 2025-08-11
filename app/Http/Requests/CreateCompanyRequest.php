@@ -54,4 +54,53 @@ class CreateCompanyRequest extends FormRequest
             'created_by' => $this->validated('created_by'),
         ];
     }
+
+     public function messages(): array
+    {
+        return [
+            'company_name.required' => 'اسم الشركة مطلوب.',
+            'company_name.string'   => 'اسم الشركة يجب أن يكون نصاً.',
+            'company_name.max'      => 'اسم الشركة يجب ألا يتجاوز 255 حرفاً.',
+
+            'address.required'      => 'العنوان مطلوب.',
+            'address.string'        => 'العنوان يجب أن يكون نصاً.',
+            'address.max'           => 'العنوان يجب ألا يتجاوز 255 حرفاً.',
+
+            'city.required'         => 'اسم المدينة مطلوب.',
+            'city.string'           => 'اسم المدينة يجب أن يكون نصاً.',
+            'city.max'              => 'اسم المدينة يجب ألا يتجاوز 100 حرف.',
+
+            'email.required'        => 'البريد الإلكتروني مطلوب.',
+            'email.email'           => 'يرجى إدخال بريد إلكتروني صالح.',
+
+            'status.in'             => 'قيمة الحالة غير صحيحة.',
+
+            'balance.required'      => 'الرصيد مطلوب.',
+            'balance.numeric'       => 'الرصيد يجب أن يكون رقماً.',
+            'balance.min'           => 'الرصيد لا يمكن أن يكون أقل من صفر.',
+
+            'manager_name.string'   => 'اسم المدير يجب أن يكون نصاً.',
+            'manager_name.max'      => 'اسم المدير يجب ألا يتجاوز 100 حرف.',
+
+            'phone.string'          => 'رقم الهاتف يجب أن يكون نصاً.',
+            'phone.max'             => 'رقم الهاتف يجب ألا يتجاوز 20 حرفاً.',
+
+            'note.string'           => 'الملاحظات يجب أن تكون نصاً.',
+
+            'logo.image'            => 'يجب أن يكون الشعار صورة.',
+            'logo.mimes'            => 'صيغة الشعار يجب أن تكون jpeg أو png أو jpg أو gif أو svg.',
+            'logo.max'              => 'حجم الشعار يجب ألا يتجاوز 2 ميجابايت.',
+
+            'data.array'            => 'حقل البيانات يجب أن يكون مصفوفة.',
+
+            'active.required'       => 'حقل التفعيل مطلوب.',
+            'active.boolean'        => 'حقل التفعيل يجب أن يكون صحيح أو خطأ.',
+
+            'season.required'       => 'الموسم مطلوب.',
+            'season.integer'        => 'الموسم يجب أن يكون رقماً صحيحاً.',
+
+            'created_by.required'   => 'المستخدم المنشئ مطلوب.',
+            'created_by.exists'     => 'المستخدم المنشئ غير موجود.',
+        ];
+    }
 }

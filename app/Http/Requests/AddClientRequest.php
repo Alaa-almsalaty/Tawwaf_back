@@ -77,13 +77,118 @@ class AddClientRequest extends FormRequest
 
     public function messages(): array
     {
-        return [
-            'passport.passport_number.required' => 'Passport number is required.',
-            'personal_info.first_name_ar.required' => 'First name in Arabic is required.',
-            'client.is_family_master.boolean' => 'Is family master must be true or false.',
-            'client.register_date.date_format' => 'Register date must be in Y-m-d format.',
-            'client.register_state.in' => 'Register state must be either pending or completed.',
-            'family.family_master_id.required' => 'Family master ID is required.',
-        ];
+    return [
+        // Personal info
+        'personal_info.first_name_ar.required' => 'الاسم الأول بالعربية مطلوب.',
+        'personal_info.first_name_ar.string' => 'الاسم الأول بالعربية يجب أن يكون نصًا.',
+        'personal_info.first_name_ar.max' => 'الاسم الأول بالعربية لا يجب أن يزيد عن 50 حرفًا.',
+
+        'personal_info.first_name_en.required' => 'First name in English is required.',
+        'personal_info.first_name_en.string' => 'First name in English must be a string.',
+        'personal_info.first_name_en.max' => 'First name in English must not exceed 50 characters.',
+
+        'personal_info.second_name_ar.required' => 'الاسم الثاني بالعربية مطلوب.',
+        'personal_info.second_name_ar.string' => 'الاسم الثاني بالعربية يجب أن يكون نصًا.',
+        'personal_info.second_name_ar.max' => 'الاسم الثاني بالعربية لا يجب أن يزيد عن 50 حرفًا.',
+
+        'personal_info.second_name_en.required' => 'Second name in English is required.',
+        'personal_info.second_name_en.string' => 'Second name in English must be a string.',
+        'personal_info.second_name_en.max' => 'Second name in English must not exceed 50 characters.',
+
+        'personal_info.grand_father_name_ar.required' => 'اسم الجد بالعربية مطلوب.',
+        'personal_info.grand_father_name_ar.string' => 'اسم الجد بالعربية يجب أن يكون نصًا.',
+        'personal_info.grand_father_name_ar.max' => 'اسم الجد بالعربية لا يجب أن يزيد عن 50 حرفًا.',
+
+        'personal_info.grand_father_name_en.required' => 'Grandfather name in English is required.',
+        'personal_info.grand_father_name_en.string' => 'Grandfather name in English must be a string.',
+        'personal_info.grand_father_name_en.max' => 'Grandfather name in English must not exceed 50 characters.',
+
+        'personal_info.last_name_ar.required' => 'اسم العائلة بالعربية مطلوب.',
+        'personal_info.last_name_ar.string' => 'اسم العائلة بالعربية يجب أن يكون نصًا.',
+        'personal_info.last_name_ar.max' => 'اسم العائلة بالعربية لا يجب أن يزيد عن 50 حرفًا.',
+
+        'personal_info.last_name_en.required' => 'Last name in English is required.',
+        'personal_info.last_name_en.string' => 'Last name in English must be a string.',
+        'personal_info.last_name_en.max' => 'Last name in English must not exceed 50 characters.',
+
+        'personal_info.DOB.required' => 'تاريخ الميلاد مطلوب.',
+        'personal_info.DOB.date_format' => 'تاريخ الميلاد يجب أن يكون بالتنسيق YYYY-MM-DD.',
+
+        'personal_info.family_status.required' => 'حالة الأسرة مطلوبة.',
+        'personal_info.family_status.in' => 'حالة الأسرة يجب أن تكون واحدة من: single, married, divorced, widowed.',
+
+        'personal_info.gender.required' => 'الجنس مطلوب.',
+        'personal_info.gender.in' => 'الجنس يجب أن يكون إما female أو male.',
+
+        'personal_info.medical_status.required' => 'الحالة الصحية مطلوبة.',
+        'personal_info.medical_status.in' => 'الحالة الصحية يجب أن تكون واحدة من: healthy, sick, disabled.',
+
+        'personal_info.phone.string' => 'رقم الهاتف يجب أن يكون نصًا.',
+        'personal_info.phone.max' => 'رقم الهاتف لا يجب أن يزيد عن 20 حرفًا.',
+
+        'personal_info.personal_img.required' => 'صورة الشخصية مطلوبة.',
+        'personal_info.personal_img.string' => 'صورة الشخصية يجب أن تكون نصًا.',
+
+        'personal_info.passport_no.exists' => 'رقم جواز السفر غير موجود.',
+
+        // Passport info
+        'passport_no.passport_number.required' => 'رقم جواز السفر مطلوب.',
+        'passport_no.passport_number.string' => 'رقم جواز السفر يجب أن يكون نصًا.',
+        'passport_no.passport_number.max' => 'رقم جواز السفر لا يجب أن يزيد عن 20 حرفًا.',
+
+        'passport_no.passport_type.required' => 'نوع جواز السفر مطلوب.',
+        'passport_no.passport_type.in' => 'نوع جواز السفر يجب أن يكون واحدًا من: regular, diplomatic, official, ordinary, other.',
+
+        'passport_no.nationality.required' => 'الجنسية مطلوبة.',
+        'passport_no.nationality.string' => 'الجنسية يجب أن تكون نصًا.',
+        'passport_no.nationality.max' => 'الجنسية لا يجب أن تزيد عن 50 حرفًا.',
+
+        'passport_no.issue_date.required' => 'تاريخ الإصدار مطلوب.',
+        'passport_no.issue_date.date_format' => 'تاريخ الإصدار يجب أن يكون بالتنسيق YYYY-MM-DD.',
+
+        'passport_no.expiry_date.required' => 'تاريخ الانتهاء مطلوب.',
+        'passport_no.expiry_date.date_format' => 'تاريخ الانتهاء يجب أن يكون بالتنسيق YYYY-MM-DD.',
+        'passport_no.expiry_date.after' => 'تاريخ الانتهاء يجب أن يكون بعد تاريخ الإصدار.',
+
+        'passport_no.issue_place.required' => 'مكان الإصدار مطلوب.',
+        'passport_no.issue_place.string' => 'مكان الإصدار يجب أن يكون نصًا.',
+        'passport_no.issue_place.max' => 'مكان الإصدار لا يجب أن يزيد عن 100 حرف.',
+
+        'passport_no.birth_place.required' => 'مكان الميلاد مطلوب.',
+        'passport_no.birth_place.string' => 'مكان الميلاد يجب أن يكون نصًا.',
+        'passport_no.birth_place.max' => 'مكان الميلاد لا يجب أن يزيد عن 100 حرف.',
+
+        'passport_no.issue_authority.string' => 'جهة الإصدار يجب أن تكون نصًا.',
+        'passport_no.issue_authority.max' => 'جهة الإصدار لا يجب أن تزيد عن 100 حرف.',
+
+        'passport_no.passport_img.required' => 'صورة جواز السفر مطلوبة.',
+        'passport_no.passport_img.string' => 'صورة جواز السفر يجب أن تكون نصًا.',
+
+        // Client info
+        'client.personal_info_id.exists' => 'معلومات الشخصية غير موجودة.',
+        'client.is_family_master.required' => 'حقل تحديد إذا كان رب الأسرة مطلوب.',
+        'client.is_family_master.boolean' => 'حقل رب الأسرة يجب أن يكون true أو false.',
+        'client.register_date.required' => 'تاريخ التسجيل مطلوب.',
+        'client.register_date.date_format' => 'تاريخ التسجيل يجب أن يكون بالتنسيق YYYY-MM-DD.',
+        'client.register_state.required' => 'حالة التسجيل مطلوبة.',
+        'client.register_state.in' => 'حالة التسجيل يجب أن تكون إما pending أو completed.',
+        'client.MuhramID.exists' => 'رقم المحرم غير موجود.',
+        'client.Muhram_relation.in' => 'علاقة المحرم غير صحيحة.',
+
+        'client.branch_id.exists' => 'الفرع غير موجود.',
+        'client.tenant_id.required' => 'رقم الشركة مطلوب.',
+        'client.tenant_id.exists' => 'رقم الشركة غير موجود.',
+
+        // Family info
+        'family.family_master_id.exists' => 'رقم رب الأسرة غير موجود.',
+        'family.family_size.integer' => 'حجم الأسرة يجب أن يكون رقمًا صحيحًا.',
+        'family.family_size.min' => 'حجم الأسرة لا يمكن أن يقل عن 1.',
+        'family.family_name_ar.string' => 'اسم العائلة بالعربية يجب أن يكون نصًا.',
+        'family.family_name_ar.max' => 'اسم العائلة بالعربية لا يجب أن يزيد عن 100 حرف.',
+        'family.family_name_en.string' => 'اسم العائلة بالإنجليزية يجب أن يكون نصًا.',
+        'family.family_name_en.max' => 'اسم العائلة بالإنجليزية لا يجب أن يزيد عن 100 حرف.',
+        'family.tenant_id.exists' => 'رقم الشركة غير موجود.',
+    ];
     }
+
 }

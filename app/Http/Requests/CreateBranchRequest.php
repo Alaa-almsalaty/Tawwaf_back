@@ -43,4 +43,38 @@ class CreateBranchRequest extends FormRequest
             'tenant_id' => $this->tenant_id,
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.string'         => 'اسم الفرع يجب أن يكون نصاً.',
+            'name.max'            => 'اسم الفرع يجب ألا يتجاوز 100 حرف.',
+
+            'address.required'    => 'العنوان مطلوب.',
+            'address.string'      => 'العنوان يجب أن يكون نصاً.',
+            'address.max'         => 'العنوان يجب ألا يتجاوز 255 حرف.',
+
+            'city.required'       => 'المدينة مطلوبة.',
+            'city.string'         => 'اسم المدينة يجب أن يكون نصاً.',
+            'city.max'            => 'اسم المدينة يجب ألا يتجاوز 100 حرف.',
+
+            'email.email'         => 'يرجى إدخال بريد إلكتروني صالح.',
+
+            'manager_name.string' => 'اسم المدير يجب أن يكون نصاً.',
+            'manager_name.max'    => 'اسم المدير يجب ألا يتجاوز 100 حرف.',
+
+            'capacity.integer'    => 'السعة يجب أن تكون رقماً صحيحاً.',
+
+            'phone.string'        => 'رقم الهاتف يجب أن يكون نصاً.',
+            'phone.max'           => 'رقم الهاتف يجب ألا يتجاوز 20 حرف.',
+
+            'note.string'         => 'الملاحظات يجب أن تكون نصاً.',
+
+            'active.boolean'      => 'حقل التفعيل يجب أن يكون صحيح أو خطأ.',
+
+            'tenant_id.required'  => 'معرّف الشركة مطلوب.',
+            'tenant_id.exists'    => 'معرف الشركة المحدد غير موجود.',
+        ];
+    }
+
 }
