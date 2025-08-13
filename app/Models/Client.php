@@ -26,6 +26,8 @@ class Client extends Model
         'personal_info_id', // Foreign key to the personal info
         'MuhramID', // Foreign key to the Muhram client
         'Muhram_relation', // Type of Muhram relationship
+        'branch_id', // Foreign key to the branch
+        'created_by', // Foreign key to the user who created the client
     ];
     protected $hidden = [
         // 'id',
@@ -68,6 +70,11 @@ class Client extends Model
     public function personalInfo()
     {
         return $this->belongsTo(PersonalInfo::class, 'personal_info_id');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
     public function rooms()
     {

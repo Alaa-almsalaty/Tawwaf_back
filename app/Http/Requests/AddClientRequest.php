@@ -62,7 +62,7 @@ class AddClientRequest extends FormRequest
             'client.family_id' => 'nullable|exists:families,id', // Foreign key to the family client, if applicable
             'client.tenant_id' => 'required|exists:tenants,id', // Foreign key to the tenant
             'client.note' => 'nullable|string', // Optional note field for additional information
-
+            'client.created_by' => 'sometimes|exists:users,id', // Foreign key to the user who created the client
             // family info
             'family.family_master_id' => 'sometimes|exists:clients,id', // Foreign key to the family master client
             'family.family_size' => 'sometimes|integer|min:1', // Number of members in the family

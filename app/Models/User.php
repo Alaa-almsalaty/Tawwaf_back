@@ -83,4 +83,8 @@ class User extends Authenticatable
     {
         return $this->role === 'employee';
     }
+    public function clients()
+    {
+        return $this->hasMany(Client::class, 'created_by');
+    }
 }

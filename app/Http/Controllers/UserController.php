@@ -12,31 +12,31 @@ class UserController extends Controller
 {
     use AuthorizesRequests;
 
-public function index(Request $request)
-{
-    $this->authorize('viewAny', User::class);
+    public function index(Request $request)
+    {
+        $this->authorize('viewAny', User::class);
 
-    $query = User::with('tenant');
+        $query = User::with('tenant');
 
-     if (auth()->user()->hasRole('manager')) {
-        // Restrict to tenant users
-        $query->where('tenant_id', tenant('id'));
+        if (auth()->user()->hasRole('manager')) {
+            // Restrict to tenant users
+            $query->where('tenant_id', tenant('id'));
+        }
+        if ($request->filled('q')) {
+            $search = $request->query('q');
+
+            $query->where(function ($q) use ($search) {
+                $q->where('full_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('username', 'LIKE', '%' . $search . '%')
+                    ->orWhere('id', 'LIKE', '%' . $search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $search . '%');
+            });
+
+        }
+
+        $users = $query->paginate(6);
+        return UserResource::collection($users);
     }
-    if ($request->filled('q')) {
-        $search = $request->query('q');
-
-        $query->where(function ($q) use ($search) {
-            $q->where('full_name', 'LIKE', '%' . $search . '%')
-              ->orWhere('username', 'LIKE', '%' . $search . '%')
-              ->orWhere('id', 'LIKE', '%' . $search . '%')
-              ->orWhere('email', 'LIKE', '%' . $search . '%');
-        });
-
-    }
-
-    $users = $query->paginate(6);
-    return UserResource::collection($users);
-}
 
 
 
@@ -46,13 +46,13 @@ public function index(Request $request)
     }
 
 
-public function update(UpdateUserRequest $request, User $user)
-{
-    $userData = $request->updateUser();
-    $user->update($userData);
+    public function update(UpdateUserRequest $request, User $user)
+    {
+        $userData = $request->updateUser();
+        $user->update($userData);
 
-    return response()->json(['message' => 'User updated successfully', 'user' => $user]);
-}
+        return response()->json(['message' => 'User updated successfully', 'user' => $user]);
+    }
 
 
 
@@ -61,4 +61,34 @@ public function update(UpdateUserRequest $request, User $user)
         $user->delete();
         return response()->json(['message' => 'User deleted successfully']);
     }
+
+    //Reset password by superadmin or manager
+    public function resetPassword(Request $request, User $user)
+    {
+        $this->authorize('update', $user);
+
+        $request->validate([
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $user->update(['password' => bcrypt($request->input('password'))]);
+
+        return response()->json(['message' => 'Password reset successfully']);
+    }
+
+    // Update password for the authenticated user
+    public function updatePassword(Request $request)
+    {
+        $user = auth()->user();
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:6|confirmed',
+        ]);
+        if (!password_verify($request->input('current_password'), $user->password)) {
+            return response()->json(['message' => 'Current password is incorrect'], 403);
+        }
+        $user->update(['password' => bcrypt($request->input('new_password'))]);
+        return response()->json(['message' => 'Password updated successfully']);
+    }
+
 }

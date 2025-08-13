@@ -56,6 +56,17 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
+        // Superadmin can update any user
+        if ($user->hasRole('superadmin')) {
+            return true;
+        }
+
+        // Manager can update users in their tenant
+        if ($user->hasRole('manager') && $user->tenant_id === $model->tenant_id) {
+            return $user->hasPermissionTo('update users');
+        }
+
+        // Employee cannot update users
         return false;
     }
 

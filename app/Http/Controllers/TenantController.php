@@ -98,4 +98,19 @@ class TenantController extends Controller
         $tenant->delete();
         return response()->json(['message' => 'Tenant deleted successfully']);
     }
+
+    public function uploadLogo(Request $request, Tenant $tenant)
+    {
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $path = $file->store('logos', 'public');
+
+            // Update tenant logo path
+            $tenant->update(['logo' => $path]);
+
+            return response()->json(['message' => 'Logo uploaded successfully', 'logo_path' => $path]);
+        }
+
+        return response()->json(['message' => 'No file uploaded'], 400);
+    }
 }

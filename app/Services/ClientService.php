@@ -56,6 +56,7 @@ class ClientService
                 'MuhramID' => $data['client']['MuhramID'] ?? null,
                 'Muhram_relation' => $data['client']['Muhram_relation'] ?? null,
                 'note' => $data['client']['note'] ?? null,
+                'created_by' => $data['client']['created_by'] ?? null
             ]);
 
             // Step 4: If client is a family master, create a Family record
