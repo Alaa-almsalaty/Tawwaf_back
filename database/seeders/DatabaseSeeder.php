@@ -8,6 +8,8 @@ use App\Models\Client;
 use App\Models\Family;
 use App\Models\Passport;
 use App\Models\Tenant;
+use Spatie\Permission\Models\Role;
+//use Spatie\Permission\Models\Permission;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -19,33 +21,30 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+    Role::firstOrCreate(['name' => 'super', 'guard_name' => 'web']);
+    Role::firstOrCreate(['name' => 'manager', 'guard_name' => 'web']);
 
-<<<<<<< HEAD
-        Tenant::factory()->withDomain()->create();
-=======
-        // Tenant::factory()->count(5)->withDomain()->create();
->>>>>>> origin/main
+     //   Tenant::factory()->withDomain()->create();
+         Tenant::factory()->count(5)->create();
 
-        // User::factory(10)->create();
-        // Branch::factory(10)->create();
+       //  User::factory(10)->create();
+         Branch::factory(10)->create();
         // //Client::factory(10)->create();
         //  // Create 5 clients without families
-        // Client::factory(5)->create();
+         Client::factory(5)->create();
 
         // // Create 5 clients with families
         // Client::factory(5)->withFamily()->create();
 
-<<<<<<< HEAD
        // Client::factory(5)->withFamilyMembers(3)->create();
-=======
+
         // Client::factory(5)->withFamilyMembers(3)->create();
->>>>>>> origin/main
 
         User::factory()->create([
             'username' => 'Admin',
             'email' => 'admin@example.com',
             'role' => 'super'
-        ])->assignRole('superadmin');
+        ])->assignRole('super');
 
         User::factory()->create([
             'username' => 'manager',

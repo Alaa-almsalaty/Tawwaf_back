@@ -10,13 +10,13 @@ class UserPolicy
 
     public function viewAny(User $authUser)
     {
-        return $authUser->hasRole('superadmin') ||
+        return $authUser->hasRole('super') ||
             ($authUser->hasRole('manager') && $authUser->hasPermissionTo('view_any users'));
     }
 
     public function view(User $authUser, User $targetUser)
     {
-        if ($authUser->hasRole('superadmin')) {
+        if ($authUser->hasRole('super')) {
             return true;
         }
 
@@ -34,7 +34,7 @@ class UserPolicy
     public function create(User $authUser)
     {
         // Global superadmin bypass
-        if ($authUser->hasRole('superadmin')) {
+        if ($authUser->hasRole('super')) {
             return true;
         }
 
@@ -57,7 +57,7 @@ class UserPolicy
     public function update(User $user, User $model): bool
     {
         // Superadmin can update any user
-        if ($user->hasRole('superadmin')) {
+        if ($user->hasRole('super')) {
             return true;
         }
 

@@ -24,7 +24,6 @@ class UserResource extends JsonResource
             'description' => $this->description,
             'role' => $this->role,
             'created_at' => $this->created_at,
-<<<<<<< HEAD
             'is_Active' => $this->is_Active,
             'tenant_id' => $this->tenant_id,
             'tenant' => $this->whenLoaded('tenant', function () {
@@ -32,9 +31,9 @@ class UserResource extends JsonResource
                 'company_name' => $this->tenant->company_name,
             ];
         }),
-=======
+
             'tenant_id' => new TenantResource($this->whenLoaded('tenant')),
->>>>>>> origin/main
+
         ];
     }
 }

@@ -8,21 +8,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
-<<<<<<< HEAD
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
-=======
 use Spatie\Permission\Traits\HasRoles;
 //use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
->>>>>>> origin/main
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-<<<<<<< HEAD
-    use HasFactory, Notifiable , HasApiTokens, SoftDeletes, BelongsToTenant;
-=======
-    use HasFactory, Notifiable , HasApiTokens, SoftDeletes , HasRoles  ;
->>>>>>> origin/main
+    use HasFactory, Notifiable , HasApiTokens, SoftDeletes, BelongsToTenant, HasRoles;
+
 
     /**
      * The attributes that are mass assignable.

@@ -33,12 +33,10 @@ class ClientController extends Controller
                     ->orWhere('id', $search);
             });
         }
-<<<<<<< HEAD
    // هنا نبحث حسب رقم العائلة (family_id)
     if ($request->filled('family_id')) {
         $query->where('family_id', $request->query('family_id'));
     }
-=======
         // هنا نبحث حسب رقم العائلة (family_id)
         if ($request->filled('family_id')) {
             $query->where('family_id', $request->query('family_id'));
@@ -51,7 +49,6 @@ class ClientController extends Controller
         if ($request->filled('created_by')) {
             $query->where('created_by', $request->query('created_by'));
         }
->>>>>>> origin/main
         return ClientResource::collection($query->paginate(6));
     }
 
@@ -97,7 +94,6 @@ class ClientController extends Controller
         ]);
     }
 
-<<<<<<< HEAD
 public function uploadPassportImage(Request $request)
 {
     if (!$request->hasFile('file')) {
@@ -145,54 +141,6 @@ public function uploadPersonalImage(Request $request)
     ]);
 }
 
-=======
-    public function uploadPassportImage(Request $request)
-    {
-        if (!$request->hasFile('file')) {
-            return response()->json(['error' => 'No file uploaded'], 400);
-        }
 
-        $file = $request->file('file');
-        $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
-
-        $tenantId = auth()->user()?->tenant_id ?? $request->input('tenant_id') ?? 'default';
-
-        $destination = public_path("PassportsImages/$tenantId");
-        if (!file_exists($destination)) {
-            mkdir($destination, 0777, true);
-        }
-
-        $file->move($destination, $imageName);
-
-        // يعيد المسار للفرونت
-        return response()->json([
-            'path' => "/PassportsImages/$tenantId/$imageName"
-        ]);
-    }
-
-    public function uploadPersonalImage(Request $request)
-    {
-        if (!$request->hasFile('file')) {
-            return response()->json(['error' => 'No file uploaded'], 400);
-        }
-
-        $file = $request->file('file');
-        $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
-
-        $tenantId = auth()->user()?->tenant_id ?? $request->input('tenant_id') ?? 'default';
-
-        $destination = public_path("PersonalImages/$tenantId");
-        if (!file_exists($destination)) {
-            mkdir($destination, 0777, true);
-        }
-
-        $file->move($destination, $imageName);
-
-        return response()->json([
-            'path' => "/PersonalImages/$tenantId/$imageName"
-        ]);
-    }
-
->>>>>>> origin/main
 
 }

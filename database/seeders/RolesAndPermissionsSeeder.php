@@ -21,13 +21,15 @@ class RolesAndPermissionsSeeder extends Seeder
         $updateUsers = Permission::firstOrCreate(['name' => 'update users']);
 
         // Create roles
-        $superadmin = Role::firstOrCreate(['name' => 'superadmin']);
+        $superadmin = Role::firstOrCreate(['name' => 'super']);
         $manager = Role::firstOrCreate(['name' => 'manager']);
 
         // Assign permissions
         $manager->givePermissionTo($createUsers);
         $manager->givePermissionTo($viewUsers);
         $manager->givePermissionTo($updateUsers);
+        $manager->givePermissionTo($viewAnyUsers);
+
 
 
         // Optionally assign all permissions to superadmin

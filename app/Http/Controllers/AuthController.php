@@ -16,7 +16,7 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $this->authorize('create', User::class);
+      //  $this->authorize('create', User::class);
         $user = User::create($request->createUser());
         $user->assignRole($user->role);
 
