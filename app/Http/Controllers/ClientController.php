@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ClientResource;
 use App\Models\Client;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddClientRequest;
 use App\Services\ClientService;
 use App\Http\Requests\UpdateClientRequest;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class ClientController extends Controller
 {
@@ -32,16 +33,36 @@ class ClientController extends Controller
                     ->orWhere('id', $search);
             });
         }
+<<<<<<< HEAD
    // هنا نبحث حسب رقم العائلة (family_id)
     if ($request->filled('family_id')) {
         $query->where('family_id', $request->query('family_id'));
     }
+=======
+        // هنا نبحث حسب رقم العائلة (family_id)
+        if ($request->filled('family_id')) {
+            $query->where('family_id', $request->query('family_id'));
+        }
+
+        if ($request->filled('branch_id')) {
+            $query->where('branch_id', $request->query('branch_id'));
+        }
+
+        if ($request->filled('created_by')) {
+            $query->where('created_by', $request->query('created_by'));
+        }
+>>>>>>> origin/main
         return ClientResource::collection($query->paginate(6));
     }
 
     public function store(AddClientRequest $request, ClientService $service)
     {
         $validated = $request->validated();
+        $tenant = tenant();
+        if ($tenant->balance === 0) {
+            Log::error('Tenant balance is zero, cannot create client', ['tenant_id' => $tenant->id]);
+            return response()->json(['message' => 'Tenant balance is zero, cannot create client'], 403);
+        }
         $client = $service->store($validated);
         return response()->json([
             'message' => 'Client created successfully',
@@ -76,6 +97,7 @@ class ClientController extends Controller
         ]);
     }
 
+<<<<<<< HEAD
 public function uploadPassportImage(Request $request)
 {
     if (!$request->hasFile('file')) {
@@ -123,5 +145,54 @@ public function uploadPersonalImage(Request $request)
     ]);
 }
 
+=======
+    public function uploadPassportImage(Request $request)
+    {
+        if (!$request->hasFile('file')) {
+            return response()->json(['error' => 'No file uploaded'], 400);
+        }
+
+        $file = $request->file('file');
+        $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+        $tenantId = auth()->user()?->tenant_id ?? $request->input('tenant_id') ?? 'default';
+
+        $destination = public_path("PassportsImages/$tenantId");
+        if (!file_exists($destination)) {
+            mkdir($destination, 0777, true);
+        }
+
+        $file->move($destination, $imageName);
+
+        // يعيد المسار للفرونت
+        return response()->json([
+            'path' => "/PassportsImages/$tenantId/$imageName"
+        ]);
+    }
+
+    public function uploadPersonalImage(Request $request)
+    {
+        if (!$request->hasFile('file')) {
+            return response()->json(['error' => 'No file uploaded'], 400);
+        }
+
+        $file = $request->file('file');
+        $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+        $tenantId = auth()->user()?->tenant_id ?? $request->input('tenant_id') ?? 'default';
+
+        $destination = public_path("PersonalImages/$tenantId");
+        if (!file_exists($destination)) {
+            mkdir($destination, 0777, true);
+        }
+
+        $file->move($destination, $imageName);
+
+        return response()->json([
+            'path' => "/PersonalImages/$tenantId/$imageName"
+        ]);
+    }
+
+>>>>>>> origin/main
 
 }

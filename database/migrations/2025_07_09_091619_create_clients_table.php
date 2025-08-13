@@ -32,6 +32,10 @@ return new class extends Migration
                 ->onDelete('cascade'); // Foreign key to the family client, if applicable
             $table->string('tenant_id');
             $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('created_by')->nullable()
+                ->constrained('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade'); // Foreign key to the user who created the client
             $table->string('note')->nullable(); // Optional note field for additional information
             $table->timestamps();
             $table->softDeletes(); // Soft delete support
