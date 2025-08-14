@@ -32,7 +32,7 @@ class UserResource extends JsonResource
             ];
         }),
 
-            'tenant_id' => new TenantResource($this->whenLoaded('tenant')),
+            //'tenant_id' => new TenantResource($this->whenLoaded('tenant')),
 
         ];
     }

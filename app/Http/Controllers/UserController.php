@@ -16,7 +16,8 @@ class UserController extends Controller
     {
         $this->authorize('viewAny', User::class);
 
-        $query = User::with('tenant');
+        $query = User::with('tenant')
+          ->where('id', '!=', auth()->id());
 
         if (auth()->user()->hasRole('manager')) {
             // Restrict to tenant users
@@ -85,10 +86,32 @@ class UserController extends Controller
             'new_password' => 'required|string|min:6|confirmed',
         ]);
         if (!password_verify($request->input('current_password'), $user->password)) {
-            return response()->json(['message' => 'Current password is incorrect'], 403);
+            return response()->json(['message' => 'كلمة المرور الحالية غير صحيحة.'], 403);
         }
         $user->update(['password' => bcrypt($request->input('new_password'))]);
-        return response()->json(['message' => 'Password updated successfully']);
+        return response()->json(['message' => 'تم تحديث كلمة المرور بنجاح.']);
     }
+
+        public function profile()
+    {
+        return new UserResource(auth()->user()->load('tenant'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+
+        $data = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+        ]);
+
+        $user->update($data);
+
+        return response()->json(['message' => 'تم تحديث الملف الشخصي بنجاح', 'user' => new UserResource($user)]);
+    }
+
 
 }

@@ -33,4 +33,27 @@ class UpdateUserRequest extends FormRequest
             ->filter(fn ($value, $key) => $this->has($key))
             ->toArray();
     }
+    public function messages(): array
+{
+    return [
+        'username.required' => 'حقل اسم المستخدم مطلوب.',
+        'username.string' => 'اسم المستخدم يجب أن يكون نصاً.',
+        'username.max' => 'اسم المستخدم لا يجب أن يزيد عن 40 حرفاً.',
+
+        'password.min' => 'كلمة المرور يجب أن تكون على الأقل 6 أحرف.',
+
+        'email.email' => 'يرجى إدخال بريد إلكتروني صحيح.',
+
+        'full_name.required' => 'حقل الاسم الكامل مطلوب.',
+        'full_name.string' => 'الاسم الكامل يجب أن يكون نصاً.',
+        'full_name.max' => 'الاسم الكامل لا يجب أن يزيد عن 255 حرفاً.',
+
+        'phone.required' => 'رقم الهاتف مطلوب.',
+        'phone.string' => 'رقم الهاتف يجب أن يكون نصاً.',
+        'phone.max' => 'رقم الهاتف لا يجب أن يزيد عن 20 حرفاً.',
+
+
+
+    ];
+}
 }

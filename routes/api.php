@@ -38,7 +38,7 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
     'auth:sanctum',
-])->group(function () {
+    ])->group(function () {
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('users', UserController::class);
     Route::apiResource('branches', BranchController::class);
@@ -49,27 +49,30 @@ Route::middleware([
      Route::get('/notifications/unread-count', function (Request $request) {
         return ['count' => $request->user()->unreadNotifications()->count()];
     });
-Route::post('/notifications/mark-as-read', function (Request $request) {
-    $user = $request->user();
-    $user->unreadNotifications()->update(['read_at' => now()]);
-    return response()->noContent();
-});
-Route::post('/notifications/{id}/mark-as-read', function ($id, Request $request) {
-    $notification = $request->user()->notifications()->findOrFail($id);
-    $notification->markAsRead();
-    return response()->noContent();
-});
-Route::delete('/notifications/{id}', function ($id, Request $request) {
-    $notification = $request->user()->notifications()->find($id);
-    if (!$notification) {
-        return response()->json(['message' => 'Notification not found'], 404);
-    }
-    $notification->delete();
-    return response()->noContent();
-});
+    Route::post('/notifications/mark-as-read', function (Request $request) {
+        $user = $request->user();
+        $user->unreadNotifications()->update(['read_at' => now()]);
+        return response()->noContent();
+    });
+    Route::post('/notifications/{id}/mark-as-read', function ($id, Request $request) {
+        $notification = $request->user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+        return response()->noContent();
+    });
+    Route::delete('/notifications/{id}', function ($id, Request $request) {
+        $notification = $request->user()->notifications()->find($id);
+        if (!$notification) {
+            return response()->json(['message' => 'Notification not found'], 404);
+        }
+        $notification->delete();
+        return response()->noContent();
+    });
 
     Route::post('/upload-passport-image', [ClientController::class, 'uploadPassportImage']);
     Route::post('/upload-personal-image', [ClientController::class, 'uploadPersonalImage']);
+    Route::get('user/profile', [UserController::class, 'profile']);
+    Route::put('update/profile', [UserController::class, 'updateProfile']);
+    Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
 
     Route::post('/adduser', [AuthController::class, 'register']);
     //Route::apiResource('passengers', ClientController::class);

@@ -35,16 +35,24 @@ class LoginRequest extends FormRequest
 
         if (!$user || !Hash::check($this->password, $user->password)) {
             throw ValidationException::withMessages([
-                $this->username_or_email => ['Invalid credentials.'],
+                $this->username_or_email => ['بيانات الدخول غير صحيحة.'],
             ]);
         } else if (!$user->is_Active) {
             throw ValidationException::withMessages([
-                $this->username_or_email => ['Your account is not approved yet.'],
+                $this->username_or_email => ['لم يتم تفعيل حسابك بعد.'],
             ]);
 
         }
         return $user;
     }
-
+    public function messages(): array
+    {
+        return [
+            'username_or_email.required' => 'يرجى إدخال اسم المستخدم أو البريد الإلكتروني',
+            'password.required' => 'يرجى إدخال كلمة المرور',
+            'password.min' => 'كلمة المرور يجب أن تكون 8 أحرف على الأقل',
+            'password.max' => 'كلمة المرور يجب ألا تتجاوز 20 حرفًا',
+        ];
+    }
 }
 
