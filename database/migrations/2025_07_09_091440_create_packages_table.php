@@ -27,11 +27,10 @@ return new class extends Migration
             $table->enum('season',['Umrah','Hajj','Ramadan','Eid','Normal'])->default('Normal'); // Season type, default is Normal
             $table->enum('status', ['active', 'inactive'])->default('active'); // Status of the package, default is active
             $table->string('note')->nullable();
-
             $table->string('tenant_id');
             $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('MKHotel')->constrained('hotels')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('MDHotel')->constrained('hotels')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('MKHotel')->nullable()->constrained('hotels')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('MDHotel')->nullable()->constrained('hotels')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

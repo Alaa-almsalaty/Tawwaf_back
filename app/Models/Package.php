@@ -29,4 +29,14 @@ class Package extends Model
         return $this->belongsTo(Hotel::class, 'hotel_id');
     }
 
+    public function MKHotel()
+    {
+        return $this->belongsTo(Hotel::class, 'MKHotel');
+    }
+
+    public function MDHotel()
+    {
+        return $this->belongsTo(Hotel::class, 'MDHotel');
+    }
+
 }
