@@ -20,6 +20,8 @@ use App\Http\Controllers\DashboardController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::apiResource('packages', PackageController::class);
+//Route::apiResource('tenants', TenantController::class)->only(['index']);
+Route::get('/landing_tenants', [TenantController::class, 'landingTenants']);
 
 
 
@@ -28,7 +30,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/register', [AuthController::class, 'register']);
     Route::apiResource('users', UserController::class);
+    Route::put('/reset-password/{user}', [UserController::class, 'resetPassword']);
     Route::apiResource('tenants', TenantController::class);
+    Route::post('uploadLogo', [TenantController::class, 'uploadLogo']);
     Route::get('/superdashboard', [DashboardController::class, 'getDashboardData']);
 
 });
@@ -43,6 +47,7 @@ Route::middleware([
     ])->group(function () {
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('users', UserController::class);
+    Route::put('/reset-password/{user}', [UserController::class, 'resetPassword']);
     Route::apiResource('branches', BranchController::class);
     Route::get('/notifications', function (Request $request) {
         // جلب إشعارات المستخدم المسجل

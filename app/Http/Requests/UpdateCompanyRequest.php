@@ -26,7 +26,7 @@ class UpdateCompanyRequest extends FormRequest
             'manager_name' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:20',
             'note' => 'nullable|string',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo' => 'nullable|string',
             'data' => 'nullable|array',
             'active' => 'sometimes|boolean',
             'season' => 'required|integer',

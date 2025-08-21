@@ -24,6 +24,7 @@ class TenantFactory extends Factory
             'phone' => $this->faker->phoneNumber,
             'note' => $this->faker->sentence,
             'active' => $this->faker->boolean,
+            'logo' => 'logo.jpg',
             'season' => $this->faker->numberBetween(2010, 2025),
             'created_by' => 1, // You may update this in your tests if needed
 

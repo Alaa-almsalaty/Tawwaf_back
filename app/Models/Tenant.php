@@ -45,6 +45,7 @@ class Tenant extends BaseTenant
         'note',
         'created_by',
         'season',
+        'logo',
         'active'
     ];
 

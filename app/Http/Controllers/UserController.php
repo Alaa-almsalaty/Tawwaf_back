@@ -69,7 +69,7 @@ class UserController extends Controller
         $this->authorize('update', $user);
 
         $request->validate([
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6',
         ]);
 
         $user->update(['password' => bcrypt($request->input('password'))]);
