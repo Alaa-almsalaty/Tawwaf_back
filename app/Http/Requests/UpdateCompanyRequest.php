@@ -36,7 +36,7 @@ class UpdateCompanyRequest extends FormRequest
 
         public function UpdateCompany(): array
     {
-        return collect($this->all())
+        return collect($this->validated())
             ->filter(fn($value, $key) => $this->has($key) && $value !== null)
             ->toArray();
     }

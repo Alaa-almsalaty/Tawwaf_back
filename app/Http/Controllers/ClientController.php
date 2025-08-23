@@ -33,11 +33,7 @@ class ClientController extends Controller
                     ->orWhere('id', $search);
             });
         }
-//    // هنا نبحث حسب رقم العائلة (family_id)
-//     if ($request->filled('family_id')) {
-//         $query->where('family_id', $request->query('family_id'));
-//     }
-        // هنا نبحث حسب رقم العائلة (family_id)
+
         if ($request->filled('family_id')) {
             $query->where('family_id', $request->query('family_id'));
         }

@@ -39,4 +39,8 @@ class Package extends Model
         return $this->belongsTo(Hotel::class, 'MDHotel');
     }
 
+    public function isActive()
+    {
+        return $this->status === 'active';
+    }
 }

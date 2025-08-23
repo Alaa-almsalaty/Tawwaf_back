@@ -20,6 +20,14 @@ class RolesAndPermissionsSeeder extends Seeder
         $viewAnyUsers = Permission::firstOrCreate(['name' => 'view_any users']);
         $updateUsers = Permission::firstOrCreate(['name' => 'update users']);
 
+        $viewPackages = Permission::firstOrCreate(['name' => 'view packages']);
+        $viewAnyPackages = Permission::firstOrCreate(['name' => 'viewAny packages']);
+        $createPackages = Permission::firstOrCreate(['name' => 'create packages']);
+        $updatePackages = Permission::firstOrCreate(['name' => 'update packages']);
+        $deletePackages = Permission::firstOrCreate(['name' => 'delete packages']);
+        $restorePackages = Permission::firstOrCreate(['name' => 'restore packages']);
+        $forceDeletePackages = Permission::firstOrCreate(['name' => 'force_delete packages']);
+
         // Create roles
         $superadmin = Role::firstOrCreate(['name' => 'super']);
         $manager = Role::firstOrCreate(['name' => 'manager']);
@@ -28,7 +36,14 @@ class RolesAndPermissionsSeeder extends Seeder
         $manager->givePermissionTo($createUsers);
         $manager->givePermissionTo($viewUsers);
         $manager->givePermissionTo($updateUsers);
-        $manager->givePermissionTo($viewAnyUsers);
+        $manager->givePermissionTo($viewPackages);
+        $manager->givePermissionTo($viewAnyPackages);
+        $manager->givePermissionTo($createPackages);
+        $manager->givePermissionTo($updatePackages);
+        $manager->givePermissionTo($deletePackages);
+        $manager->givePermissionTo($restorePackages);
+        $manager->givePermissionTo($forceDeletePackages);
+        //$manager->givePermissionTo($viewAnyUsers);
 
 
 

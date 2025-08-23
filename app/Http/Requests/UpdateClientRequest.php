@@ -90,7 +90,7 @@ class UpdateClientRequest extends FormRequest
 
     public function updateClient(): array
     {
-        return collect($this->all())
+        return collect($this->validated())
             ->filter(fn($value, $key) => $this->has($key) && $value !== null)
             ->toArray();
     }
