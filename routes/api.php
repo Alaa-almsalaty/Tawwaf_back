@@ -19,7 +19,8 @@ use App\Http\Controllers\DashboardController;
 
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::apiResource('packages', PackageController::class);
+//Route::apiResource('packages', PackageController::class);
+Route::get('/packages', [PackageController::class, 'publicIndex']);
 //Route::apiResource('tenants', TenantController::class)->only(['index']);
 Route::get('/landing_tenants', [TenantController::class, 'landingTenants']);
 
@@ -34,6 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tenants', TenantController::class);
     Route::post('uploadLogo', [TenantController::class, 'uploadLogo']);
     Route::get('/superdashboard', [DashboardController::class, 'getDashboardData']);
+
 
 });
 
@@ -80,6 +82,7 @@ Route::middleware([
     Route::get('user/profile', [UserController::class, 'profile']);
     Route::put('update/profile', [UserController::class, 'updateProfile']);
     Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
+
 
     Route::post('/adduser', [AuthController::class, 'register']);
     //Route::apiResource('passengers', ClientController::class);

@@ -31,7 +31,7 @@ class UpdateBranchRequest extends FormRequest
 
       public function UpdateBranch(): array
     {
-        return collect($this->all())
+        return collect($this->validated())
             ->filter(fn($value, $key) => $this->has($key) && $value !== null)
             ->toArray();
     }
