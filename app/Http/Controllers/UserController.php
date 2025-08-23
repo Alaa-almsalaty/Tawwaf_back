@@ -97,21 +97,21 @@ class UserController extends Controller
         return new UserResource(auth()->user()->load('tenant'));
     }
 
-    public function updateProfile(Request $request)
-    {
-        $user = auth()->user();
+    // public function updateProfile(Request $request)
+    // {
+    //     $user = auth()->user();
 
-        $data = $request->validate([
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
-            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
-        ]);
+    //     $data = $request->validate([
+    //         'full_name' => 'required|string|max:255',
+    //         'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+    //         'phone' => 'nullable|string|max:20',
+    //         'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+    //     ]);
 
-        $user->update($data);
+    //     $user->update($data);
 
-        return response()->json(['message' => 'تم تحديث الملف الشخصي بنجاح', 'user' => new UserResource($user)]);
-    }
+    //     return response()->json(['message' => 'تم تحديث الملف الشخصي بنجاح', 'user' => new UserResource($user)]);
+    // }
 
 
 }
