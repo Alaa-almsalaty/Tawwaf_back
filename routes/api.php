@@ -12,6 +12,7 @@ use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PackageController;
+use App\Http\Controllers\hotelController;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -19,8 +20,7 @@ use App\Http\Controllers\DashboardController;
 
 
 Route::post('/login', [AuthController::class, 'login']);
-//Route::apiResource('packages', PackageController::class);
-Route::get('/packages', [PackageController::class, 'publicIndex']);
+Route::get('/landing_packages', [PackageController::class, 'publicIndex']);
 //Route::apiResource('tenants', TenantController::class)->only(['index']);
 Route::get('/landing_tenants', [TenantController::class, 'landingTenants']);
 
@@ -82,6 +82,8 @@ Route::middleware([
     Route::get('user/profile', [UserController::class, 'profile']);
     Route::put('update/profile', [UserController::class, 'updateProfile']);
     Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
+    Route::apiResource('packages', PackageController::class);
+    Route::apiResource('hotels', hotelController::class);
 
 
     Route::post('/adduser', [AuthController::class, 'register']);

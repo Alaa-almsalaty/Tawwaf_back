@@ -31,11 +31,13 @@ class CreatePackageRequest extends FormRequest
                 'required',
                 Rule::enum(Season::class)
             ],
-            'status' => 'in:active,inactive',
+            'status' => 'sometimes|boolean',
             'note' => 'nullable|string',
             'tenant_id' => 'required|string|exists:tenants,id',
-            'MKHotel' => 'nullable|exists:hotels,id',
-            'MDHotel' => 'nullable|exists:hotels,id'
+            'MKHotel' => 'nullable',
+            'MDHotel' => 'nullable',
+            'new_MKHotel_name' => 'nullable|string|max:255',
+            'new_MDHotel_name' => 'nullable|string|max:255',
         ];
     }
 
@@ -54,11 +56,13 @@ class CreatePackageRequest extends FormRequest
             'total_price_usd' => $this->total_price_usd ?? null,
             'currency' => $this->currency ?? 'dinar',
             'season' => $this->season,
-            'status' => $this->status ?? 'active',
+            //'status' => $this->status ?? 'active',
             'note' => $this->note ?? null,
             'tenant_id' => $this->tenant_id,
             'MKHotel' => $this->MKHotel,
-            'MDHotel' => $this->MDHotel
+            'MDHotel' => $this->MDHotel,
+            'new_MKHotel_name' => $this->new_MKHotel_name ?? null,
+            'new_MDHotel_name' => $this->new_MDHotel_name ?? null,
         ];
     }
 
@@ -94,8 +98,6 @@ class CreatePackageRequest extends FormRequest
 
             'note.string' => 'الملاحظة يجب أن تكون نصاً.',
 
-            'MkHotel.exists' => 'الفندق في مكة غير موجود.',
-            'MDHotel.exists' => 'الفندق في المدينة غير موجود.'
 
         ];
     }

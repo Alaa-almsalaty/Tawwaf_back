@@ -24,23 +24,23 @@ class Package extends Model
         return $this->belongsTo(Tenant::class, 'tenant_id');
     }
 
-    public function hotel()
-    {
-        return $this->belongsTo(Hotel::class, 'hotel_id');
-    }
+    // public function hotel()
+    // {
+    //     return $this->belongsTo(Hotel::class, 'hotel_id');
+    // }
 
-    public function MKHotel()
+    public function MK_Hotel()
     {
         return $this->belongsTo(Hotel::class, 'MKHotel');
     }
 
-    public function MDHotel()
+    public function MD_Hotel()
     {
         return $this->belongsTo(Hotel::class, 'MDHotel');
     }
 
     public function isActive()
     {
-        return $this->status === 'active';
+        return $this->status === true;
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Package;
 use App\Http\Resources\PackageResource;
 use App\Http\Requests\CreatePackageRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Models\Hotel;
 
 
 class PackageController extends Controller
@@ -17,68 +18,113 @@ class PackageController extends Controller
 
     public function publicIndex(Request $request)
     {
-        $packages = Package::where('status', 'active')
-            ->with(['MKHotel', 'MDHotel', 'tenant'])
-            ->paginate(10);
+        $query = Package::where('status', true)
+            ->with(['MK_Hotel', 'MD_Hotel', 'tenant']);
         if ($request->filled('q')) {
             $search = $request->input('q');
-            $packages->where(function ($query) use ($search) {
-                $query->where('package_name', 'like', "%$search%")
+            $query->where(function ($q) use ($search) {
+                $q->where('package_name', 'like', "%$search%")
                     ->orWhere('package_type', 'like', "%$search%")
                     ->orWhere('start_date', 'like', "%$search%")
                     ->orWhere('season', 'like', "%$search%")
                     ->orWhere('total_price_dinar', 'like', "%$search%")
                     ->orWhere('total_price_usd', 'like', "%$search%")
-                    ->orWhere('currency', 'like', "%$search%");
-            });
-        }
+                    ->orWhere('currency', 'like', "%$search%")
+                    ->orWhereHas('tenant', function ($query) use ($search) {
+                        $query->where('data->company_name', 'like', "%$search%");
+                    })
+                    ->orWhereHas('MK_Hotel', function ($query) use ($search) {
+                        $query->where('hotel_name', 'like', "%$search%")
+                                ->orWhere('distance_from_center', 'like', "%$search%");
+                    })
+                    ->orWhereHas('MD_Hotel', function ($query) use ($search) {
+                        $query->where('hotel_name', 'like', "%$search%")
+                                ->orWhere('distance_from_center', 'like', "%$search%");
+                    });
+        });
+    }
+        $packages = $query->get();
         return PackageResource::collection($packages);
     }
+
     public function index(Request $request)
     {
         $this->authorize('viewAny', Package::class);
-        if (auth()->user()->IsSuperAdmin() || auth()->user()->hasRole('super')) {
-            $packages = Package::with(['MKHotel', 'MDHotel', 'tenant'])->paginate(10);
-        } else {
-            $packages = Package::with(['MKHotel', 'MDHotel', 'tenant'])
-                ->where('tenant_id', auth()->user()->tenant_id)
-                ->paginate(10);
+
+        $query = Package::query();
+
+        if (!(auth()->user()->IsSuperAdmin() || auth()->user()->hasRole('super'))) {
+            $query->where('tenant_id', auth()->user()->tenant_id);
         }
 
         if ($request->filled('q')) {
             $search = $request->input('q');
-            $packages->where(function ($query) use ($search) {
-                $query->where('package_name', 'like', "%$search%")
-                    ->orWhere('package_type', 'like', "%$search%")
-                    ->orWhere('start_date', 'like', "%$search%")
-                    ->orWhere('season', 'like', "%$search%")
-                    ->orWhere('total_price_dinar', 'like', "%$search%")
-                    ->orWhere('total_price_usd', 'like', "%$search%")
-                    ->orWhere('currency', 'like', "%$search%");
+            $query->where(function ($q) use ($search) {
+                $q->where('package_name', 'like', "%$search%")
+                ->orWhere('package_type', 'like', "%$search%")
+                ->orWhere('start_date', 'like', "%$search%")
+                ->orWhere('season', 'like', "%$search%")
+                ->orWhere('total_price_dinar', 'like', "%$search%")
+                ->orWhere('total_price_usd', 'like', "%$search%")
+                ->orWhere('currency', 'like', "%$search%")
+                ->orWhereHas('tenant', function ($query) use ($search) {
+                    $query->where('data->company_name', 'like', "%$search%");
+                })
+                ->orWhereHas('MK_Hotel', function ($query) use ($search) {
+                    $query->where('hotel_name', 'like', "%$search%")
+                            ->orWhere('distance_from_center', 'like', "%$search%");
+                })
+                ->orWhereHas('MD_Hotel', function ($query) use ($search) {
+                    $query->where('hotel_name', 'like', "%$search%")
+                            ->orWhere('distance_from_center', 'like', "%$search%");
+                });
             });
         }
+
+        $packages = $query->with(['MK_Hotel', 'MD_Hotel', 'tenant'])->paginate(6);
+
         return PackageResource::collection($packages);
     }
 
     public function store(CreatePackageRequest $request)
     {
-        $packageData = $request->CreatePackageRequest();
-        $package = Package::create($packageData);
+        $data = $request->CreatePackageRequest();
+
+        if (!empty($data['new_MKHotel_name'])) {
+            $data['MKHotel'] = $this->createHotel($data['new_MKHotel_name'], 'مكة');
+        }
+
+        if (!empty($data['new_MDHotel_name'])) {
+            $data['MDHotel'] = $this->createHotel($data['new_MDHotel_name'], 'المدينة');
+        }
+
+
+        $package = Package::create($data);
         return new PackageResource($package);
     }
+
 
     public function show(Package $package)
     {
         $this->authorize('view', $package);
-        $package->load(['MKHotel', 'MDHotel', 'tenant']);
+        $package->load(['MK_Hotel', 'MD_Hotel', 'tenant']);
         return new PackageResource($package);
     }
 
     public function update(UpdatePackageRequest $request, Package $package)
     {
         $packageData = $request->UpdatePackage();
+        if (!empty($packageData['new_MKHotel_name'])) {
+                $packageData['MKHotel'] = $this->createHotel($packageData['new_MKHotel_name'], 'مكة');
+            }
+
+        if (!empty($packageData['new_MDHotel_name'])) {
+            $packageData['MDHotel'] = $this->createHotel($packageData['new_MDHotel_name'], 'المدينة');
+        }
+
+
         $package->update($packageData);
-        $package->load(['MKHotel', 'MDHotel', 'tenant']);
+        $package->load(['MK_Hotel', 'MD_Hotel', 'tenant']);
         return new PackageResource($package);
     }
 
@@ -88,5 +134,20 @@ class PackageController extends Controller
         $package->delete();
         return response()->json(['message' => 'Package deleted successfully']);
     }
+
+    public function createHotel(?string $name, string $city): ?int
+    {
+        if (empty($name)) {
+            return null;
+        }
+
+        $hotel = Hotel::create([
+            'hotel_name' => $name,
+            'city' => $city,
+        ]);
+
+        return $hotel->id;
+    }
+
 
 }

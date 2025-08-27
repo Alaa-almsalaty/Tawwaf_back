@@ -20,6 +20,7 @@ class PackageFactory extends Factory
     {
 
         $tenantId = Tenant::inRandomOrder()->first()?->id ?? 1;
+        $HotelId = Hotel::inRandomOrder()->first()?->id ?? 1;
 
         return [
             'package_name' => $this->faker->words(3, true),
@@ -34,11 +35,11 @@ class PackageFactory extends Factory
             'total_price_usd' => $this->faker->randomFloat(2, 50, 2000),
             'currency' => $this->faker->randomElement(['dinar', 'usd']),
             'season' => $this->faker->randomElement(['Umrah','Hajj','Ramadan','Eid','Normal']),
-            'status' => $this->faker->randomElement(['active','inactive']),
+            'status' => $this->faker->boolean,
             'note' => $this->faker->optional()->sentence(),
             'tenant_id' => $tenantId,
-            'MKHotel' => null,
-            'MDHotel' => null,
+            'MKHotel' => $HotelId,
+            'MDHotel' => $HotelId,
         ];
     }
 }

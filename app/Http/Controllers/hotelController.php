@@ -14,7 +14,7 @@ class hotelController extends Controller
 
     public function index()
     {
-       $hotels = Hotel::paginate(10);
+       $hotels = Hotel::get();
         return HotelResource::collection($hotels);
     }
 

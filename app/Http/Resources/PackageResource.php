@@ -31,10 +31,32 @@ class PackageResource extends JsonResource
             'status' => auth()->user() ? $this->status : null,
             'features' => $this->features,
             'note' => $this->note,
+            //'tenant_id' => new TenantResource($this->whenLoaded('tenant')),
+            'tenant_id' => $this->tenant_id,
+            'tenant' => $this->whenLoaded('tenant', function () {
+            return [
+                'company_name' => $this->tenant->company_name,
+                   ];
+            }),
             'MKduration' => $this->MKduration,
             'MDduration' => $this->MDduration,
-            'MKHotel' => new HotelResource($this->whenLoaded('MKHotel')),
-            'MDHotel' => new HotelResource($this->whenLoaded('MDHotel')),
+
+
+            'MK_Hotel' => $this->whenLoaded('MK_Hotel', function () {
+            return [
+                'id' => $this->MK_Hotel->id,
+                'hotel_name' => $this->MK_Hotel->hotel_name,
+                   ];
+            }),
+            'MD_Hotel' => $this->whenLoaded('MD_Hotel', function () {
+            return [
+                'id' => $this->MD_Hotel->id,
+                'hotel_name' => $this->MD_Hotel->hotel_name,
+                   ];
+            }),
+
+             //'MKHotel' => new HotelResource($this->whenLoaded('MK_Hotel')),
+             //'MDHotel' => new HotelResource($this->whenLoaded('MD_Hotel')),
         ];
     }
 }

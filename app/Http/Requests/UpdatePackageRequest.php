@@ -33,11 +33,13 @@ class UpdatePackageRequest extends FormRequest
                 'sometimes',
                 Rule::enum(Season::class)
             ],
-            'status' => 'in:active,inactive',
+            'status' => 'sometimes|boolean',
             'note' => 'nullable|string',
             'tenant_id' => 'sometimes|string|exists:tenants,id',
-            'MKHotel' => 'nullable|exists:hotels,id',
-            'MDHotel' => 'nullable|exists:hotels,id'
+            'MKHotel' => 'nullable',
+            'MDHotel' => 'nullable',
+            'new_MKHotel_name' => 'nullable|string|max:255',
+            'new_MDHotel_name' => 'nullable|string|max:255',
         ];
     }
 

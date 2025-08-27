@@ -11,6 +11,7 @@ use App\Models\Tenant;
 use Spatie\Permission\Models\Role;
 //use Spatie\Permission\Models\Permission;
 use App\Models\Package;
+use App\Models\Hotel;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -56,6 +57,7 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        Hotel::factory()->count(5)->create();
 
         Package::factory()->count(10)->create();
 
