@@ -31,6 +31,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Create roles
         $superadmin = Role::firstOrCreate(['name' => 'super']);
         $manager = Role::firstOrCreate(['name' => 'manager']);
+        $employee = Role::firstOrCreate(['name' => 'employee']);
 
         // Assign permissions
         $manager->givePermissionTo($createUsers);
@@ -43,7 +44,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $manager->givePermissionTo($deletePackages);
         $manager->givePermissionTo($restorePackages);
         $manager->givePermissionTo($forceDeletePackages);
-        //$manager->givePermissionTo($viewAnyUsers);
+        $manager->givePermissionTo($viewAnyUsers);
 
 
 

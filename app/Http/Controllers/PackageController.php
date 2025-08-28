@@ -20,29 +20,35 @@ class PackageController extends Controller
     {
         $query = Package::where('status', true)
             ->with(['MK_Hotel', 'MD_Hotel', 'tenant']);
+
         if ($request->filled('q')) {
-            $search = $request->input('q');
-            $query->where(function ($q) use ($search) {
+        $search = $request->input('q');
+        $type = $request->input('type', 'package');
+
+        $query->where(function ($q) use ($search, $type) {
+                if ($type === 'hotel') {
+                $q->whereHas('MK_Hotel', function ($q) use ($search) {
+                    $q->where('hotel_name', 'like', "%$search%")
+                    ->orWhere('distance_from_center', 'like', "%$search%");
+                })
+                ->orWhereHas('MD_Hotel', function ($q) use ($search) {
+                    $q->where('hotel_name', 'like', "%$search%")
+                    ->orWhere('distance_from_center', 'like', "%$search%");
+                });
+            } elseif ($type === 'company') {
+                $q->whereHas('tenant', fn($q) => $q->where('data->company_name', 'like', "%$search%"));
+            } else {
                 $q->where('package_name', 'like', "%$search%")
-                    ->orWhere('package_type', 'like', "%$search%")
-                    ->orWhere('start_date', 'like', "%$search%")
-                    ->orWhere('season', 'like', "%$search%")
-                    ->orWhere('total_price_dinar', 'like', "%$search%")
-                    ->orWhere('total_price_usd', 'like', "%$search%")
-                    ->orWhere('currency', 'like', "%$search%")
-                    ->orWhereHas('tenant', function ($query) use ($search) {
-                        $query->where('data->company_name', 'like', "%$search%");
-                    })
-                    ->orWhereHas('MK_Hotel', function ($query) use ($search) {
-                        $query->where('hotel_name', 'like', "%$search%")
-                                ->orWhere('distance_from_center', 'like', "%$search%");
-                    })
-                    ->orWhereHas('MD_Hotel', function ($query) use ($search) {
-                        $query->where('hotel_name', 'like', "%$search%")
-                                ->orWhere('distance_from_center', 'like', "%$search%");
-                    });
+                ->orWhere('package_type', 'like', "%$search%")
+                ->orWhere('start_date', 'like', "%$search%")
+                ->orWhere('season', 'like', "%$search%")
+                ->orWhere('total_price_dinar', 'like', "%$search%")
+                ->orWhere('total_price_usd', 'like', "%$search%")
+                ->orWhere('currency', 'like', "%$search%");
+            }
         });
-    }
+        }
+
         $packages = $query->get();
         return PackageResource::collection($packages);
     }
@@ -58,27 +64,31 @@ class PackageController extends Controller
         }
 
         if ($request->filled('q')) {
-            $search = $request->input('q');
-            $query->where(function ($q) use ($search) {
+        $search = $request->input('q');
+        $type = $request->input('type', 'package');
+
+        $query->where(function ($q) use ($search, $type) {
+                if ($type === 'hotel') {
+                $q->whereHas('MK_Hotel', function ($q) use ($search) {
+                    $q->where('hotel_name', 'like', "%$search%")
+                    ->orWhere('distance_from_center', 'like', "%$search%");
+                })
+                ->orWhereHas('MD_Hotel', function ($q) use ($search) {
+                    $q->where('hotel_name', 'like', "%$search%")
+                    ->orWhere('distance_from_center', 'like', "%$search%");
+                });
+            } elseif ($type === 'company') {
+                $q->whereHas('tenant', fn($q) => $q->where('data->company_name', 'like', "%$search%"));
+            } else {
                 $q->where('package_name', 'like', "%$search%")
                 ->orWhere('package_type', 'like', "%$search%")
                 ->orWhere('start_date', 'like', "%$search%")
                 ->orWhere('season', 'like', "%$search%")
                 ->orWhere('total_price_dinar', 'like', "%$search%")
                 ->orWhere('total_price_usd', 'like', "%$search%")
-                ->orWhere('currency', 'like', "%$search%")
-                ->orWhereHas('tenant', function ($query) use ($search) {
-                    $query->where('data->company_name', 'like', "%$search%");
-                })
-                ->orWhereHas('MK_Hotel', function ($query) use ($search) {
-                    $query->where('hotel_name', 'like', "%$search%")
-                            ->orWhere('distance_from_center', 'like', "%$search%");
-                })
-                ->orWhereHas('MD_Hotel', function ($query) use ($search) {
-                    $query->where('hotel_name', 'like', "%$search%")
-                            ->orWhere('distance_from_center', 'like', "%$search%");
-                });
-            });
+                ->orWhere('currency', 'like', "%$search%");
+            }
+        });
         }
 
         $packages = $query->with(['MK_Hotel', 'MD_Hotel', 'tenant'])->paginate(6);

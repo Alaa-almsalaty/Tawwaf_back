@@ -46,12 +46,14 @@ class PackageResource extends JsonResource
             return [
                 'id' => $this->MK_Hotel->id,
                 'hotel_name' => $this->MK_Hotel->hotel_name,
-                   ];
+                'distance_from_center' => $this->MK_Hotel->distance_from_center,
+                ];
             }),
             'MD_Hotel' => $this->whenLoaded('MD_Hotel', function () {
             return [
                 'id' => $this->MD_Hotel->id,
                 'hotel_name' => $this->MD_Hotel->hotel_name,
+                'distance_from_center' => $this->MK_Hotel->distance_from_center,
                    ];
             }),
 
