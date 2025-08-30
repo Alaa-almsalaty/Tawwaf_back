@@ -32,6 +32,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $superadmin = Role::firstOrCreate(['name' => 'super']);
         $manager = Role::firstOrCreate(['name' => 'manager']);
         $employee = Role::firstOrCreate(['name' => 'employee']);
+        $visitor = Role::firstOrCreate(['name' => 'visitor']);
 
         // Assign permissions
         $manager->givePermissionTo($createUsers);

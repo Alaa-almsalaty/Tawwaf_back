@@ -28,12 +28,15 @@ class UserFactory extends Factory
         return [
             'username' => fake()->unique()->userName(),
             'full_name' => fake()->name(),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'city' => fake()->city(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('Password123#'),
             'phone' => fake()->phoneNumber(),
             'is_Active' => true,
-            'role' => static::$role ??= fake()->randomElement(['employee', 'manager', 'super']),
+            'role' => static::$role ??= fake()->randomElement(['employee', 'manager', 'super' ,'visitor']),
             'tenant_id' => Tenant::factory(),
             'remember_token' => Str::random(10),
         ];

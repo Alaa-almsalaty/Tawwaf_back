@@ -12,6 +12,7 @@ use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PackageController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\hotelController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -35,6 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tenants', TenantController::class);
     Route::post('uploadLogo', [TenantController::class, 'uploadLogo']);
     Route::get('/superdashboard', [DashboardController::class, 'getDashboardData']);
+    Route::get('/reservation', [ReservationController::class, 'index']);
+    Route::apiResource('reservations', ReservationController::class);
 
 
 });

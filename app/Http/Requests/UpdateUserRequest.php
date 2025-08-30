@@ -22,6 +22,9 @@ class UpdateUserRequest extends FormRequest
             'password' => 'nullable|string|min:6',
             'email' => 'sometimes|email',
             'full_name' => 'sometimes|string|max:255',
+            'first_name' => 'sometimes|string|max:50',
+            'last_name' => 'sometimes|string|max:50',
+            'city' => 'sometimes|string|max:100',
             'phone' => 'sometimes|string|max:20',
             'role' => [
                 'sometimes',

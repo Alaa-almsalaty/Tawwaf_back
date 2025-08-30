@@ -25,7 +25,9 @@ return new class extends Migration
             $table->decimal('total_price_usd')->nullable(); // Optional total price in USD
             $table->enum('currency', ['dinar', 'usd'])->default('dinar'); // Currency type, default is Dinar
             $table->enum('season',['Umrah','Hajj','Ramadan','Eid','Normal'])->default('Normal'); // Season type, default is Normal
-            $table->boolean('status')->default(true); // Status of the package, default is active
+            //$table->boolean('status')->default(true); // Status of the package, default is active
+            $table->enum('status', ['active', 'inactive'])->default('active'); // Status of the package, default is active
+            $table->string('image')->nullable(); // Optional image URL or path
             $table->string('note')->nullable();
             $table->string('tenant_id');
             $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');

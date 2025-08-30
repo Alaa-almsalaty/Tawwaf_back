@@ -23,7 +23,10 @@ class RegisterRequest extends FormRequest
             'username' => 'required|string|max:40|unique:users|regex:/^(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/',
             'email' => 'required|email|unique:users',
             'password' => ['required', 'string', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]).{8,20}$/', 'max:20'],
-            'full_name' => 'required|string|min:8|max:20',
+            'full_name' => 'nullable|string|min:8|max:20',
+            'first_name' => 'required|string|max:50',
+            'last_name' => 'nullable|string|max:50',
+            'city' => 'nullable|string|max:100',
             'phone' => 'required|starts_with:09|digits:10',
             'is_Active' => 'boolean',
             'role' => ['required', Rule::enum(UserRole::class)],
@@ -37,7 +40,10 @@ class RegisterRequest extends FormRequest
         return [
             'username' => $this->validated('username'),
             'email' => $this->validated('email'),
-            'full_name' => $this->validated('full_name'),
+            'full_name' => $this->validated('full_name') ?? $this->validated('first_name') . ' ' . ($this->validated('last_name') ?? ''),
+            'first_name' => $this->validated('first_name'),
+            'last_name' => $this->validated('last_name') ?? null,
+            'city' => $this->validated('city') ?? null,
             'password' => Hash::make($this->validated('password')),
             'phone' => $this->validated('phone'),
             'is_Active' => $this->validated('is_Active') ?? false,
@@ -67,6 +73,16 @@ public function messages(): array
         'full_name.string' => 'الاسم الكامل يجب أن يكون نصاً.',
         'full_name.min' => 'الاسم الكامل يجب أن لا يقل عن 8 أحرف.',
         'full_name.max' => 'الاسم الكامل لا يمكن أن يزيد عن 20 حرفاً.',
+
+        'first_name.required' => 'حقل الاسم الأول مطلوب.',
+        'first_name.string' => 'الاسم الأول يجب أن يكون نصاً.',
+        'first_name.max' => 'الاسم الأول لا يمكن أن يزيد عن 50 حرفاً.',
+
+        'last_name.string' => 'اسم العائلة يجب أن يكون نصاً.',
+        'last_name.max' => 'اسم العائلة لا يمكن أن يزيد عن 50 حرفاً.',
+
+        'city.string' => 'اسم المدينة يجب أن يكون نصاً.',
+        'city.max' => 'اسم المدينة لا يمكن أن يزيد عن 100 حرفاً.',
 
         'phone.required' => 'حقل رقم الهاتف مطلوب.',
         'phone.starts_with' => 'رقم الهاتف يجب أن يبدأ بـ 09.',

@@ -17,10 +17,13 @@ return new class extends Migration
                 $table->string('password');
                 $table->string('email')->unique();
                 $table->timestamp('email_verified_at')->nullable();
-                $table->string('full_name');
+                $table->string('first_name');
+                $table->string('last_name')->nullable();
+                $table->string('full_name')->nullable();
                 $table->string('phone');
+                $table->string('city')->nullable();
                 $table->boolean('is_Active')->default(true);
-                $table->enum('role',['employee','manager','super']);
+                $table->enum('role',['employee','manager','super','visitor']);
                 $table->string('tenant_id')->nullable(); // Nullable to allow for non-tenant users
                 $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
                 $table->foreignId('branch_id')->nullable()->constrained('branches')->onDelete('cascade')->onUpdate('cascade');
