@@ -11,7 +11,12 @@ class UpdateUserRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->can('update users');
+        $user = auth()->user();
+            // إذا كان المستخدم زائر يمكنه التعديل
+            if ($user->role === 'visitor') {
+                return true;
+            }
+            return $user->can('update users');
     }
 
     public function rules(): array

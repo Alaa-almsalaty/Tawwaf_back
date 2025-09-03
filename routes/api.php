@@ -14,6 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\hotelController;
+use App\Http\Controllers\VisitorController;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/landing_packages', [PackageController::class, 'publicIndex']);
 //Route::apiResource('tenants', TenantController::class)->only(['index']);
 Route::get('/landing_tenants', [TenantController::class, 'landingTenants']);
+Route::post('/visitor_register', [VisitorController::class, 'store']);
 
 
 
@@ -38,7 +40,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/superdashboard', [DashboardController::class, 'getDashboardData']);
     Route::get('/reservation', [ReservationController::class, 'index']);
     Route::apiResource('reservations', ReservationController::class);
-
+    Route::apiResource('/visitors', VisitorController::class);
+    Route::post('/visitors/{visitor}/cart', [VisitorController::class, 'addToCart']);
+    Route::get('/visitors/{visitor}/cart', [VisitorController::class, 'viewCart']);
+    Route::delete('/cart/{cart}', [VisitorController::class, 'removeFromCart']);
+    Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
 
 });
 
@@ -84,9 +90,10 @@ Route::middleware([
     Route::post('/upload-personal-image', [ClientController::class, 'uploadPersonalImage']);
     Route::get('user/profile', [UserController::class, 'profile']);
     Route::put('update/profile', [UserController::class, 'updateProfile']);
-    Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
+    //Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
     Route::apiResource('packages', PackageController::class);
     Route::apiResource('hotels', hotelController::class);
+   // Route::apiResource('visitors', VisitorController::class);
 
 
     Route::post('/adduser', [AuthController::class, 'register']);

@@ -19,17 +19,16 @@ class VisitorController extends Controller
     {
         if ($request->filled('q')) {
             $search = $request->input('q');
-            $visitors = User::where(function ($query) use ($search) {
-                $query->where('role', 'visitor')
-                    ->orwhere('name', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%")
-                    ->orWhere('phone', 'like', "%$search%");
-            })->paginate(10);
+            $visitors = User::where('role', 'visitor')
+                ->where(function ($query) use ($search) {
+                    $query->where('username', 'like', "%$search%")
+                        ->orWhere('email', 'like', "%$search%")
+                        ->orWhere('phone', 'like', "%$search%");
+                })->paginate(10);
         } else {
-            $visitors = User::where('role', 'visitor')->paginate(10);
+            $visitors = User::where('role', 'visitor')->paginate(6);
         }
-
-        return UserResource::collection($visitors);
+            return UserResource::collection($visitors);
     }
 
 
@@ -41,16 +40,16 @@ class VisitorController extends Controller
         return UserResource::make($user);
     }
 
-    public function show(User $user)
+    public function show(User $visitor)
     {
-        return UserResource::make($user);
+        return UserResource::make($visitor);
     }
 
 
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $visitor)
     {
-        $user->update($request->updateUser());
-        return UserResource::make($user);
+        $visitor->update($request->updateUser());
+        return UserResource::make($visitor);
     }
 
 
@@ -70,8 +69,8 @@ class VisitorController extends Controller
 
     public function viewCart(User $visitor)
     {
-        $cartItems = Cart::with('package')->where('visitor', $visitor->id)
-            ->paginate(10);
+        $cartItems = Cart::with(['package', 'visitor', 'package.MK_Hotel', 'package.MD_Hotel'])->where('visitor_id', $visitor->id)
+            ->get();
 
         return CartResource::collection($cartItems);
     }

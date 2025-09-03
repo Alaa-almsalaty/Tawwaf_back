@@ -16,16 +16,16 @@ class CreateCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'visitor' => 'required|exists:users,id',
-            'package' => 'required|exists:packages,id',
+            'visitor_id' => 'required|exists:users,id',
+            'package_id' => 'required|exists:packages,id',
         ];
     }
 
     public function createCart(): array
     {
         return [
-            'visitor' => $this->visitor,
-            'package' => $this->package,
+            'visitor_id' => $this->visitor_id,
+            'package_id' => $this->package_id,
         ];
     }
 }

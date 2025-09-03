@@ -24,7 +24,7 @@ class RegisterRequest extends FormRequest
             'email' => 'required|email|unique:users',
             'password' => ['required', 'string', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]).{8,20}$/', 'max:20'],
             'full_name' => 'nullable|string|min:8|max:20',
-            'first_name' => 'required|string|max:50',
+            'first_name' => 'nullable|string|max:50',
             'last_name' => 'nullable|string|max:50',
             'city' => 'nullable|string|max:100',
             'phone' => 'required|starts_with:09|digits:10',
