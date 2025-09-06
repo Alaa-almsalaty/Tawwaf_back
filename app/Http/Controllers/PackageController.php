@@ -24,12 +24,9 @@ class PackageController extends Controller
 
     public function publicIndex(PackageIndexRequest $request)
     {
-        //$user = $request->user();
-
         $baseQuery = Package::query()
             ->with(['MK_Hotel', 'MD_Hotel', 'tenant'])
             ->where('status', true);
-        //->when($user?->tenant_id, fn($q) => $q->where('tenant_id', $user->tenant_id)); // multi-tenant guard
 
         $filters = [
             new PackageTypeFilter($request),
@@ -54,42 +51,14 @@ class PackageController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $baseQuery = Package::query()
+        $search = trim((string) $request->query('q'));
+        $packages = Package::query()
             ->with(['MK_Hotel', 'MD_Hotel', 'tenant'])
             ->where('status', true)
-            ->when($user?->tenant_id, fn($q) => $q->where('tenant_id', $user->tenant_id)); // multi-tenant guard
-        $query = Package::where('status', true)
-            ->with(['MK_Hotel', 'MD_Hotel', 'tenant']);
-
-        if ($request->filled('q')) {
-            $search = $request->input('q');
-            $type = $request->input('type', 'package');
-
-            $query->where(function ($q) use ($search, $type) {
-                if ($type === 'hotel') {
-                    $q->whereHas('MK_Hotel', function ($q) use ($search) {
-                        $q->where('hotel_name', 'like', "%$search%")
-                            ->orWhere('distance_from_center', 'like', "%$search%");
-                    })
-                        ->orWhereHas('MD_Hotel', function ($q) use ($search) {
-                            $q->where('hotel_name', 'like', "%$search%")
-                                ->orWhere('distance_from_center', 'like', "%$search%");
-                        });
-                } elseif ($type === 'company') {
-                    $q->whereHas('tenant', fn($q) => $q->where('data->company_name', 'like', "%$search%"));
-                } else {
-                    $q->where('package_name', 'like', "%$search%")
-                        ->orWhere('package_type', 'like', "%$search%")
-                        ->orWhere('start_date', 'like', "%$search%")
-                        ->orWhere('season', 'like', "%$search%")
-                        ->orWhere('total_price_dinar', 'like', "%$search%")
-                        ->orWhere('total_price_usd', 'like', "%$search%")
-                        ->orWhere('currency', 'like', "%$search%");
-                }
-            });
-        }
-
-        $packages = $query->get();
+            ->forUser($user)
+            ->search($search)
+            ->latest('id')
+            ->paginate(10);
         return PackageResource::collection($packages);
     }
 

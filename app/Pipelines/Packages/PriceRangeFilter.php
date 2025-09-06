@@ -15,7 +15,7 @@ class PriceRangeFilter
     public function handle(Builder $query, Closure $next)
     {
         $range = $this->request->input('price');    // "1000-1500" or "2000+"
-        $currency = $this->request->input('currency'); // "usd" or "lyd"
+        $currency = $this->request->input('currency'); // "usd" or "dinar"
 
         if (!filled($range) || !filled($currency)) {
             return $next($query);
