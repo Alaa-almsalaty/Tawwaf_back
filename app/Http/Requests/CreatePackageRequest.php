@@ -63,7 +63,6 @@ class CreatePackageRequest extends FormRequest
             'MKHotel' => $this->MKHotel,
             'MDHotel' => $this->MDHotel,
             'image' => $this->image ?? null,
-            'MDHotel' => $this->MDHotel,
             'new_MKHotel_name' => $this->new_MKHotel_name ?? null,
             'new_MDHotel_name' => $this->new_MDHotel_name ?? null,
         ];
