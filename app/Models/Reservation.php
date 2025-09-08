@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Reservation extends Model
 {
-    use HasFactory, SoftDeletes , BelongsToTenant;
+    use HasFactory, SoftDeletes, BelongsToTenant;
 
     protected $guarded = ['id'];
 
@@ -56,8 +56,8 @@ class Reservation extends Model
 
     public function scopeForUser(Builder $q, User $user): Builder
     {
-        if ($user->hasAnyRole(['manager','employee'])) {
-            return $q->whereHas('package', fn ($p) => $p->where('tenant_id', $user->tenant_id));
+        if ($user->hasAnyRole(['manager', 'employee'])) {
+            return $q->whereHas('package', fn($p) => $p->where('tenant_id', $user->tenant_id));
         }
         if ($user->hasRole('visitor')) {
             return $q->where('visitor_id', $user->id);
@@ -65,30 +65,31 @@ class Reservation extends Model
         return $q; // super-admin, etc.
     }
 
-public function scopeSearch(Builder $q, ?string $rawTerm): Builder
+    public function scopeSearch(Builder $q, ?string $rawTerm): Builder
     {
         $term = trim((string) $rawTerm);
-        if ($term === '') return $q;
+        if ($term === '')
+            return $q;
 
         return $q->where(function (Builder $w) use ($term) {
-            // PACKAGE FIELDS — make sure these names match your schema
+
             $w->whereHas('package', function (Builder $p) use ($term) {
                 $p->where(function (Builder $g) use ($term) {
                     $g->where('package_type', 'like', "%{$term}%")
-                      ->orWhere('package_name', 'like', "%{$term}%")
-                      ->orWhere('currency', 'like', "%{$term}%")
-                      ->orWhere('total_price_dinar', 'like', "%{$term}%")
-                      ->orWhere('total_price_usd', 'like', "%{$term}%");
+                        ->orWhere('package_name', 'like', "%{$term}%")
+                        ->orWhere('currency', 'like', "%{$term}%")
+                        ->orWhere('total_price_dinar', 'like', "%{$term}%")
+                        ->orWhere('total_price_usd', 'like', "%{$term}%");
                 });
             })
-            // VISITOR FIELDS — adjust to your actual columns
-            ->orWhereHas('visitor', function (Builder $v) use ($term) {
-                $v->where(function (Builder $g) use ($term) {
-                    $g->where('full_name', 'like', "%{$term}%")
-                      ->orWhere('email', 'like', "%{$term}%")
-                      ->orWhere('phone', 'like', "%{$term}%");
+
+                ->orWhereHas('visitor', function (Builder $v) use ($term) {
+                    $v->where(function (Builder $g) use ($term) {
+                        $g->where('full_name', 'like', "%{$term}%")
+                            ->orWhere('email', 'like', "%{$term}%")
+                            ->orWhere('phone', 'like', "%{$term}%");
+                    });
                 });
-            });
         });
     }
 
