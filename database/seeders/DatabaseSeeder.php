@@ -76,7 +76,7 @@ class DatabaseSeeder extends Seeder
         Hotel::factory()->count(5)->create();
 
         Package::factory()->count(10)->create();
-        Reservation::factory()->count(20)->create();
+        Reservation::factory()->count(10)->create();
 
 
     }

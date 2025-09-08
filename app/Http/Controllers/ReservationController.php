@@ -23,7 +23,8 @@ public function index(ReservationIndexRequest $request)
         ->forUser($user)
         ->search($search)
         ->latest('id')
-        ->paginate(10);
+        ->paginate(6);
+        //$reservations =Reservation::with(['package', 'visitor'])->get();
 
     return ReservationResource::collection($reservations);
 }
@@ -53,8 +54,10 @@ public function index(ReservationIndexRequest $request)
     {
         $request->validate([
             'reservation_state' => ['required', Rule::enum(ReservationState::class)],
+            'created_by' => ['nullable', 'exists:users,id'],
         ]);
         $reservation->reservation_state = $request->reservation_state;
+        $reservation->created_by = $request->created_by;
         $reservation->save();
         return ReservationResource::make($reservation->load(['visitor', 'package']));
     }
@@ -66,26 +69,36 @@ public function index(ReservationIndexRequest $request)
             'reservation_state' => ['required', Rule::enum(ReservationState::class)],
         ]);
 
-        $updatedReservations = [];
-        foreach ($request->reservation_ids as $id) {
-            $reservation = Reservation::find($id);
-            if ($reservation) {
-                $reservation->reservation_state = $request->reservation_state;
-                $reservation->save();
-                $updatedReservations[] = $reservation;
-            }
-        }
+    //     $updatedReservations = [];
+    //     foreach ($request->reservation_ids as $id) {
+    //         $reservation = Reservation::find($id);
+    //         if ($reservation) {
+    //             $reservation->reservation_state = $request->reservation_state;
+    //             $reservation->save();
+    //             $updatedReservations[] = $reservation;
+    //         }
+    //     }
 
-        return ReservationResource::collection(collect($updatedReservations)->load(['visitor', 'package']));
+    //     return ReservationResource::collection(collect($updatedReservations)->load(['visitor', 'package']));
+        $updatedReservations = Reservation::whereIn('id', $request->reservation_ids)->get();
+
+        $updatedReservations->each(function ($reservation) use ($request) {
+            $reservation->reservation_state = $request->reservation_state;
+            $reservation->save();
+        });
+
+        $updatedReservations->load(['visitor', 'package']);
+
+        return ReservationResource::collection($updatedReservations);
     }
 
     public function cancelReservation(Reservation $reservation)
     {
         $status = $reservation->reservation_state;
-        if ($status === 'completed' || $status === 'confirmed' || $status === 'canceled') {
+        if ($status === 'completed' || $status === 'confirmed' || $status === 'cancelled') {
             return response()->json(['message' => 'Cannot cancel a completed or already canceled reservation.'], 400);
         }
-        $reservation->reservation_state = 'canceled';
+        $reservation->reservation_state = 'cancelled';
         $reservation->save();
         return ReservationResource::make($reservation->load(['visitor', 'package']));
     }

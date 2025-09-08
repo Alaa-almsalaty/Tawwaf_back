@@ -22,7 +22,13 @@ class ClientResource extends JsonResource
             'muhram' => new ClientResource($this->whenLoaded('muhram')),
             'Muhram_relation' => $this->Muhram_relation,
             'note' => $this->note,
-            'created_by' => new UserResource($this->whenLoaded('createdBy')),
+            //'created_by' => new UserResource($this->whenLoaded('createdBy')),
+            'created_by' =>$this->whenLoaded('createdBy', function () {
+            return [
+                'id' => $this->createdBy->id,
+            ];
+        }),
         ];
     }
 }
+

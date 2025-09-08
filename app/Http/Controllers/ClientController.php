@@ -16,7 +16,7 @@ class ClientController extends Controller
 
     public function index(Request $request)
     {
-        $query = Client::with(['family', 'personalInfo.passport', 'muhram', 'branch']);
+        $query = Client::with(['family', 'personalInfo.passport', 'muhram', 'branch','createdBy']);
 
         if ($request->filled('q')) {
             $search = $request->query('q');
@@ -137,6 +137,9 @@ public function uploadPersonalImage(Request $request)
     ]);
 }
 
-
+    public function getClientsCountByUser($userId)
+    {
+        return Client::where('created_by', $userId)->count();
+}
 
 }

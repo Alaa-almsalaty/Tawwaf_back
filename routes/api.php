@@ -39,12 +39,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('uploadLogo', [TenantController::class, 'uploadLogo']);
     Route::get('/superdashboard', [DashboardController::class, 'getDashboardData']);
     Route::get('/reservation', [ReservationController::class, 'index']);
-    Route::apiResource('reservations', ReservationController::class);
+ //  Route::apiResource('reservations', ReservationController::class);
     Route::apiResource('/visitors', VisitorController::class);
     Route::post('/visitors/{visitor}/cart', [VisitorController::class, 'addToCart']);
     Route::get('/visitors/{visitor}/cart', [VisitorController::class, 'viewCart']);
     Route::delete('/cart/{cart}', [VisitorController::class, 'removeFromCart']);
     Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
+Route::patch('/reservations/{reservation}/cancel', [ReservationController::class, 'cancelReservation']);
+
+Route::patch('/reservations/bulk-status', [ReservationController::class, 'bulkUpdateStatus']);
+Route::apiResource('/reservations', ReservationController::class);
+Route::patch('/reservations/{reservation}/status', [ReservationController::class, 'editStatus']);
 
 });
 
@@ -94,6 +99,7 @@ Route::middleware([
     Route::apiResource('packages', PackageController::class);
     Route::apiResource('hotels', hotelController::class);
    // Route::apiResource('visitors', VisitorController::class);
+    Route::get('/users/{userId}/clients-count', [ClientController::class, 'getClientsCountByUser']);
 
 
     Route::post('/adduser', [AuthController::class, 'register']);
