@@ -43,7 +43,8 @@ class PackageController extends Controller
         \Log::debug('filters', $request->only('type', 'currency', 'price', 'date', 'date_tolerance_days', 'distance'));
         \Log::debug('sql', ['sql' => $query->toSql(), 'bindings' => $query->getBindings()]);
 
-        $packages = $query->latest('id')->paginate($request->integer('per_page', 10));
+        //$packages = $query->latest('id')->paginate($request->integer('per_page', 10));
+        $packages = $query->latest('id')->get();
 
         return PackageResource::collection($packages);
     }
@@ -58,7 +59,7 @@ class PackageController extends Controller
             ->forUser($user)
             ->search($search)
             ->latest('id')
-            ->paginate(10);
+            ->paginate(6);
         return PackageResource::collection($packages);
     }
 

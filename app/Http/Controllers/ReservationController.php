@@ -38,14 +38,30 @@ public function index(ReservationIndexRequest $request)
 
     public function store(CreateReservationRequest $request)
     {
+        $visitorId = $request->input('visitor_id');
+
+        $hasReservation  = Reservation::where('visitor_id', $visitorId)
+            ->whereIn('reservation_state', ['pending', 'confirmed'])
+            ->exists();
+
+        if ($hasReservation ) {
+            return response()->json([
+                'message' => ' لا يمكنك إنشاء حجز جديد لأنه لديك حجز مسبق  .'
+            ], 422);
+        }
+
         $data = $request->createReservation();
         $reservation = Reservation::create($data);
         return ReservationResource::make($reservation);
     }
 
-    public function show(Reservation $reservation)
+    public function show($visitorId)
     {
-        return ReservationResource::make($reservation->load(['visitor', 'package']));
+        $reservation = Reservation::with(['visitor', 'package'])
+        ->where('visitor_id', $visitorId)
+        ->first();
+        return ReservationResource::make($reservation);
+       // return ReservationResource::make($reservation->load(['visitor', 'package']));
     }
 
 
