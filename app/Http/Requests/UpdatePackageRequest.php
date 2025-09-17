@@ -28,7 +28,7 @@ class UpdatePackageRequest extends FormRequest
             'MDduration' => 'sometimes|integer',
             'total_price_dinar' => 'nullable|numeric',
             'total_price_usd' => 'nullable|numeric',
-            'currency' => 'in:dinar,usd',
+            'currency' => 'nullable|in:dinar,usd',
             'season' => [
                 'sometimes',
                 Rule::enum(Season::class)

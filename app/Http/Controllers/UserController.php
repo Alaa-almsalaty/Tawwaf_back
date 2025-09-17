@@ -20,10 +20,10 @@ class UserController extends Controller
           ->where('id', '!=', auth()->id());
 
         if (auth()->user()->hasRole('manager')) {
-            $query->where('tenant_id', tenant('id'))
+            $query->where('tenant_id', auth()->user()->tenant_id)
                   ->where('role', '!=', 'super');
         }
-        
+
         if ($request->filled('q')) {
             $search = $request->query('q');
 

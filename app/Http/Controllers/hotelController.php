@@ -33,11 +33,6 @@ class hotelController extends Controller
     }
 
 
-    public function edit(string $id)
-    {
-        //
-    }
-
 
     public function update(UpdateHotelRequest $request, Hotel $hotel)
     {

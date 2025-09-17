@@ -92,4 +92,30 @@ class DashboardController extends Controller
         ]);
 
     }
+
+    public function getClientsCountPerEmployee()
+{
+    if (!auth()->user()->hasRole('manager') && !auth()->user()->IsSuperAdmin()) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    $tenantId = auth()->user()?->tenant_id;
+
+    $employees = User::where('tenant_id', $tenantId)
+        ->where('role', 'employee')
+        ->withCount('clients')
+        ->get();
+
+    // $employeesClientsCount = $employees->map(function ($employee) {
+    //     $clientsCount = Client::where('created_by', $employee->id)->count();
+    //     return [
+    //         'id' => $employee->id,
+    //         'full_name' => $employee->full_name,
+    //         'clients_count' => $clientsCount,
+    //     ];
+    // });
+
+    return response()->json( $employees);
+}
+
 }

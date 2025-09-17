@@ -26,7 +26,7 @@ class CreatePackageRequest extends FormRequest
             'MDduration' => 'required|integer',
             'total_price_dinar' => 'nullable|numeric',
             'total_price_usd' => 'nullable|numeric',
-            'currency' => 'in:dinar,usd',
+            'currency' => 'nullable|in:dinar,usd',
             'season' => [
                 'required',
                 Rule::enum(Season::class)

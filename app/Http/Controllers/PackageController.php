@@ -14,6 +14,7 @@ use App\Pipelines\Packages\PriceRangeFilter;
 use App\Pipelines\Packages\FlightDateFilter;
 use App\Pipelines\Packages\DistanceFilter;
 use App\Pipelines\Packages\PackageTypeFilter;
+use App\Pipelines\Packages\TenantNameFilter;
 use App\Http\Requests\PackageIndexRequest;
 
 
@@ -33,6 +34,7 @@ class PackageController extends Controller
             new PriceRangeFilter($request),
             new FlightDateFilter($request),
             new DistanceFilter($request),
+            new TenantNameFilter($request),
         ];
 
         $query = app(Pipeline::class)

@@ -5,6 +5,7 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
 use App\Http\Middleware\TenantPermissionMiddleware;
+use App\Http\Middleware\InitializeTenancyByHeader;
 use Stancl\Tenancy\Facades\Tenancy;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BranchController;
@@ -50,6 +51,7 @@ Route::patch('/reservations/{reservation}/cancel', [ReservationController::class
 Route::patch('/reservations/bulk-status', [ReservationController::class, 'bulkUpdateStatus']);
 Route::apiResource('/reservations', ReservationController::class);
 Route::patch('/reservations/{reservation}/status', [ReservationController::class, 'editStatus']);
+//User::whereName('')
 
 });
 
@@ -57,12 +59,12 @@ Route::patch('/reservations/{reservation}/status', [ReservationController::class
 // Tenant-scoped routes
 Route::middleware([
     'api',
-    InitializeTenancyByDomain::class,
+    InitializeTenancyByHeader::class,
     PreventAccessFromCentralDomains::class,
     'auth:sanctum',
     ])->group(function () {
     Route::apiResource('clients', ClientController::class);
-    Route::apiResource('users', UserController::class);
+    Route::apiResource('all-users', UserController::class);
     Route::put('/reset-password/{user}', [UserController::class, 'resetPassword']);
     Route::apiResource('branches', BranchController::class);
     Route::get('/notifications', function (Request $request) {
@@ -110,6 +112,10 @@ Route::middleware([
     Route::get('/test', function () {
         return response()->json(['message' => 'Tenant API is working and secured!']);
     });
+
+
+        Route::get('/dashboard/employees-clients-count', [DashboardController::class, 'getClientsCountPerEmployee']);
+
 });
 
 
