@@ -18,7 +18,6 @@ use App\Http\Controllers\hotelController;
 use App\Http\Controllers\VisitorController;
 use App\Models\User;
 use Illuminate\Http\Request;
-
 use App\Http\Controllers\DashboardController;
 
 
@@ -52,6 +51,7 @@ Route::patch('/reservations/bulk-status', [ReservationController::class, 'bulkUp
 Route::apiResource('/reservations', ReservationController::class);
 Route::patch('/reservations/{reservation}/status', [ReservationController::class, 'editStatus']);
 //User::whereName('')
+Route::get('/super-admin/dashboard', [DashboardController::class, 'getSuperAdminDashboardData']);
 
 });
 
@@ -108,13 +108,11 @@ Route::middleware([
     //Route::apiResource('passengers', ClientController::class);
     Route::apiResource('susers', UserController::class);
     Route::get('dashboard', [DashboardController::class, 'getDashboardData']);
-    Route::get('empdashboard', [DashboardController::class, 'getClientsperEmployee']);
+    //Route::get('empdashboard', [DashboardController::class, 'getClientsperEmployee']);
     Route::get('/test', function () {
         return response()->json(['message' => 'Tenant API is working and secured!']);
     });
-
-
-        Route::get('/dashboard/employees-clients-count', [DashboardController::class, 'getClientsCountPerEmployee']);
+    Route::get('/employees/clients-count', [DashboardController::class, 'getClientsCountPerEmployee']);
 
 });
 

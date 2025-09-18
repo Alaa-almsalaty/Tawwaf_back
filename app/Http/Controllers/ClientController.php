@@ -140,6 +140,6 @@ public function uploadPersonalImage(Request $request)
     public function getClientsCountByUser($userId)
     {
         return Client::where('created_by', $userId)->count();
-}
+    }
 
 }
