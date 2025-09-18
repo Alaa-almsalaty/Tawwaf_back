@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\PassportBalanceNotification;
 use App\Models\User;
+use App\Events\ClientCreated;
 
 class ClientService
 {
@@ -92,15 +93,16 @@ class ClientService
             // step 5 : adjust the tenant balance after creating the client
             $tenant = $client->tenant;
             if ($tenant) {
-                $tenant->balance -= 1.0;
-                $tenant->save();
-$manager = User::where('tenant_id', $tenant->id)
-            ->where('role', 'manager')
-            ->first();
+//                 // $tenant->balance -= 1.0;
+//                 // $tenant->save();
+                event(new ClientCreated($client));
+// $manager = User::where('tenant_id', $tenant->id)
+//             ->where('role', 'manager')
+//             ->first();
 
-if ($manager) {
-    $manager->notify(new PassportBalanceNotification($tenant->balance, $manager->id));
-}
+// if ($manager) {
+//     $manager->notify(new PassportBalanceNotification($tenant->balance, $manager->id));
+// }
             } else {
                 Log::warning('Client created without a valid tenant', ['client_id' => $client->id]);
             }
