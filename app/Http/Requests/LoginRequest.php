@@ -37,11 +37,10 @@ class LoginRequest extends FormRequest
             throw ValidationException::withMessages([
                 $this->username_or_email => ['بيانات الدخول غير صحيحة.'],
             ]);
-        } else if (!$user->is_Active) {
-            throw ValidationException::withMessages([
-                $this->username_or_email => ['لم يتم تفعيل حسابك بعد.'],
-            ]);
-
+        } if (!$user->is_Active) {
+        throw ValidationException::withMessages([
+            'username_or_email' => ['لم يتم تفعيل حسابك بعد.'],
+        ]);
         }
         return $user;
     }
