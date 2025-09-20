@@ -110,6 +110,7 @@ public function uploadLogo(Request $request)
 {
     if (!$request->hasFile('logo')) {
         return response()->json(['error' => 'No file uploaded'], 400);
+        // throw ValidationException::withMessages(['file' => 'No file uploaded']);
     }
 
     $file = $request->file('logo');

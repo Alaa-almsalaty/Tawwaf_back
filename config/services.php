@@ -34,5 +34,18 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'whatsapp' => [
+        'token' => env('WHATSAPP_TOKEN'),
+        'phone_number_id' => env('WHATSAPP_PHONE_NUMBER_ID'),
+        'otp_template' => env('WHATSAPP_OTP_TEMPLATE', 'verify_otp'),
+        'language' => env('WHATSAPP_OTP_LANG', 'en'),
+    ],
+    'otp' => [
+        'length' => env('OTP_LENGTH', 6),
+        'ttl' => env('OTP_TTL_MINUTES', 5),
+    ],
+
+    // ...
+
 
 ];

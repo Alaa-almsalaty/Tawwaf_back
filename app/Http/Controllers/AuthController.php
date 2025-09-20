@@ -16,13 +16,14 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-      //  $this->authorize('create', User::class);
+        //  $this->authorize('create', User::class);
         $user = User::create($request->createUser());
         $user->assignRole($user->role);
 
         return UserResource::make($user);
 
     }
+
     public function login(LoginRequest $request)
     {
         $user = $request->authenticate();
@@ -35,7 +36,7 @@ class AuthController extends Controller
                 'user' => $user,
                 'token' => $token,
                 'tenant' => [
-                    'domain' => parse_url(config('app.url'), PHP_URL_HOST) ,
+                    'domain' => parse_url(config('app.url'), PHP_URL_HOST),
                 ],
             ]);
         }

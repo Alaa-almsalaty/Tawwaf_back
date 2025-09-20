@@ -27,7 +27,7 @@ class RegisterRequest extends FormRequest
             'first_name' => 'nullable|string|max:50',
             'last_name' => 'nullable|string|max:50',
             'city' => 'nullable|string|max:100',
-            'phone' => 'required|starts_with:09|digits:10',
+            'phone' => 'required|starts_with:+21',
             'is_Active' => 'boolean',
             'role' => ['required', Rule::enum(UserRole::class)],
             'tenant_id' => 'sometimes|exists:tenants,id',

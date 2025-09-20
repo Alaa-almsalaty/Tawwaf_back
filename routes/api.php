@@ -16,6 +16,7 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\hotelController;
 use App\Http\Controllers\VisitorController;
+use App\Http\Controllers\OtpController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\DashboardController;
@@ -26,6 +27,8 @@ Route::get('/landing_packages', [PackageController::class, 'publicIndex']);
 //Route::apiResource('tenants', TenantController::class)->only(['index']);
 Route::get('/landing_tenants', [TenantController::class, 'landingTenants']);
 Route::post('/visitor_register', [VisitorController::class, 'store']);
+Route::post('/auth/otp/request', [OtpController::class, 'requestOtp']);
+Route::post('/auth/otp/verify', [OtpController::class, 'verifyOtp']);
 
 
 
@@ -35,23 +38,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::apiResource('users', UserController::class);
     Route::put('/reset-password/{user}', [UserController::class, 'resetPassword']);
+
     Route::apiResource('tenants', TenantController::class);
     Route::post('uploadLogo', [TenantController::class, 'uploadLogo']);
     Route::get('/superdashboard', [DashboardController::class, 'getDashboardData']);
     Route::get('/reservation', [ReservationController::class, 'index']);
- //  Route::apiResource('reservations', ReservationController::class);
+    //  Route::apiResource('reservations', ReservationController::class);
     Route::apiResource('/visitors', VisitorController::class);
     Route::post('/visitors/{visitor}/cart', [VisitorController::class, 'addToCart']);
     Route::get('/visitors/{visitor}/cart', [VisitorController::class, 'viewCart']);
     Route::delete('/cart/{cart}', [VisitorController::class, 'removeFromCart']);
     Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
-Route::patch('/reservations/{reservation}/cancel', [ReservationController::class, 'cancelReservation']);
+    Route::patch('/reservations/{reservation}/cancel', [ReservationController::class, 'cancelReservation']);
 
-Route::patch('/reservations/bulk-status', [ReservationController::class, 'bulkUpdateStatus']);
-Route::apiResource('/reservations', ReservationController::class);
-Route::patch('/reservations/{reservation}/status', [ReservationController::class, 'editStatus']);
-//User::whereName('')
-Route::get('/super-admin/dashboard', [DashboardController::class, 'getSuperAdminDashboardData']);
+    Route::patch('/reservations/bulk-status', [ReservationController::class, 'bulkUpdateStatus']);
+    Route::apiResource('/reservations', ReservationController::class);
+    Route::patch('/reservations/{reservation}/status', [ReservationController::class, 'editStatus']);
+    //User::whereName('')
+    Route::get('/super-admin/dashboard', [DashboardController::class, 'getSuperAdminDashboardData']);
 
 });
 
@@ -62,7 +66,7 @@ Route::middleware([
     InitializeTenancyByHeader::class,
     PreventAccessFromCentralDomains::class,
     'auth:sanctum',
-    ])->group(function () {
+])->group(function () {
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('all-users', UserController::class);
     Route::put('/reset-password/{user}', [UserController::class, 'resetPassword']);
@@ -71,7 +75,7 @@ Route::middleware([
         // جلب إشعارات المستخدم المسجل
         return $request->user()->notifications()->latest()->get();
     });
-     Route::get('/notifications/unread-count', function (Request $request) {
+    Route::get('/notifications/unread-count', function (Request $request) {
         return ['count' => $request->user()->unreadNotifications()->count()];
     });
     Route::post('/notifications/mark-as-read', function (Request $request) {
@@ -100,7 +104,7 @@ Route::middleware([
     //Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
     Route::apiResource('packages', PackageController::class);
     Route::apiResource('hotels', hotelController::class);
-   // Route::apiResource('visitors', VisitorController::class);
+    // Route::apiResource('visitors', VisitorController::class);
     Route::get('/users/{userId}/clients-count', [ClientController::class, 'getClientsCountByUser']);
 
 

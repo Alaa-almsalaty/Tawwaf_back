@@ -10,6 +10,8 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Cart;
+use App\Enums\UserRole;
+use App\Services\Otp\OtpService;
 
 
 class VisitorController extends Controller
@@ -28,7 +30,7 @@ class VisitorController extends Controller
         } else {
             $visitors = User::where('role', 'visitor')->paginate(6);
         }
-            return UserResource::collection($visitors);
+        return UserResource::collection($visitors);
     }
 
 
@@ -36,6 +38,7 @@ class VisitorController extends Controller
     {
         $user = User::create($request->createUser());
         $user->assignRole($user->role);
+        app(OtpService::class)->send($user, $user->phone);
 
         return UserResource::make($user);
     }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('first_name_ar', 50)->nullable();
             $table->string('first_name_en', 50)->nullable();
+            //$table->json('name');
             $table->string('second_name_ar', 50)->nullable();
             $table->string('second_name_en', 50)->nullable();
             $table->string('grand_father_name_ar', 50)->nullable();

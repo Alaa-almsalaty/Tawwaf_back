@@ -13,21 +13,14 @@ class BranchController extends Controller
 
     public function index(Request $request)
     {
-        $query = Branch::with('tenant');
+        $search = trim((string) $request->query('q'));
+        $query = Branch::query()
+        ->with('tenant')
+        ->search($search)
+        ->latest('id')
+        ->paginate(6);
 
-        if ($request->filled('q')) {
-            $search = $request->query('q');
-
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('address', 'LIKE', '%' . $search . '%')
-                    ->orWhere('id', 'LIKE', '%' . $search . '%')
-                    ->orWhere('email', 'LIKE', '%' . $search . '%')
-                    ->orWhere('city', 'LIKE', '%' . $search . '%');
-            });
-        }
-
-        return BranchResource::collection($query->paginate(6));
+        return BranchResource::collection($query);
 
     }
 
@@ -41,7 +34,6 @@ class BranchController extends Controller
 
     public function show(Branch $branch)
     {
-        // The branch is automatically injected by Laravel's route model binding
         return BranchResource::make($branch);
     }
 

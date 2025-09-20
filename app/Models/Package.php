@@ -25,11 +25,6 @@ class Package extends Model
         return $this->belongsTo(Tenant::class, 'tenant_id');
     }
 
-    // public function hotel()
-    // {
-    //     return $this->belongsTo(Hotel::class, 'hotel_id');
-    // }
-
     public function MK_Hotel()
     {
         return $this->belongsTo(Hotel::class, 'MKHotel');
