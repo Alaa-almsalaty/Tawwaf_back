@@ -9,6 +9,7 @@ use App\Http\Requests\ReservationIndexRequest;
 use App\Http\Resources\ReservationResource;
 use App\Enums\ReservationState;
 use Illuminate\Validation\Rule;
+use App\Jobs\UpdateReservationStatusJob;
 
 class ReservationController extends Controller
 {
@@ -85,28 +86,38 @@ public function index(ReservationIndexRequest $request)
             'reservation_state' => ['required', Rule::enum(ReservationState::class)],
         ]);
 
-    //     $updatedReservations = [];
-    //     foreach ($request->reservation_ids as $id) {
-    //         $reservation = Reservation::find($id);
-    //         if ($reservation) {
-    //             $reservation->reservation_state = $request->reservation_state;
-    //             $reservation->save();
-    //             $updatedReservations[] = $reservation;
-    //         }
-    //     }
+    // //     $updatedReservations = [];
+    // //     foreach ($request->reservation_ids as $id) {
+    // //         $reservation = Reservation::find($id);
+    // //         if ($reservation) {
+    // //             $reservation->reservation_state = $request->reservation_state;
+    // //             $reservation->save();
+    // //             $updatedReservations[] = $reservation;
+    // //         }
+    // //     }
 
-    //     return ReservationResource::collection(collect($updatedReservations)->load(['visitor', 'package']));
-        $updatedReservations = Reservation::whereIn('id', $request->reservation_ids)->get();
+    // //     return ReservationResource::collection(collect($updatedReservations)->load(['visitor', 'package']));
+    //     $updatedReservations = Reservation::whereIn('id', $request->reservation_ids)->get();
 
-        $updatedReservations->each(function ($reservation) use ($request) {
-            $reservation->reservation_state = $request->reservation_state;
-            $reservation->save();
-        });
+    //     $updatedReservations->each(function ($reservation) use ($request) {
+    //         $reservation->reservation_state = $request->reservation_state;
+    //         $reservation->save();
+    //     });
 
-        $updatedReservations->load(['visitor', 'package']);
+    //     $updatedReservations->load(['visitor', 'package']);
 
-        return ReservationResource::collection($updatedReservations);
-    }
+    //     return ReservationResource::collection($updatedReservations);
+
+            UpdateReservationStatusJob::dispatch(
+                $request->reservation_ids,
+                $request->reservation_state
+            );
+
+            return response()->json([
+                'message' => 'جاري تحديث حالة الحجوزات ...'
+            ]);
+
+}
 
     public function cancelReservation(Reservation $reservation)
     {
