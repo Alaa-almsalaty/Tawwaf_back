@@ -18,8 +18,9 @@ class OtpController extends Controller
             'email' => ['nullable','email'],
             'reason'=> ['nullable','string'],
         ]);
+$user = User::where('phone', $request->phone)->first();
 
-        $user = $request->user(); // or locate a user by phone/email for public flows
+       // $user = $request->user(); // or locate a user by phone/email for public flows
         $result = $this->otpService->send(
             user: $user,
             phoneE164: $data['phone'],

@@ -11,6 +11,7 @@ use App\Models\Tenant;
 use Spatie\Permission\Models\Role;
 //use Spatie\Permission\Models\Permission;
 use App\Models\Package;
+use App\Models\PackageRoom;
 use App\Models\Hotel;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -75,8 +76,10 @@ class DatabaseSeeder extends Seeder
         // ]);
         Hotel::factory()->count(5)->create();
 
-        Package::factory()->count(10)->create();
-        Reservation::factory()->count(10)->create();
+        Package::factory()->count(5)->create();
+                PackageRoom::factory()->count(5)->create();
+
+        Reservation::factory()->count(5)->create();
 
 
     }

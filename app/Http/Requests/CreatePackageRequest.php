@@ -39,6 +39,11 @@ class CreatePackageRequest extends FormRequest
             'image' => 'nullable|string',
             'new_MKHotel_name' => 'nullable|string|max:255',
             'new_MDHotel_name' => 'nullable|string|max:255',
+            'rooms' => 'required|array|min:1',
+'rooms.*.room_type' => 'required|in:single,double,triple,quad,quintuple,sextuple,septuple',
+'rooms.*.total_price_dinar' => 'nullable|numeric|min:0',
+'rooms.*.total_price_usd' => 'nullable|numeric|min:0',
+
         ];
     }
 
@@ -53,8 +58,8 @@ class CreatePackageRequest extends FormRequest
             'end_date' => $this->end_date ?? null,
             'MKduration' => $this->MKduration,
             'MDduration' => $this->MDduration,
-            'total_price_dinar' => $this->total_price_dinar ?? null,
-            'total_price_usd' => $this->total_price_usd ?? null,
+            //'total_price_dinar' => $this->total_price_dinar ?? null,
+            //'total_price_usd' => $this->total_price_usd ?? null,
             'currency' => $this->currency ?? 'dinar',
             'season' => $this->season,
             //'status' => $this->status ?? 'active',

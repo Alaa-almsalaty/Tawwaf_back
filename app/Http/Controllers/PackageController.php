@@ -9,6 +9,7 @@ use App\Http\Resources\PackageResource;
 use App\Http\Requests\CreatePackageRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Hotel;
+use App\Models\PackageRoom;
 use Illuminate\Pipeline\Pipeline;
 use App\Pipelines\Packages\PriceRangeFilter;
 use App\Pipelines\Packages\FlightDateFilter;
@@ -26,7 +27,7 @@ class PackageController extends Controller
     public function publicIndex(PackageIndexRequest $request)
     {
         $baseQuery = Package::query()
-            ->with(['MK_Hotel', 'MD_Hotel', 'tenant'])
+            ->with(['MK_Hotel', 'MD_Hotel', 'tenant', 'rooms'])
             ->where('status', true);
 
         $filters = [
@@ -56,7 +57,7 @@ class PackageController extends Controller
         $user = $request->user();
         $search = trim((string) $request->query('q'));
         $packages = Package::query()
-            ->with(['MK_Hotel', 'MD_Hotel', 'tenant'])
+            ->with(['MK_Hotel', 'MD_Hotel', 'tenant','rooms'])
             ->where('status', true)
             ->forUser($user)
             ->search($search)
@@ -80,14 +81,25 @@ class PackageController extends Controller
 
 
         $package = Package::create($data);
-        return new PackageResource($package);
+            // إنشاء الغرف المرتبطة بالباقة (لو تم إرسالها)
+        if ($request->has('rooms')) {
+            foreach ($request->rooms as $room) {
+                $package->rooms()->create([
+                    'room_type' => $room['room_type'],
+                    'total_price_dinar' => $room['total_price_dinar'] ?? null,
+                    'total_price_usd' => $room['total_price_usd'] ?? null,
+                ]);
+            }
+        }
+
+    return new PackageResource($package->load('rooms'));
     }
 
 
     public function show(Package $package)
     {
         $this->authorize('view', $package);
-        $package->load(['MK_Hotel', 'MD_Hotel', 'tenant']);
+        $package->load(['MK_Hotel', 'MD_Hotel', 'tenant', 'rooms']);
         return new PackageResource($package);
     }
 
@@ -104,7 +116,16 @@ class PackageController extends Controller
 
 
         $package->update($packageData);
-        $package->load(['MK_Hotel', 'MD_Hotel', 'tenant']);
+        if ($request->has('rooms')) {
+        foreach ($request->rooms as $room) {
+            $package->rooms()->create([
+                'room_type' => $room['room_type'],
+                'total_price_dinar' => $room['total_price_dinar'] ?? null,
+                'total_price_usd' => $room['total_price_usd'] ?? null,
+            ]);
+        }
+    }
+        $package->load(['MK_Hotel', 'MD_Hotel', 'tenant', 'rooms']);
         return new PackageResource($package);
     }
 
@@ -129,5 +150,11 @@ class PackageController extends Controller
         return $hotel->id;
     }
 
+    public function destroyRoom($roomId)
+    {
+        $room = PackageRoom::findOrFail($roomId);
+        $room->delete();
+        return response()->json(['message' => 'Room deleted successfully']);
+    }
 
 }

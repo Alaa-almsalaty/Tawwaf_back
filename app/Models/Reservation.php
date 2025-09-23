@@ -54,6 +54,11 @@ class Reservation extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function packageRoom()
+    {
+        return $this->belongsTo(PackageRoom::class, 'package_room_id');
+    }
+
     public function scopeForUser(Builder $q, User $user): Builder
     {
         if ($user->hasAnyRole(['manager', 'employee'])) {

@@ -52,6 +52,17 @@ class PackageResource extends JsonResource
                    ];
             }),
 
+            'rooms' => $this->whenLoaded('rooms', function () {
+                return $this->rooms->map(function ($room) {
+                    return [
+                        'id' => $room->id,
+                        'room_type' => $room->room_type,
+                        'total_price_dinar' => $room->total_price_dinar,
+                        'total_price_usd' => $room->total_price_usd,
+                    ];
+                });
+            }),
+
              //'MKHotel' => new HotelResource($this->whenLoaded('MK_Hotel')),
              //'MDHotel' => new HotelResource($this->whenLoaded('MD_Hotel')),
         ];

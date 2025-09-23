@@ -21,8 +21,8 @@ return new class extends Migration
             $table->date('end_date')->nullable(); // Optional end date for the package
             $table->integer('MKduration');
             $table->integer('MDduration');
-            $table->decimal('total_price_dinar')->nullable(); // Optional total price in Dinar
-            $table->decimal('total_price_usd')->nullable(); // Optional total price in USD
+           // $table->decimal('total_price_dinar')->nullable(); // Optional total price in Dinar
+            //$table->decimal('total_price_usd')->nullable(); // Optional total price in USD
             $table->enum('currency', ['dinar', 'usd'])->default('dinar'); // Currency type, default is Dinar
             $table->enum('season',['Umrah','Hajj','Ramadan','Eid','Normal'])->default('Normal'); // Season type, default is Normal
             $table->boolean('status')->default(true); // Status of the package, default is active

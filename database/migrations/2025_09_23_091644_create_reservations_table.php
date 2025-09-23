@@ -17,6 +17,10 @@ return new class extends Migration {
             $table->foreignId('visitor_id')->nullable()->constrained('users');
             $table->foreignId('family_id')->nullable()->constrained('families');
             $table->foreignId('package_id')->nullable()->constrained('packages')->onUpdate('cascade')->onDelete('cascade'); // Foreign key to the package, if applicable
+            $table->foreignId('package_room_id')->nullable()
+            ->constrained('package_rooms')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->foreignId('ticket_id')->nullable()
                 ->constrained('tickets')
                 ->onUpdate('cascade')

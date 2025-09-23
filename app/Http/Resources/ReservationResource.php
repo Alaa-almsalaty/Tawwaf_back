@@ -13,6 +13,7 @@ class ReservationResource extends JsonResource
             'id' => $this->id,
             'visitor_id' => UserResource::make($this->whenLoaded('visitor')),
             'package_id' => PackageResource::make($this->whenLoaded('package')),
+            'package_room_id' => PackageRoomResource::make($this->whenLoaded('packageRoom')),
             'extra_services' => $this->extra_services,
             'has_transportation' => $this->has_transportation,
             'has_ticket' => $this->has_ticket,

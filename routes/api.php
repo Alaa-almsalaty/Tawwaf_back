@@ -103,6 +103,7 @@ Route::middleware([
     Route::put('update/profile', [UserController::class, 'updateProfile']);
     //Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
     Route::apiResource('packages', PackageController::class);
+    Route::delete('/packages/rooms/{id}', [PackageController::class,'destroyRoom']);
     Route::apiResource('hotels', hotelController::class);
     // Route::apiResource('visitors', VisitorController::class);
     Route::get('/users/{userId}/clients-count', [ClientController::class, 'getClientsCountByUser']);

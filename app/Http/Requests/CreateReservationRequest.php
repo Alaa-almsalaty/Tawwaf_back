@@ -23,7 +23,8 @@ class CreateReservationRequest extends FormRequest
             'visitor_id' => 'nullable|exists:users,id',
             'family_id' => 'nullable|exists:families,id',
             'package_id' => 'nullable|exists:packages,id',
-            'ticket_id' => 'nullable|exists:tickets,id',
+            'package_room_id' => 'nullable|exists:package_rooms,id',
+            //'ticket_id' => 'nullable|exists:tickets,id',
             'number_of_travelers' => 'integer|min:1',
             'has_transportation' => 'boolean',
             'has_ticket' => 'boolean',
@@ -43,6 +44,7 @@ class CreateReservationRequest extends FormRequest
             'visitor_id' => $this->validated('visitor_id') ?? null,
             'family_id' => $this->validated('family_id') ?? null,
             'package_id' => $this->validated('package_id') ?? null,
+            'package_room_id' => $this->validated('package_room_id') ?? null,
             'ticket_id' => $this->validated('ticket_id') ?? null,
             'has_transportation' => $this->validated('has_transportation') ?? false,
             'has_ticket' => $this->validated('has_ticket') ?? false,
@@ -59,7 +61,6 @@ class CreateReservationRequest extends FormRequest
         return [
             'visitor_id.exists' => 'المستخدم غير موجود',
             'package_id.exists' => 'الباقة غير موجودة',
-            'ticket_id.exists' => 'التذكرة غير موجودة',
             'family_id.exists' => 'العائلة غير موجودة',
             'client_id.exists' => 'العميل غير موجود',
             'branch_id.exists' => 'الفرع غير موجود',
@@ -73,6 +74,8 @@ class CreateReservationRequest extends FormRequest
             'reservation_state.required' => 'حالة الحجز مطلوبة',
             'reservation_state.in' => 'حالة الحجز غير صحيحة',
             'note.string' => 'الملاحظة يجب ان تكون نصا',
+            'package_room_id.exists' => 'الغرفة المختارة غير موجودة',
+
         ];
     }
 }

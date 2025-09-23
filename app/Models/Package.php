@@ -40,6 +40,10 @@ class Package extends Model
         return $this->status === true;
     }
 
+    public function rooms()
+    {
+        return $this->hasMany(PackageRoom::class);
+    }
 
     public function scopeForUser(Builder $q, User $user): Builder
     {

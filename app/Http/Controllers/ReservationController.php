@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Reservation;
+use App\Models\PackageRoom;
 use App\Http\Requests\CreateReservationRequest;
 use App\Http\Requests\ReservationIndexRequest;
 use App\Http\Resources\ReservationResource;
@@ -20,7 +21,7 @@ public function index(ReservationIndexRequest $request)
     $search = trim((string) $request->query('q'));
 
     $reservations = Reservation::query()
-        ->with(['visitor','package'])
+        ->with(['visitor','package', 'packageRoom'])
         ->forUser($user)
         ->search($search)
         ->latest('id')
@@ -39,19 +40,20 @@ public function index(ReservationIndexRequest $request)
 
     public function store(CreateReservationRequest $request)
     {
-        $visitorId = $request->input('visitor_id');
+        // $visitorId = $request->input('visitor_id');
 
-        $hasReservation  = Reservation::where('visitor_id', $visitorId)
-            ->whereIn('reservation_state', ['pending', 'confirmed'])
-            ->exists();
+        // $hasReservation  = Reservation::where('visitor_id', $visitorId)
+        //     ->whereIn('reservation_state', ['pending', 'confirmed'])
+        //     ->exists();
 
-        if ($hasReservation ) {
-            return response()->json([
-                'message' => ' لا يمكنك إنشاء حجز جديد لأنه لديك حجز مسبق  .'
-            ], 422);
-        }
+        // if ($hasReservation ) {
+        //     return response()->json([
+        //         'message' => ' لا يمكنك إنشاء حجز جديد لأنه لديك حجز مسبق  .'
+        //     ], 422);
+        // }
 
         $data = $request->createReservation();
+
         $reservation = Reservation::create($data);
         return ReservationResource::make($reservation);
     }
@@ -108,7 +110,7 @@ public function index(ReservationIndexRequest $request)
 
     //     return ReservationResource::collection($updatedReservations);
 
-            UpdateReservationStatusJob::dispatch(
+            UpdateReservationStatusJob::dispatchSync(
                 $request->reservation_ids,
                 $request->reservation_state
             );
