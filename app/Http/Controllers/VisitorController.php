@@ -72,7 +72,7 @@ class VisitorController extends Controller
 
     public function viewCart(User $visitor)
     {
-        $cartItems = Cart::with(['package', 'visitor', 'package.MK_Hotel', 'package.MD_Hotel'])->where('visitor_id', $visitor->id)
+        $cartItems = Cart::with(['package', 'visitor', 'package.MK_Hotel', 'package.MD_Hotel','room'])->where('visitor_id', $visitor->id)
             ->get();
 
         return CartResource::collection($cartItems);

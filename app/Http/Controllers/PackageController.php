@@ -117,14 +117,24 @@ class PackageController extends Controller
 
         $package->update($packageData);
         if ($request->has('rooms')) {
-        foreach ($request->rooms as $room) {
-            $package->rooms()->create([
-                'room_type' => $room['room_type'],
-                'total_price_dinar' => $room['total_price_dinar'] ?? null,
-                'total_price_usd' => $room['total_price_usd'] ?? null,
-            ]);
+            $roomIds = collect($request->rooms)->pluck('id')->filter()->toArray();
+
+            // حذف أي غرفة موجودة في الباقة ليست موجودة في الريكوست
+            $package->rooms()->whereNotIn('id', $roomIds)->delete();
+
+            // تحديث أو إنشاء الغرف
+            foreach ($request->rooms as $room) {
+                $package->rooms()->updateOrCreate(
+                    ['id' => $room['id'] ?? null],
+                    [
+                        'room_type' => $room['room_type'],
+                        'total_price_dinar' => $room['total_price_dinar'] ?? null,
+                        'total_price_usd' => $room['total_price_usd'] ?? null,
+                    ]
+                );
+            }
         }
-    }
+
         $package->load(['MK_Hotel', 'MD_Hotel', 'tenant', 'rooms']);
         return new PackageResource($package);
     }

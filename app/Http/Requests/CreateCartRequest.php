@@ -18,6 +18,7 @@ class CreateCartRequest extends FormRequest
         return [
             'visitor_id' => 'required|exists:users,id',
             'package_id' => 'required|exists:packages,id',
+            'package_room_id' => 'required|exists:package_rooms,id',
         ];
     }
 
@@ -26,6 +27,7 @@ class CreateCartRequest extends FormRequest
         return [
             'visitor_id' => $this->visitor_id,
             'package_id' => $this->package_id,
+            'package_room_id' => $this->package_room_id,
         ];
     }
 }

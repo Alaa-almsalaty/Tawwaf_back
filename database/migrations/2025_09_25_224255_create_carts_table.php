@@ -13,6 +13,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('visitor_id')->constrained('users');
             $table->foreignId('package_id')->constrained('packages');
+            $table->foreignId('package_room_id')->constrained('package_rooms');
             $table->timestamps();
         });
     }

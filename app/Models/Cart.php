@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Cart extends Model
 {
     use HasFactory;
-    protected $fillable = ['visitor_id', 'package_id'];
+    protected $fillable = ['visitor_id', 'package_id', 'package_room_id'];
 
     public function visitor()
     {
@@ -19,5 +19,10 @@ class Cart extends Model
     public function package()
     {
         return $this->belongsTo(Package::class, 'package_id');
+    }
+
+        public function room()
+    {
+        return $this->belongsTo(PackageRoom::class, 'package_room_id');
     }
 }
