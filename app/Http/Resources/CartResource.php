@@ -19,6 +19,11 @@ class CartResource extends JsonResource
             'visitor' => new UserResource($this->whenLoaded('visitor')),
             'package' => new PackageResource($this->whenLoaded('package')),
             'room' => new PackageRoomResource($this->whenLoaded('room')),
+            'tenant' => $this->whenLoaded('tenant', function () {
+                        return [
+                            'company_name' => $this->tenant->company_name,
+                        ];
+                    }),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
