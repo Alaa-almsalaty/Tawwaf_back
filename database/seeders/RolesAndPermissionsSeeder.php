@@ -46,6 +46,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $manager->givePermissionTo($restorePackages);
         $manager->givePermissionTo($forceDeletePackages);
         $manager->givePermissionTo($viewAnyUsers);
+        $employee->givePermissionTo($updateUsers);
 
 
 

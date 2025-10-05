@@ -37,7 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/register', [AuthController::class, 'register']);
     Route::apiResource('users', UserController::class);
-    Route::put('/reset-password/{user}', [UserController::class, 'resetPassword']);
+    Route::put('/resetPassword/{user}', [UserController::class, 'resetPassword']);
 
     Route::apiResource('tenants', TenantController::class);
     Route::post('uploadLogo', [TenantController::class, 'uploadLogo']);

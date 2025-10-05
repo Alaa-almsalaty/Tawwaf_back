@@ -60,7 +60,7 @@ public function index(ReservationIndexRequest $request)
 
     public function show($visitorId)
     {
-        $reservation = Reservation::with(['visitor', 'package'])
+        $reservation = Reservation::with(['visitor', 'package','packageRoom'])
         ->where('visitor_id', $visitorId)
         ->first();
         return ReservationResource::make($reservation);
