@@ -21,20 +21,29 @@ class PriceRangeFilter
             return $next($query);
         }
 
-        $query->where(function (Builder $q) use ($currency, $range) {
-            $q->where('currency', $currency);
-            $priceCol = $currency === 'usd' ? 'total_price_usd' : 'total_price_dinar';
-            [$min, $max] = $this->parseRange($range);
-            if (!is_null($min)) {
-                $q->where($priceCol, '>=', $min);
-            }
-            if (!is_null($max)) {
-                $q->where($priceCol, '<=', $max);
-            }
+        [$min, $max] = $this->parseRange($range);
+
+        // Scope packages by package currency and by any related room price matching the range
+        $priceCol = $currency === 'usd' ? 'total_price_usd' : 'total_price_dinar';
+
+        $query->where(function (Builder $q) use ($currency, $priceCol, $min, $max) {
+            // keep package currency consistent if packages still have currency column
+            $q->where('currency', $currency)
+                ->whereHas('rooms', function (Builder $rq) use ($priceCol, $min, $max) {
+                    if (!is_null($min)) {
+                        $rq->where($priceCol, '>=', $min);
+                    }
+                    if (!is_null($max)) {
+                        $rq->where($priceCol, '<=', $max);
+                    }
+                });
         });
+
+        $query->distinct();
 
         return $next($query);
     }
+
 
     private function parseRange(string $range): array
     {

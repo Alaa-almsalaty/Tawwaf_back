@@ -16,7 +16,7 @@ class ClientController extends Controller
 
     public function index(Request $request)
     {
-        $query = Client::with(['family', 'personalInfo.passport', 'muhram', 'branch','createdBy']);
+        $query = Client::with(['family', 'personalInfo.passport', 'muhram', 'branch', 'createdBy', 'tenant']);
 
         if ($request->filled('q')) {
             $search = $request->query('q');
@@ -40,6 +40,10 @@ class ClientController extends Controller
 
         if ($request->filled('branch_id')) {
             $query->where('branch_id', $request->query('branch_id'));
+        }
+
+        if ($request->filled('tenant_id')) {
+            $query->where('tenant_id', $request->query('tenant_id'));
         }
 
         if ($request->filled('created_by')) {
@@ -90,52 +94,52 @@ class ClientController extends Controller
         ]);
     }
 
-public function uploadPassportImage(Request $request)
-{
-    if (!$request->hasFile('file')) {
-        return response()->json(['error' => 'No file uploaded'], 400);
+    public function uploadPassportImage(Request $request)
+    {
+        if (!$request->hasFile('file')) {
+            return response()->json(['error' => 'No file uploaded'], 400);
+        }
+
+        $file = $request->file('file');
+        $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+        $tenantId = auth()->user()?->tenant_id ?? $request->input('tenant_id') ?? 'default';
+
+        $destination = public_path("PassportsImages/$tenantId");
+        if (!file_exists($destination)) {
+            mkdir($destination, 0777, true);
+        }
+
+        $file->move($destination, $imageName);
+
+        // يعيد المسار للفرونت
+        return response()->json([
+            'path' => "/PassportsImages/$tenantId/$imageName"
+        ]);
     }
 
-    $file = $request->file('file');
-    $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+    public function uploadPersonalImage(Request $request)
+    {
+        if (!$request->hasFile('file')) {
+            return response()->json(['error' => 'No file uploaded'], 400);
+        }
 
-    $tenantId = auth()->user()?->tenant_id ?? $request->input('tenant_id') ?? 'default';
+        $file = $request->file('file');
+        $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
 
-    $destination = public_path("PassportsImages/$tenantId");
-    if (!file_exists($destination)) {
-        mkdir($destination, 0777, true);
+        $tenantId = auth()->user()?->tenant_id ?? $request->input('tenant_id') ?? 'default';
+
+        $destination = public_path("PersonalImages/$tenantId");
+        if (!file_exists($destination)) {
+            mkdir($destination, 0777, true);
+        }
+
+        $file->move($destination, $imageName);
+
+        return response()->json([
+            'path' => "/PersonalImages/$tenantId/$imageName"
+        ]);
     }
-
-    $file->move($destination, $imageName);
-
-    // يعيد المسار للفرونت
-    return response()->json([
-        'path' => "/PassportsImages/$tenantId/$imageName"
-    ]);
-}
-
-public function uploadPersonalImage(Request $request)
-{
-    if (!$request->hasFile('file')) {
-        return response()->json(['error' => 'No file uploaded'], 400);
-    }
-
-    $file = $request->file('file');
-    $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
-
-    $tenantId = auth()->user()?->tenant_id ?? $request->input('tenant_id') ?? 'default';
-
-    $destination = public_path("PersonalImages/$tenantId");
-    if (!file_exists($destination)) {
-        mkdir($destination, 0777, true);
-    }
-
-    $file->move($destination, $imageName);
-
-    return response()->json([
-        'path' => "/PersonalImages/$tenantId/$imageName"
-    ]);
-}
 
     public function getClientsCountByUser($userId)
     {

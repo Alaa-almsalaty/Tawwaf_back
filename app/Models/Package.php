@@ -47,6 +47,9 @@ class Package extends Model
 
     public function scopeForUser(Builder $q, User $user): Builder
     {
+        if ($user->hasRole('super')) {
+            return $q;
+        }
         if ($user->hasAnyRole(['manager', 'employee'])) {
             return $q->where('tenant_id', $user->tenant_id);
         }
@@ -64,11 +67,14 @@ class Package extends Model
                 ->orWhere('start_date', 'like', "%{$term}%")
                 ->orWhere('season', 'like', "%{$term}%")
                 ->orWhere('currency', 'like', "%{$term}%")
-                ->orWhere('total_price_dinar', '<=', "%{$term}%")
-                ->orWhere('total_price_usd', '<=', "%{$term}%")
 
                 ->orWhereHas('tenant', function (Builder $t) use ($term) {
                     $t->where('data->company_name', 'like', "%{$term}%");
+                })
+                ->orWhereHas('rooms', function (Builder $r) use ($term) {
+                    $r->where('room_type', 'like', "%{$term}%")
+                      ->orWhere('total_price_dinar', 'like', "%{$term}%")
+                      ->orWhere('total_price_usd', 'like', "%{$term}%");
                 })
                 ->orWhereHas('MK_Hotel', function (Builder $h) use ($term) {
                     $h->where(function (Builder $g) use ($term) {

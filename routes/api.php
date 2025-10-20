@@ -38,6 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::apiResource('users', UserController::class);
     Route::put('/resetPassword/{user}', [UserController::class, 'resetPassword']);
+    Route::get('/allpackages', [PackageController::class, 'index']);
+    Route::get('/allclients', [ClientController::class, 'index']);
 
     Route::apiResource('tenants', TenantController::class);
     Route::post('uploadLogo', [TenantController::class, 'uploadLogo']);
@@ -102,8 +104,8 @@ Route::middleware([
     Route::get('user/profile', [UserController::class, 'profile']);
     Route::put('update/profile', [UserController::class, 'updateProfile']);
     //Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
-    Route::apiResource('packages', PackageController::class);
     Route::delete('/packages/rooms/{id}', [PackageController::class,'destroyRoom']);
+    Route::apiResource('packages', PackageController::class);
     Route::apiResource('hotels', hotelController::class);
     // Route::apiResource('visitors', VisitorController::class);
     Route::get('/users/{userId}/clients-count', [ClientController::class, 'getClientsCountByUser']);

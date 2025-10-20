@@ -43,7 +43,7 @@ class PackageController extends Controller
             ->through($filters)
             ->thenReturn();
 
-        \Log::debug('filters', $request->only('type', 'currency', 'price', 'date', 'date_tolerance_days', 'distance'));
+        \Log::debug('filters', $request->only('type', 'currency', 'price', 'date', 'date_tolerance_days', 'distance','tenant_name'));
         \Log::debug('sql', ['sql' => $query->toSql(), 'bindings' => $query->getBindings()]);
 
         //$packages = $query->latest('id')->paginate($request->integer('per_page', 10));

@@ -13,13 +13,16 @@ class TenantNameFilter
     {
     }
 
-public function handle(Builder $query, Closure $next)
+    public function handle(Builder $query, Closure $next)
     {
-            $tenantName = $this->request->input('tenant_name');
+        $tenantName = $this->request->input('tenant_name');
+        if (!filled($tenantName)) {
+            return $next($query);
+        }
 
-            $query->whereHas('tenant', function (Builder $q) use ($tenantName) {
-                $q->where('data->company_name', 'like', "%{$tenantName}%");
-            });
+        $query->whereHas('tenant', function (Builder $q) use ($tenantName) {
+            $q->where('data->company_name', 'like', "%{$tenantName}%");
+        });
 
 
         return $next($query);

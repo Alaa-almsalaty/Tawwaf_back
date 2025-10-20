@@ -24,24 +24,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-    Role::firstOrCreate(['name' => 'super', 'guard_name' => 'web']);
-    Role::firstOrCreate(['name' => 'manager', 'guard_name' => 'web']);
-    Role::firstOrCreate(['name' => 'employee', 'guard_name' => 'web']);
-    Role::firstOrCreate(['name' => 'visitor', 'guard_name' => 'web']);
+        Role::firstOrCreate(['name' => 'super', 'guard_name' => 'web']);
+        Role::firstOrCreate(['name' => 'manager', 'guard_name' => 'web']);
+        Role::firstOrCreate(['name' => 'employee', 'guard_name' => 'web']);
+        Role::firstOrCreate(['name' => 'visitor', 'guard_name' => 'web']);
 
         Tenant::factory()->withDomain()->create();
         Tenant::factory()->count(5)->create();
 
         User::factory(10)->create()->each(function ($user) {
             $roles = ['employee', 'manager', 'visitor'];
-            $user->assignRole($roles[array_rand($roles)]);})  ;
-         Branch::factory(10)->create();
+            $user->assignRole($roles[array_rand($roles)]);
+        });
+        Branch::factory(10)->create();
         //Client::factory(10)->create();
         //  // Create 5 clients without families
-         Client::factory(10)->create();
+        Client::factory(10)->create();
 
         // // Create 5 clients with families
-         Client::factory(5)->withFamily()->create();
+        Client::factory(5)->withFamily()->create();
 
         Client::factory(5)->withFamilyMembers(3)->create();
 
@@ -77,7 +78,7 @@ class DatabaseSeeder extends Seeder
         Hotel::factory()->count(5)->create();
 
         Package::factory()->count(5)->create();
-                PackageRoom::factory()->count(5)->create();
+        PackageRoom::factory()->count(5)->create();
 
         Reservation::factory()->count(5)->create();
 
