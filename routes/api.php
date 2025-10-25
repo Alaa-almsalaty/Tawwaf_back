@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/allclients', [ClientController::class, 'index']);
 
     Route::apiResource('tenants', TenantController::class);
+    Route::post('/tenants/{tenant}/balance/decrease', [TenantController::class, 'decreaseBalance']);
     Route::post('uploadLogo', [TenantController::class, 'uploadLogo']);
     Route::get('/superdashboard', [DashboardController::class, 'getDashboardData']);
     Route::get('/reservation', [ReservationController::class, 'index']);

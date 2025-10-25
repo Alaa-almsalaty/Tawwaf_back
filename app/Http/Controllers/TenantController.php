@@ -9,6 +9,7 @@ use App\Http\Requests\CreateCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class TenantController extends Controller
 {
@@ -103,35 +104,67 @@ class TenantController extends Controller
         return response()->json(['message' => 'Tenant deleted successfully']);
     }
 
+     public function decreaseBalance(Request $request, Tenant $tenant)
+    {
+        // Optional: Check role, ensure only admin can do this
+        if (!$request->user()->hasRole('super')) {
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 403);
+        }
 
 
+        return DB::transaction(function () use ($tenant) {
+            // Lock the tenant row for safe balance update
+            $t = Tenant::where('id', $tenant->id)->lockForUpdate()->first();
 
-public function uploadLogo(Request $request)
-{
-    if (!$request->hasFile('logo')) {
-        return response()->json(['error' => 'No file uploaded'], 400);
-        // throw ValidationException::withMessages(['file' => 'No file uploaded']);
+            if ($t->balance <= 0) {
+                return response()->json([
+                    'can_decrease' => false,
+                    'message' => 'Insufficient balance',
+                    'balance' => $t->balance
+                ], 400);
+            }
+
+            $t->balance -= 1;
+            $t->save();
+
+            return response()->json([
+                'can_decrease' => true,
+                'message' => 'Balance decreased successfully',
+                'balance' => $t->balance
+            ]);
+        });
     }
 
-    $file = $request->file('logo');
-    $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
 
-    $destination = public_path("Logos");
-    if (!file_exists($destination)) {
-        mkdir($destination, 0777, true);
+
+    public function uploadLogo(Request $request)
+    {
+        if (!$request->hasFile('logo')) {
+            return response()->json(['error' => 'No file uploaded'], 400);
+            // throw ValidationException::withMessages(['file' => 'No file uploaded']);
+        }
+
+        $file = $request->file('logo');
+        $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+        $destination = public_path("Logos");
+        if (!file_exists($destination)) {
+            mkdir($destination, 0777, true);
+        }
+
+        $file->move($destination, $imageName);
+
+        // يعيد المسار للفرونت
+        return response()->json([
+            'path' => "/Logos/$imageName"
+        ]);
     }
 
-    $file->move($destination, $imageName);
-
-    // يعيد المسار للفرونت
-    return response()->json([
-        'path' => "/Logos/$imageName"
-    ]);
-}
-
-public function landingTenants()
-{
-    $tenants = Tenant::select('data->company_name as company_name', 'data->logo as logo')->get();
-    return TenantResource::collection($tenants);
-}
+    public function landingTenants()
+    {
+        $tenants = Tenant::select('data->company_name as company_name', 'data->logo as logo')->get();
+        return TenantResource::collection($tenants);
+    }
 }
