@@ -32,6 +32,8 @@ class AuthController extends Controller
 
         $token = $user->createToken('RehlatyApp')->plainTextToken;
 
+        $mainDomain = parse_url(config('app.url'), PHP_URL_HOST);
+
         // إذا لم يكن لدى المستخدم tenant_id، استخدم الدومين الافتراضي
         if (!$user->tenant_id) {
             return response()->json([
@@ -46,8 +48,8 @@ class AuthController extends Controller
         // الحصول على الدومين الحالي من الهيدر أو من الرابط الحالي
         $currentHost = $request->header('X-Tenant-Domain');
 
-        // لو الدومين localhost، جلب أول دومين موجود لنفس الـ tenant
-        if ($currentHost === 'localhost') {
+    // لو دخل من الدومين الرئيسي، يرجع أول دومين متاح له
+        if ($currentHost === $mainDomain) {
             $domain = Domain::where('tenant_id', $user->tenant_id)->first();
 
             return response()->json([
