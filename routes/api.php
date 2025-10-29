@@ -30,6 +30,8 @@ Route::post('/visitor_register', [VisitorController::class, 'store']);
 Route::post('/auth/otp/request', [OtpController::class, 'requestOtp']);
 Route::post('/auth/otp/verify', [OtpController::class, 'verifyOtp']);
 
+Route::post('/check-user', [AuthController::class, 'checkUser']);
+
 
 
 //Central (super admin) routes
@@ -109,6 +111,7 @@ Route::middleware([
     Route::apiResource('hotels', hotelController::class);
     // Route::apiResource('visitors', VisitorController::class);
     Route::get('/users/{userId}/clients-count', [ClientController::class, 'getClientsCountByUser']);
+    Route::post('uploadImage', [PackageController::class, 'uploadImage']);
 
 
     Route::post('/adduser', [AuthController::class, 'register']);

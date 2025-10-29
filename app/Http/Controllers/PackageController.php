@@ -71,6 +71,9 @@ class PackageController extends Controller
     {
         $data = $request->CreatePackageRequest();
 
+        if ($request->has('image')) {
+            $data['image'] = $request->image;
+        }
         if (!empty($data['new_MKHotel_name'])) {
             $data['MKHotel'] = $this->createHotel($data['new_MKHotel_name'], 'مكة');
         }
@@ -106,6 +109,10 @@ class PackageController extends Controller
     public function update(UpdatePackageRequest $request, Package $package)
     {
         $packageData = $request->UpdatePackage();
+
+        if ($request->has('image')) {
+            $packageData['image'] = $request->image;
+        }
         if (!empty($packageData['new_MKHotel_name'])) {
             $packageData['MKHotel'] = $this->createHotel($packageData['new_MKHotel_name'], 'مكة');
         }
@@ -165,6 +172,27 @@ class PackageController extends Controller
         $room = PackageRoom::findOrFail($roomId);
         $room->delete();
         return response()->json(['message' => 'Room deleted successfully']);
+    }
+
+    public function uploadImage(Request $request)
+    {
+        if (!$request->hasFile('image')) {
+            return response()->json(['error' => 'No file uploaded'], 400);
+        }
+
+        $file = $request->file('image');
+        $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+        $destination = public_path("Packages");
+        if (!file_exists($destination)) {
+            mkdir($destination, 0777, true);
+        }
+
+        $file->move($destination, $imageName);
+
+        return response()->json([
+            'path' => "/Packages/$imageName"
+        ]);
     }
 
 }

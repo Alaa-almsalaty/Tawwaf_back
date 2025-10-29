@@ -17,6 +17,7 @@ class PackageResource extends JsonResource
             'description' => $this->description,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
+            'image' => $this->image, 
             //'total_price_dinar' => $this->total_price_dinar,
             //'total_price_usd' => $this->total_price_usd,
             'currency' => $this->currency,
