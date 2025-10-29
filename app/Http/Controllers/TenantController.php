@@ -167,4 +167,35 @@ class TenantController extends Controller
         $tenants = Tenant::select('data->company_name as company_name', 'data->logo as logo')->get();
         return TenantResource::collection($tenants);
     }
+
+
+
+public function uploadLogo(Request $request)
+{
+    if (!$request->hasFile('logo')) {
+        return response()->json(['error' => 'No file uploaded'], 400);
+        // throw ValidationException::withMessages(['file' => 'No file uploaded']);
+    }
+
+    $file = $request->file('logo');
+    $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+    $destination = public_path("Logos");
+    if (!file_exists($destination)) {
+        mkdir($destination, 0777, true);
+    }
+
+    $file->move($destination, $imageName);
+
+    // يعيد المسار للفرونت
+    return response()->json([
+        'path' => "/Logos/$imageName"
+    ]);
+}
+
+public function landingTenants()
+{
+    $tenants = Tenant::select('data->company_name as company_name', 'data->logo as logo')->get();
+    return TenantResource::collection($tenants);
+}
 }

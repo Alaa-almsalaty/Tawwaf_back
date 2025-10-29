@@ -7,6 +7,8 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Stancl\Tenancy\Database\Models\Domain;
 
 class AuthController extends Controller
@@ -77,4 +79,24 @@ class AuthController extends Controller
             ],
         ]);
     }
+
+
+    public function checkUser(Request $request)
+    {
+        $username = $request->input('username');
+        $password = $request->input('password');
+
+        $user = User::where('username', $username)->first();
+
+        if (!$user) {
+            return 'false';
+        }
+
+        if (Hash::check($password, $user->password)) {
+            return 'true';
+        }
+
+        return 'false';
+    }
+
 }
