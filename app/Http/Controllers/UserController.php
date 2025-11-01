@@ -97,7 +97,11 @@ class UserController extends Controller
 
         public function profile()
     {
-        return new UserResource(auth()->user()->load('tenant'));
+        $user = auth()->user();
+        if ($user->IsManager() || $user->IsEmployee() ){
+            $user->load('tenant');
+        }
+        return new UserResource($user);
     }
 
     // public function updateProfile(Request $request)

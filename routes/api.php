@@ -55,6 +55,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/visitors/{visitor}/cart', [VisitorController::class, 'viewCart']);
     Route::delete('/cart/{cart}', [VisitorController::class, 'removeFromCart']);
     Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
+    Route::put('/profile', [UserController::class, 'profile']);
+    Route::put('/profile/update', [UserController::class, 'update']);
     Route::patch('/reservations/{reservation}/cancel', [ReservationController::class, 'cancelReservation']);
 
     Route::patch('/reservations/bulk-status', [ReservationController::class, 'bulkUpdateStatus']);
@@ -106,7 +108,7 @@ Route::middleware([
     Route::post('/upload-passport-image', [ClientController::class, 'uploadPassportImage']);
     Route::post('/upload-personal-image', [ClientController::class, 'uploadPersonalImage']);
     Route::get('user/profile', [UserController::class, 'profile']);
-    Route::put('update/profile', [UserController::class, 'updateProfile']);
+    Route::put('update/profile', [UserController::class, 'update']);
     //Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
     Route::delete('/packages/rooms/{id}', [PackageController::class,'destroyRoom']);
     Route::apiResource('packages', PackageController::class);
