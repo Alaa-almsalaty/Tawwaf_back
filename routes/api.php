@@ -55,7 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/visitors/{visitor}/cart', [VisitorController::class, 'viewCart']);
     Route::delete('/cart/{cart}', [VisitorController::class, 'removeFromCart']);
     Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
-    Route::put('/profile', [UserController::class, 'profile']);
+    Route::get('/profile', [UserController::class, 'profile']);
     Route::put('/profile/update', [UserController::class, 'update']);
     Route::patch('/reservations/{reservation}/cancel', [ReservationController::class, 'cancelReservation']);
 
