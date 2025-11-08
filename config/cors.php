@@ -5,7 +5,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://tawwaf.ly', 'https://*.tawwaf.ly','http://localhost:4173/'],
+    'allowed_origins' => ['*'],
 
     'supports_credentials' => true,
 
