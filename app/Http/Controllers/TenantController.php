@@ -149,7 +149,8 @@ class TenantController extends Controller
         $file = $request->file('logo');
         $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
 
-        $destination = public_path("Logos");
+        $destination = env('UPLOAD_PATH', public_path('Logos'));
+
         if (!file_exists($destination)) {
             mkdir($destination, 0777, true);
         }
