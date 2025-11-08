@@ -23,6 +23,7 @@ use App\Http\Controllers\DashboardController;
 
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/refresh', [AuthController::class, 'refresh']);
 Route::get('/landing_packages', [PackageController::class, 'publicIndex']);
 //Route::apiResource('tenants', TenantController::class)->only(['index']);
 Route::get('/landing_tenants', [TenantController::class, 'landingTenants']);
@@ -43,6 +44,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/resetPassword/{user}', [UserController::class, 'resetPassword']);
     Route::get('/allpackages', [PackageController::class, 'index']);
     Route::get('/allclients', [ClientController::class, 'index']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout-all', [AuthController::class, 'logoutAll']);
 
     Route::apiResource('tenants', TenantController::class);
     Route::post('/tenants/{tenant}/balance/decrease', [TenantController::class, 'decreaseBalance']);
@@ -77,6 +80,8 @@ Route::middleware([
 ])->group(function () {
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('all-users', UserController::class);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout-all', [AuthController::class, 'logoutAll']);
     Route::put('/reset-password/{user}', [UserController::class, 'resetPassword']);
     Route::apiResource('branches', BranchController::class);
     Route::get('/notifications', function (Request $request) {

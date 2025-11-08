@@ -30,54 +30,112 @@ class AuthController extends Controller
     {
         $user = $request->authenticate();
 
-        $token = $user->createToken('RehlatyApp')->plainTextToken;
+        // 🔹 Delete old tokens to avoid unlimited device sessions (optional but safer)
+        $user->tokens()->delete();
 
-        // إذا لم يكن لدى المستخدم tenant_id، استخدم الدومين الافتراضي
+        // 🔹 Create short-lived access token (uses Sanctum expiration from config)
+        $accessToken = $user->createToken('access-token')->plainTextToken;
+
+        // 🔹 Create long-lived refresh token (does NOT expire unless manually revoked)
+        $refreshToken = $user->createToken('refresh-token', ['refresh'])->plainTextToken;
+
+        // ✅ If the user does not belong to a tenant (Super Admin or Visitor)
         if (!$user->tenant_id) {
             return response()->json([
                 'user' => $user,
-                'token' => $token,
+                'access_token' => $accessToken,
+                'refresh_token' => $refreshToken,
+                'token_type' => 'Bearer',
+                'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 60 : null,
                 'tenant' => [
                     'domain' => parse_url(config('app.url'), PHP_URL_HOST),
                 ],
             ]);
         }
 
-        // الحصول على الدومين الحالي من الهيدر أو من الرابط الحالي
+        // ✅ Determine current domain from frontend header
         $currentHost = $request->header('X-Tenant-Domain');
 
-        // لو الدومين localhost، جلب أول دومين موجود لنفس الـ tenant
-    if (in_array($currentHost, ['tawwaf.ly', 'www.tawwaf.ly', 'localhost'])) {
+        // If accessing from central domain or localhost → return the tenant's first domain instead
+        if (in_array($currentHost, ['tawwaf.ly', 'www.tawwaf.ly', 'localhost'])) {
             $domain = Domain::where('tenant_id', $user->tenant_id)->first();
 
             return response()->json([
                 'user' => $user,
-                'token' => $token,
+                'access_token' => $accessToken,
+                'refresh_token' => $refreshToken,
+                'token_type' => 'Bearer',
+                'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 60 : null,
                 'tenant' => [
                     'domain' => $domain?->domain ?? parse_url(config('app.url'), PHP_URL_HOST),
                 ],
             ]);
         }
 
-        // البحث عن الدومين ضمن الدومينات الخاصة بالمستخدم
+        // ✅ For login from a tenant subdomain → verify ownership
         $domain = Domain::where('domain', $currentHost)
             ->where('tenant_id', $user->tenant_id)
             ->first();
 
-        // رفض الوصول إذا الدومين غير موجود
         if (!$domain) {
             return response()->json([
                 'message' => 'User does not belong to this tenant domain'
             ], 403);
         }
 
+        // ✅ Return final successful response
         return response()->json([
             'user' => $user,
-            'token' => $token,
+            'access_token' => $accessToken,
+            'refresh_token' => $refreshToken,
+            'token_type' => 'Bearer',
+            'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 60 : null,
             'tenant' => [
                 'domain' => $domain->domain,
             ],
         ]);
+    }
+
+
+    public function refresh(Request $request)
+    {
+        $refreshToken = $request->bearerToken();
+
+        if (!$refreshToken) {
+            return response()->json(['message' => 'Refresh token missing'], 401);
+        }
+
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Invalid or expired refresh token'], 401);
+        }
+
+        // Delete old access tokens (but keep refresh token alive)
+        $user->tokens()->where('name', 'access-token')->delete();
+
+        // Issue new access token
+        $newAccessToken = $user->createToken('access-token')->plainTextToken;
+
+        return response()->json([
+            'access_token' => $newAccessToken,
+            'token_type' => 'Bearer',
+            'expires_in' => config('sanctum.expiration') * 60,
+        ]);
+    }
+
+    public function logout(Request $request)
+    {
+        // Deletes only the current access token
+        $request->user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'Logged out']);
+    }
+
+    public function logoutAll(Request $request) // OPTIONAL
+    {
+        // Deletes ALL tokens of this user (access + refresh)
+        $request->user()->tokens()->delete();
+        return response()->json(['message' => 'Logged out from all devices']);
     }
 
 
