@@ -48,7 +48,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout-all', [AuthController::class, 'logoutAll']);
 
     Route::apiResource('tenants', TenantController::class);
-    Route::post('/tenants/{tenant}/balance/decrease', [TenantController::class, 'decreaseBalance']);
     Route::post('uploadLogo', [TenantController::class, 'uploadLogo']);
     Route::get('/superdashboard', [DashboardController::class, 'getDashboardData']);
     Route::get('/reservation', [ReservationController::class, 'index']);
@@ -110,6 +109,7 @@ Route::middleware([
         return response()->noContent();
     });
 
+    Route::post('/tenants/{tenant}/balance/decrease', [TenantController::class, 'decreaseBalance']);
     Route::post('/upload-passport-image', [ClientController::class, 'uploadPassportImage']);
     Route::post('/upload-personal-image', [ClientController::class, 'uploadPersonalImage']);
     Route::get('user/profile', [UserController::class, 'profile']);

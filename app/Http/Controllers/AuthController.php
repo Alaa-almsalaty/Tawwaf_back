@@ -30,16 +30,16 @@ class AuthController extends Controller
     {
         $user = $request->authenticate();
 
-        // 🔹 Delete old tokens to avoid unlimited device sessions (optional but safer)
+        // Delete old tokens to avoid unlimited device sessions
         $user->tokens()->delete();
 
-        // 🔹 Create short-lived access token (uses Sanctum expiration from config)
+        // Create short-lived access token
         $accessToken = $user->createToken('access-token')->plainTextToken;
 
-        // 🔹 Create long-lived refresh token (does NOT expire unless manually revoked)
+        // Create long-lived refresh token
         $refreshToken = $user->createToken('refresh-token', ['refresh'])->plainTextToken;
 
-        // ✅ If the user does not belong to a tenant (Super Admin or Visitor)
+        // If the user does not belong to a tenant (Super Admin or Visitor)
         if (!$user->tenant_id) {
             return response()->json([
                 'user' => $user,
@@ -53,7 +53,7 @@ class AuthController extends Controller
             ]);
         }
 
-        // ✅ Determine current domain from frontend header
+        // Determine current domain from frontend header
         $currentHost = $request->header('X-Tenant-Domain');
 
         // If accessing from central domain or localhost → return the tenant's first domain instead
@@ -72,7 +72,7 @@ class AuthController extends Controller
             ]);
         }
 
-        // ✅ For login from a tenant subdomain → verify ownership
+        // For login from a tenant subdomain → verify ownership
         $domain = Domain::where('domain', $currentHost)
             ->where('tenant_id', $user->tenant_id)
             ->first();
@@ -83,7 +83,7 @@ class AuthController extends Controller
             ], 403);
         }
 
-        // ✅ Return final successful response
+        // Return final successful response
         return response()->json([
             'user' => $user,
             'access_token' => $accessToken,

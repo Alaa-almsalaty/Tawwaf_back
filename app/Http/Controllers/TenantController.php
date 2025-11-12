@@ -106,8 +106,7 @@ class TenantController extends Controller
 
      public function decreaseBalance(Request $request, Tenant $tenant)
     {
-        // Optional: Check role, ensure only admin can do this
-        if (!$request->user()->hasRole('super')) {
+        if (!$request->user()->hasRole('manager')) {
             return response()->json([
                 'error' => 'Unauthorized'
             ], 403);
