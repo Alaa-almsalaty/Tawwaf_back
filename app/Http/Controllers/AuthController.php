@@ -10,6 +10,7 @@ use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Stancl\Tenancy\Database\Models\Domain;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -46,7 +47,7 @@ class AuthController extends Controller
                 'access_token' => $accessToken,
                 'refresh_token' => $refreshToken,
                 'token_type' => 'Bearer',
-                'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 60 : null,
+                'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 1 : null,
                 'tenant' => [
                     'domain' => parse_url(config('app.url'), PHP_URL_HOST),
                 ],
@@ -65,7 +66,7 @@ class AuthController extends Controller
                 'access_token' => $accessToken,
                 'refresh_token' => $refreshToken,
                 'token_type' => 'Bearer',
-                'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 60 : null,
+                'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 1 : null,
                 'tenant' => [
                     'domain' => $domain?->domain ?? parse_url(config('app.url'), PHP_URL_HOST),
                 ],
@@ -105,7 +106,15 @@ class AuthController extends Controller
             return response()->json(['message' => 'Refresh token missing'], 401);
         }
 
-        $user = $request->user();
+        // Find the token model from the provided plain-text token string
+        $tokenModel = PersonalAccessToken::findToken($refreshToken);
+
+        // Token not found or doesn't have refresh ability
+        if (!$tokenModel || !$tokenModel->can('refresh')) {
+            return response()->json(['message' => 'Invalid or expired refresh token'], 401);
+        }
+
+        $user = $tokenModel->tokenable;
 
         if (!$user) {
             return response()->json(['message' => 'Invalid or expired refresh token'], 401);
@@ -120,7 +129,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $newAccessToken,
             'token_type' => 'Bearer',
-            'expires_in' => config('sanctum.expiration') * 1,
+            'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 1 : null,
         ]);
     }
 
