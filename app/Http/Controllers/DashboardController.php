@@ -31,6 +31,8 @@ class DashboardController extends Controller
             });
 
         $balance = auth()->user()?->tenant?->balance ?? 0;
+        $company_name = auth()->user()?->tenant?->company_name;
+        $season = auth()->user()?->tenant?->season;
 
         // $employees = User::where('tenant_id', $tenantId)
         //     ->where('role', 'employee')
@@ -41,6 +43,8 @@ class DashboardController extends Controller
             'branches_count' => $branchesCount,
             'clients_count_per_branch' => $clientsCountperBranch,
             'balance' => $balance,
+            'company_name' => $company_name,
+            'season' => $season,
             // 'employees_clients' => $employees->map(function ($employee) {
             //     return [
             //         'id' => $employee->id,
