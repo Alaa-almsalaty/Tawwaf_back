@@ -89,7 +89,7 @@ class AuthController extends Controller
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
             'token_type' => 'Bearer',
-            'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 60 : null,
+            'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 1 : null,
             'tenant' => [
                 'domain' => $domain->domain,
             ],
@@ -120,7 +120,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $newAccessToken,
             'token_type' => 'Bearer',
-            'expires_in' => config('sanctum.expiration') * 60,
+            'expires_in' => config('sanctum.expiration') * 1,
         ]);
     }
 
