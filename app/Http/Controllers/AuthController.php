@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Stancl\Tenancy\Database\Models\Domain;
 use Laravel\Sanctum\PersonalAccessToken;
+use App\Http\Resources\AuthResource;
 
 class AuthController extends Controller
 {
@@ -42,16 +43,12 @@ class AuthController extends Controller
 
         // If the user does not belong to a tenant (Super Admin or Visitor)
         if (!$user->tenant_id) {
-            return response()->json([
-                'user' => $user,
-                'access_token' => $accessToken,
-                'refresh_token' => $refreshToken,
-                'token_type' => 'Bearer',
-                'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 1 : null,
-                'tenant' => [
-                    'domain' => parse_url(config('app.url'), PHP_URL_HOST),
-                ],
-            ]);
+            return new AuthResource(
+                $user,
+                $accessToken,
+                $refreshToken,
+                null
+            );
         }
 
         // Determine current domain from frontend header
@@ -61,16 +58,12 @@ class AuthController extends Controller
         if (in_array($currentHost, ['tawwaf.ly', 'www.tawwaf.ly', 'localhost'])) {
             $domain = Domain::where('tenant_id', $user->tenant_id)->first();
 
-            return response()->json([
-                'user' => $user,
-                'access_token' => $accessToken,
-                'refresh_token' => $refreshToken,
-                'token_type' => 'Bearer',
-                'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 1 : null,
-                'tenant' => [
-                    'domain' => $domain?->domain ?? parse_url(config('app.url'), PHP_URL_HOST),
-                ],
-            ]);
+            return new AuthResource(
+                $user,
+                $accessToken,
+                $refreshToken,
+                $domain->domain
+            );
         }
 
         // For login from a tenant subdomain → verify ownership
@@ -84,17 +77,12 @@ class AuthController extends Controller
             ], 403);
         }
 
-        // Return final successful response
-        return response()->json([
-            'user' => $user,
-            'access_token' => $accessToken,
-            'refresh_token' => $refreshToken,
-            'token_type' => 'Bearer',
-            'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 1 : null,
-            'tenant' => [
-                'domain' => $domain->domain,
-            ],
-        ]);
+        return new AuthResource(
+            $user,
+            $accessToken,
+            $refreshToken,
+            $domain->domain
+        );
     }
 
 
@@ -126,11 +114,12 @@ class AuthController extends Controller
         // Issue new access token
         $newAccessToken = $user->createToken('access-token')->plainTextToken;
 
-        return response()->json([
-            'access_token' => $newAccessToken,
-            'token_type' => 'Bearer',
-            'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') * 1 : null,
-        ]);
+        return new AuthResource(
+            $user,
+            $newAccessToken,
+            null,
+            $user->tenant_id ? Domain::where('tenant_id', $user->tenant_id)->first()->domain : null
+        );
     }
 
     public function logout(Request $request)
