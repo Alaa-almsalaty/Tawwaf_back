@@ -7,7 +7,7 @@ return [
 
     'allowed_origins' => ['*'],
 
-    'supports_credentials' => false,
+    'supports_credentials' => true,
 
     'allowed_origins_patterns' => [],
 
