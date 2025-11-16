@@ -9,6 +9,7 @@ use App\Http\Requests\CreateReservationRequest;
 use App\Http\Requests\ReservationIndexRequest;
 use App\Http\Resources\ReservationResource;
 use App\Enums\ReservationState;
+use App\Events\ReservationCreated;
 use Illuminate\Validation\Rule;
 use App\Jobs\UpdateReservationStatusJob;
 
@@ -55,6 +56,7 @@ public function index(ReservationIndexRequest $request)
         $data = $request->createReservation();
 
         $reservation = Reservation::create($data);
+        event(new ReservationCreated($reservation));
         return ReservationResource::make($reservation);
     }
 

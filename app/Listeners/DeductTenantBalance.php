@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Models\Client;
 use App\Models\User;
 use App\Notifications\PassportBalanceNotification;
+use Illuminate\Support\Facades\Log;
 
 class DeductTenantBalance
 {
