@@ -19,6 +19,8 @@ class AuthResource extends JsonResource
         $this->tenantDomain = $tenantDomain;
     }
 
+    public static $wrap = null;
+
     public function toArray($request)
     {
         return [
