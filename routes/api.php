@@ -23,7 +23,8 @@ use App\Http\Controllers\DashboardController;
 
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/refresh', [AuthController::class, 'refresh']);
+Route::post('/refresh', [AuthController::class, 'refresh'])
+    ->middleware('refresh.token');
 Route::get('/landing_packages', [PackageController::class, 'publicIndex']);
 //Route::apiResource('tenants', TenantController::class)->only(['index']);
 Route::get('/landing_tenants', [TenantController::class, 'landingTenants']);
@@ -110,12 +111,12 @@ Route::middleware([
     });
 
     Route::post('/tenants/{tenant}/balance/decrease', [TenantController::class, 'decreaseBalance']);
-    Route::post('/upload-passport-image', [ClientController::class, 'uploadPassportImage']);
-    Route::post('/upload-personal-image', [ClientController::class, 'uploadPersonalImage']);
+    Route::post('/clients/{client}/passport-image', [ClientController::class, 'uploadPassportImage']);
+    Route::post('/clients/{client}/personal-image', [ClientController::class, 'uploadPersonalImage']);
     Route::get('user/profile', [UserController::class, 'profile']);
     Route::put('update/profile', [UserController::class, 'update']);
     //Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
-    Route::delete('/packages/rooms/{id}', [PackageController::class,'destroyRoom']);
+    Route::delete('/packages/rooms/{id}', [PackageController::class, 'destroyRoom']);
     Route::apiResource('packages', PackageController::class);
     Route::apiResource('hotels', hotelController::class);
     // Route::apiResource('visitors', VisitorController::class);

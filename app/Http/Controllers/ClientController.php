@@ -30,7 +30,8 @@ class ClientController extends Controller
                         // بحث داخل رقم الجواز
                         $q3->where('passport_number', 'like', "%{$search}%");
                     })
-                    ->orWhere('id', $search);
+                    ->orWhere('id', $search)
+                    ->orWhere('register_date', 'like', "%{$search}%");
             });
         }
 
@@ -94,7 +95,41 @@ class ClientController extends Controller
         ]);
     }
 
-    public function uploadPassportImage(Request $request)
+
+
+    public function uploadPassportImage(Request $request, Client $client)
+    {
+        $client->clearMediaCollection('passport_images'); // auto-delete old
+
+        $media = $client
+            ->addMedia($request->file('file'))
+            ->toMediaCollection('passport_images');
+
+        return response()->json([
+            'url' => $media->getUrl(),
+            'thumb' => $media->getUrl('thumb'),
+            'path' => $media->getPath(),
+            'mime' => $media->mime_type,
+            'size' => $media->size,
+        ]);
+    }
+
+    public function uploadPersonalImage(Request $request, Client $client)
+    {
+        $client->clearMediaCollection('personal_images');
+
+        $media = $client
+            ->addMedia($request->file('file'))
+            ->toMediaCollection('personal_images');
+
+        return response()->json([
+            'url' => $media->getUrl(),
+            'thumb' => $media->getUrl('thumb'),
+        ]);
+    }
+
+
+    /*public function uploadPassportImage(Request $request)
     {
         if (!$request->hasFile('file')) {
             return response()->json(['error' => 'No file uploaded'], 400);
@@ -116,31 +151,31 @@ class ClientController extends Controller
         return response()->json([
             'path' => "/PassportsImages/$tenantId/$imageName"
         ]);
-    }
+    }*/
 
-    public function uploadPersonalImage(Request $request)
-    {
-        if (!$request->hasFile('file')) {
-            return response()->json(['error' => 'No file uploaded'], 400);
-        }
+    /* public function uploadPersonalImage(Request $request)
+     {
+         if (!$request->hasFile('file')) {
+             return response()->json(['error' => 'No file uploaded'], 400);
+         }
 
-        $file = $request->file('file');
-        $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+         $file = $request->file('file');
+         $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
 
-        $tenantId = auth()->user()?->tenant_id ?? $request->input('tenant_id') ?? 'default';
+         $tenantId = auth()->user()?->tenant_id ?? $request->input('tenant_id') ?? 'default';
 
-        $destination = public_path("PersonalImages/$tenantId");
-        if (!file_exists($destination)) {
-            mkdir($destination, 0777, true);
-        }
+         $destination = public_path("PersonalImages/$tenantId");
+         if (!file_exists($destination)) {
+             mkdir($destination, 0777, true);
+         }
 
-        $file->move($destination, $imageName);
+         $file->move($destination, $imageName);
 
-        return response()->json([
-            'path' => "/PersonalImages/$tenantId/$imageName"
-        ]);
-    }
-
+         return response()->json([
+             'path' => "/PersonalImages/$tenantId/$imageName"
+         ]);
+     }
+ */
     public function getClientsCountByUser($userId)
     {
         return Client::where('created_by', $userId)->count();

@@ -6,10 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Client extends Model
+
+class Client extends Model implements HasMedia
 {
-    use SoftDeletes, HasFactory , BelongsToTenant;
+    use SoftDeletes, HasFactory , BelongsToTenant, InteractsWithMedia;
 
     protected $fillable = [
         'name',
@@ -42,6 +46,32 @@ class Client extends Model
         'deleted_at' => 'datetime',
         'is_family_master' => 'boolean',
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $tenantId = $this->tenant_id ?? 'default';
+
+        $this->addMediaCollection('passport_images')
+            ->useDisk('public_html')
+            ->useFallbackUrl('/images/default_passport.png')
+            ->withResponsiveImages()
+            ->storeFileNamesUsing(function ($file) {
+                return uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+            })
+            ->path("/PassportsImages/{$tenantId}");
+
+        $this->addMediaCollection('personal_images')
+            ->useDisk('public_html')
+            ->path("/PersonalImages/{$tenantId}");
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(300)
+            ->height(300)
+            ->keepOriginalImageFormat();
+    }
 
     public function family()
     {

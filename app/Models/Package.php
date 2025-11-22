@@ -7,10 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Package extends Model
+
+class Package extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes, BelongsToTenant;
+    use HasFactory, SoftDeletes, BelongsToTenant, InteractsWithMedia;
 
     protected $guarded = ['id'];
 
@@ -19,6 +23,20 @@ class Package extends Model
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('images')
+            ->useDisk('public_html')
+            ->path('/Packages');
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(300)
+            ->height(200);
+    }
 
     public function tenant()
     {
@@ -73,8 +91,8 @@ class Package extends Model
                 })
                 ->orWhereHas('rooms', function (Builder $r) use ($term) {
                     $r->where('room_type', 'like', "%{$term}%")
-                      ->orWhere('total_price_dinar', 'like', "%{$term}%")
-                      ->orWhere('total_price_usd', 'like', "%{$term}%");
+                        ->orWhere('total_price_dinar', 'like', "%{$term}%")
+                        ->orWhere('total_price_usd', 'like', "%{$term}%");
                 })
                 ->orWhereHas('MK_Hotel', function (Builder $h) use ($term) {
                     $h->where(function (Builder $g) use ($term) {

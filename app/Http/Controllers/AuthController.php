@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Stancl\Tenancy\Database\Models\Domain;
 use Laravel\Sanctum\PersonalAccessToken;
 use App\Http\Resources\AuthResource;
+use App\Services\Auth\LoginService;
 
 class AuthController extends Controller
 {
@@ -28,99 +29,32 @@ class AuthController extends Controller
 
     }
 
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request, LoginService $loginService)
     {
         $user = $request->authenticate();
 
-        // Delete old tokens to avoid unlimited device sessions
-        $user->tokens()->delete();
-
-        // Create short-lived access token
-        $accessToken = $user->createToken('access-token')->plainTextToken;
-
-        // Create long-lived refresh token
-        $refreshToken = $user->createToken('refresh-token', ['refresh'])->plainTextToken;
-
-        // If the user does not belong to a tenant (Super Admin or Visitor)
-        if (!$user->tenant_id) {
-            return new AuthResource(
-                $user,
-                $accessToken,
-                $refreshToken,
-                null
-            );
-        }
-
-        // Determine current domain from frontend header
-        $currentHost = $request->header('X-Tenant-Domain');
-
-        // If accessing from central domain or localhost → return the tenant's first domain instead
-        if (in_array($currentHost, ['tawwaf.ly', 'www.tawwaf.ly', 'localhost'])) {
-            $domain = Domain::where('tenant_id', $user->tenant_id)->first();
-
-            return new AuthResource(
-                $user,
-                $accessToken,
-                $refreshToken,
-                $domain->domain
-            );
-        }
-
-        // For login from a tenant subdomain → verify ownership
-        $domain = Domain::where('domain', $currentHost)
-            ->where('tenant_id', $user->tenant_id)
-            ->first();
-
-        if (!$domain) {
-            return response()->json([
-                'message' => 'User does not belong to this tenant domain'
-            ], 403);
-        }
+        $data = $loginService->handle($user, $request);
 
         return new AuthResource(
-            $user,
-            $accessToken,
-            $refreshToken,
-            $domain->domain
+            $data['user'],
+            $data['accessToken'],
+            $data['refreshToken'],
+            $data['domain']
         );
     }
+
 
 
     public function refresh(Request $request)
     {
-        $refreshToken = $request->bearerToken();
-
-        if (!$refreshToken) {
-            return response()->json(['message' => 'Refresh token missing'], 401);
-        }
-
-        // Find the token model from the provided plain-text token string
-        $tokenModel = PersonalAccessToken::findToken($refreshToken);
-
-        // Token not found or doesn't have refresh ability
-        if (!$tokenModel || !$tokenModel->can('refresh')) {
-            return response()->json(['message' => 'Invalid or expired refresh token'], 401);
-        }
-
-        $user = $tokenModel->tokenable;
-
-        if (!$user) {
-            return response()->json(['message' => 'Invalid or expired refresh token'], 401);
-        }
-
-        // Delete old access tokens (but keep refresh token alive)
-        $user->tokens()->where('name', 'access-token')->delete();
-
-        // Issue new access token
-        $newAccessToken = $user->createToken('access-token')->plainTextToken;
-
         return new AuthResource(
-            $user,
-            $newAccessToken,
+            $request->auth_user,
+            $request->new_access_token,
             null,
-            $user->tenant_id ? Domain::where('tenant_id', $user->tenant_id)->first()->domain : null
+            $request->tenant_domain
         );
     }
+
 
     public function logout(Request $request)
     {
@@ -137,6 +71,7 @@ class AuthController extends Controller
     }
 
 
+    //Tamer win app
     public function checkUser(Request $request)
     {
         $username = $request->input('username');

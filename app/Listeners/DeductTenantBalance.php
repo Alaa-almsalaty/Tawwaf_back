@@ -24,7 +24,7 @@ class DeductTenantBalance
         $client = $event->client;
         $tenant = $client->tenant;
         if (!$tenant) {
-            Log::warning('Client created without a valid tenant');
+            \Log::warning('Client created without a valid tenant');
             return;
         }
 

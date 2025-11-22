@@ -8,10 +8,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Stancl\Tenancy\Database\Models\Domain;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Tenant extends BaseTenant
+
+class Tenant extends BaseTenant implements HasMedia
 {
-    use HasFactory, SoftDeletes, HasDomains;
+    use HasFactory, SoftDeletes, HasDomains, InteractsWithMedia;
     public $incrementing = false;   // المفتاح الأساسي ليس رقمًا متزايدًا تلقائيًا
     protected $keyType = 'string';  // المفتاح الأساسي هو نص (UUID)
 
@@ -20,6 +24,19 @@ class Tenant extends BaseTenant
         'data' => 'array',
     ];
 
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('logos')
+            ->useDisk('public_html')
+            ->path('/Logos');
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(200)
+            ->height(200);
+    }
     public function getInfoAttribute()
     {
         return $this->data;
