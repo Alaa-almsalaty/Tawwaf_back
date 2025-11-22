@@ -28,7 +28,7 @@ class AuthResource extends JsonResource
             'access_token' => $this->accessToken,
             'refresh_token' => $this->refreshToken,
             'token_type' => 'Bearer',
-            'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') / 60 + "hour": null,
+            'expires_in' => config('sanctum.expiration') ? config('sanctum.expiration') / 60: null,
             'tenant' => [
                 'domain' => $this->tenantDomain ?? parse_url(config('app.url'), PHP_URL_HOST),
             ],
