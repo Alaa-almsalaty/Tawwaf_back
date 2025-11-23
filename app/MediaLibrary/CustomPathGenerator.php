@@ -36,8 +36,14 @@ class CustomPathGenerator implements PathGenerator
             return "Packages/";
         }
 
+        // 🛡 SAFETY: prevent null model error
+        if ($model === null) {
+            return "media/{$collection}/";
+        }
+
         return "media/{$collection}/{$model->getKey()}/";
     }
+
 
     public function getPathForConversions(Media $media): string
     {
@@ -49,3 +55,4 @@ class CustomPathGenerator implements PathGenerator
         return $this->getPath($media) . 'responsive/';
     }
 }
+
