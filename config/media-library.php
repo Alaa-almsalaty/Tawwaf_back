@@ -8,7 +8,11 @@ return [
      */
     //'disk_name' => env('MEDIA_DISK', 'public'),
 
+    // use your public_html disk by default
     'default_filesystem_disk' => env('MEDIA_DISK', 'public_html'),
+
+    // use custom path generator (we'll create it next)
+    'path_generator' => App\MediaLibrary\CustomPathGenerator::class,
 
     /*
      * The maximum file size of an item in bytes.

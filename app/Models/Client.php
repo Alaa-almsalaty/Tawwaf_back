@@ -13,7 +13,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Client extends Model implements HasMedia
 {
-    use SoftDeletes, HasFactory , BelongsToTenant, InteractsWithMedia;
+    use SoftDeletes, HasFactory, BelongsToTenant, InteractsWithMedia;
 
     protected $fillable = [
         'name',
@@ -46,23 +46,17 @@ class Client extends Model implements HasMedia
         'deleted_at' => 'datetime',
         'is_family_master' => 'boolean',
     ];
-
     public function registerMediaCollections(): void
     {
-        $tenantId = $this->tenant_id ?? 'default';
-
         $this->addMediaCollection('passport_images')
             ->useDisk('public_html')
-            ->useFallbackUrl('/images/default_passport.png')
-            ->withResponsiveImages()
-            ->storeFileNamesUsing(function ($file) {
-                return uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
-            })
-            ->path("/PassportsImages/{$tenantId}");
+            ->singleFile() // always keep only one (auto-remove previous)
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
 
         $this->addMediaCollection('personal_images')
             ->useDisk('public_html')
-            ->path("/PersonalImages/{$tenantId}");
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
     }
 
     public function registerMediaConversions(Media $media = null): void
@@ -70,8 +64,10 @@ class Client extends Model implements HasMedia
         $this->addMediaConversion('thumb')
             ->width(300)
             ->height(300)
-            ->keepOriginalImageFormat();
+            ->scale(width: 300, height: 300);
     }
+
+
 
     public function family()
     {
@@ -85,7 +81,7 @@ class Client extends Model implements HasMedia
 
     public function visa()
     {
-        return $this->belongsTo(Visa::class , 'visa_id');
+        return $this->belongsTo(Visa::class, 'visa_id');
     }
 
     public function branch()

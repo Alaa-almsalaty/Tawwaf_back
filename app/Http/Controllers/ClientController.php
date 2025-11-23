@@ -10,6 +10,7 @@ use App\Http\Requests\AddClientRequest;
 use App\Services\ClientService;
 use App\Http\Requests\UpdateClientRequest;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ClientController extends Controller
 {
@@ -99,35 +100,47 @@ class ClientController extends Controller
 
     public function uploadPassportImage(Request $request, Client $client)
     {
-        $client->clearMediaCollection('passport_images'); // auto-delete old
+        $request->validate([
+            'file' => ['required', 'image', 'max:5120'],
+        ]);
+
+        $client->clearMediaCollection('passport_images');
+
+        $file = $request->file('file');
+        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
 
         $media = $client
-            ->addMedia($request->file('file'))
+            ->addMedia($file)
+            ->usingFileName($filename)
             ->toMediaCollection('passport_images');
 
         return response()->json([
             'url' => $media->getUrl(),
             'thumb' => $media->getUrl('thumb'),
-            'path' => $media->getPath(),
-            'mime' => $media->mime_type,
-            'size' => $media->size,
         ]);
     }
 
     public function uploadPersonalImage(Request $request, Client $client)
     {
-        $client->clearMediaCollection('personal_images');
+        $request->validate([
+            'file' => ['required', 'image', 'max:5120'],
+        ]);
+
+        $client->clearMediaCollection('passport_images');
+
+        $file = $request->file('file');
+        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
 
         $media = $client
-            ->addMedia($request->file('file'))
-            ->toMediaCollection('personal_images');
+            ->addMedia($file)
+            ->usingFileName($filename)
+            ->toMediaCollection('passport_images');
 
         return response()->json([
             'url' => $media->getUrl(),
             'thumb' => $media->getUrl('thumb'),
         ]);
     }
-
 
     /*public function uploadPassportImage(Request $request)
     {
