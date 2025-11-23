@@ -112,7 +112,7 @@ Route::middleware([
 
     Route::post('/tenants/{tenant}/balance/decrease', [TenantController::class, 'decreaseBalance']);
     Route::post('/upload/{client}/passport-image', [ClientController::class, 'uploadPassportImage']);
-    Route::post('/clients/{client}/personal-image', [ClientController::class, 'uploadPersonalImage']);
+    Route::post('/upload/{client}/personal-image', [ClientController::class, 'uploadPersonalImage']);
     Route::get('user/profile', [UserController::class, 'profile']);
     Route::put('update/profile', [UserController::class, 'update']);
     //Route::put('/profile/update-password', [UserController::class, 'updatePassword']);
