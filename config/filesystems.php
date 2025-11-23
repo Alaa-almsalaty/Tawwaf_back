@@ -49,7 +49,7 @@ return [
 
         'public_html' => [
             'driver' => 'local',
-            'root' => base_path('../public_html'),
+            'root' => '/home/tawwafly/public_html',
             'url' => env('APP_URL'),
             'visibility' => 'public',
         ],
