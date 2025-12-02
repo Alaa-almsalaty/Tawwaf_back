@@ -28,14 +28,16 @@ class Package extends Model implements HasMedia
     {
         $this->addMediaCollection('images')
             ->useDisk('public_html')
-            ->path('/Packages');
+            ->singleFile() // always keep only one (auto-remove previous)
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
     }
 
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
             ->width(300)
-            ->height(200);
+            ->height(200)
+            ->scale(width: 300, height: 300);
     }
 
     public function tenant()

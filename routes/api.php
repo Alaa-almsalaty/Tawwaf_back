@@ -49,7 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout-all', [AuthController::class, 'logoutAll']);
 
     Route::apiResource('tenants', TenantController::class);
-    Route::post('uploadLogo', [TenantController::class, 'uploadLogo']);
+    Route::post('/upload/logo', [TenantController::class, 'uploadLogo']);
     Route::get('/superdashboard', [DashboardController::class, 'getDashboardData']);
     Route::get('/reservation', [ReservationController::class, 'index']);
     //  Route::apiResource('reservations', ReservationController::class);
@@ -80,7 +80,7 @@ Route::middleware([
 ])->group(function () {
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('all-users', UserController::class);
-    //Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/auth/validate', [AuthController::class, 'validateUser']);
     //Route::post('/logout-all', [AuthController::class, 'logoutAll']);
     Route::put('/reset-password/{user}', [UserController::class, 'resetPassword']);
     Route::apiResource('branches', BranchController::class);
@@ -122,7 +122,7 @@ Route::middleware([
     // Route::apiResource('visitors', VisitorController::class);
     Route::get('/users/{userId}/clients-count', [ClientController::class, 'getClientsCountByUser']);
 
-    Route::post('uploadImage', [PackageController::class, 'uploadImage']);
+    Route::post('/upload/{package}/image', [PackageController::class, 'uploadPackageImage']);
 
 
     Route::post('/adduser', [AuthController::class, 'register']);

@@ -90,4 +90,10 @@ class AuthController extends Controller
         return 'false';
     }
 
+    public function validateUser(Request $request)
+    {
+        $user = auth()->user();
+        return new UserResource($user);
+    }
+
 }

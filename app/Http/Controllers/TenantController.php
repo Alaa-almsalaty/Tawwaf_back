@@ -138,27 +138,25 @@ class TenantController extends Controller
 
 
 
-    public function uploadLogo(Request $request)
+     public function uploadLogo(Request $request)
     {
-        if (!$request->hasFile('logo')) {
-            return response()->json(['error' => 'No file uploaded'], 400);
-            // throw ValidationException::withMessages(['file' => 'No file uploaded']);
-        }
+        $request->validate([
+            'logo' => ['required', 'image', 'max:4096'],
+        ]);
+        $tenant = auth()->user()->tenant;
 
-        $file = $request->file('logo');
-        $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $tenant->clearMediaCollection('logos');
 
-        $destination = env('UPLOAD_PATH', public_path('Logos'));
+        $file = $request->file('file');
+        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
+        $media = $tenant
+            ->addMedia($request->file('logo'))
+            ->usingFileName($filename)
+            ->toMediaCollection('logos');
 
-        if (!file_exists($destination)) {
-            mkdir($destination, 0777, true);
-        }
-
-        $file->move($destination, $imageName);
-
-        // يعيد المسار للفرونت
         return response()->json([
-            'path' => "/Logos/$imageName"
+            'url'       => $media->getUrl(),
+            'thumb'     => $media->getUrl('thumb')
         ]);
     }
 

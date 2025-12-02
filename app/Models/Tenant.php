@@ -28,14 +28,16 @@ class Tenant extends BaseTenant implements HasMedia
     {
         $this->addMediaCollection('logos')
             ->useDisk('public_html')
-            ->path('/Logos');
+            ->singleFile() // always keep only one (auto-remove previous)
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
     }
 
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
             ->width(200)
-            ->height(200);
+            ->height(200)
+            ->scale(width: 200, height: 200);
     }
     public function getInfoAttribute()
     {

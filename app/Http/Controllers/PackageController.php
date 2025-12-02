@@ -17,6 +17,7 @@ use App\Pipelines\Packages\DistanceFilter;
 use App\Pipelines\Packages\PackageTypeFilter;
 use App\Pipelines\Packages\TenantNameFilter;
 use App\Http\Requests\PackageIndexRequest;
+use Illuminate\Support\Str;
 
 
 class PackageController extends Controller
@@ -176,24 +177,25 @@ class PackageController extends Controller
     }
 
 
-    public function uploadImage(Request $request)
+    public function uploadPackageImage(Request $request, Package $package)
     {
-        if (!$request->hasFile('image')) {
-            return response()->json(['error' => 'No file uploaded'], 400);
-        }
+        $request->validate([
+            'image' => ['required', 'image', 'max:5120'],
+        ]);
 
-        $file = $request->file('image');
-        $imageName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $package->clearMediaCollection('images');
 
-        $destination = public_path("Packages");
-        if (!file_exists($destination)) {
-            mkdir($destination, 0777, true);
-        }
+        $file = $request->file('file');
+        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
 
-        $file->move($destination, $imageName);
+        $media = $package
+            ->addMedia($request->file('image'))
+            ->usingFileName($filename)
+            ->toMediaCollection('images');
 
         return response()->json([
-            'path' => "/Packages/$imageName"
+            'url'       => $media->getUrl(),
+            'thumb'     => $media->getUrl('thumb')
         ]);
     }
 
