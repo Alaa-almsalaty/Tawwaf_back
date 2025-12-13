@@ -40,9 +40,9 @@ class CreatePackageRequest extends FormRequest
             'new_MKHotel_name' => 'nullable|string|max:255',
             'new_MDHotel_name' => 'nullable|string|max:255',
             'rooms' => 'required|array|min:1',
-'rooms.*.room_type' => 'required|in:single,double,triple,quad,quintuple,sextuple,septuple',
-'rooms.*.total_price_dinar' => 'nullable|numeric|min:0',
-'rooms.*.total_price_usd' => 'nullable|numeric|min:0',
+            'rooms.*.room_type' => 'required|in:single,double,triple,quad,quintuple,sextuple,septuple',
+            'rooms.*.total_price_dinar' => 'nullable|numeric|min:0',
+            'rooms.*.total_price_usd' => 'nullable|numeric|min:0',
 
         ];
     }

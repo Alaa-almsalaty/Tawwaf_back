@@ -36,7 +36,7 @@ class AddClientRequest extends FormRequest
             'personal_info.gender' => 'required|in:female,male',
             'personal_info.medical_status' => 'required|in:healthy,sick,disabled',
             'personal_info.phone' => 'nullable|string|max:20',
-            'personal_info.personal_img' => 'required|string',
+            'personal_info.personal_img' => 'string',
             'personal_info.passport_no' => 'sometimes|exists:passports,id', // Foreign key to the passport, if applicable
 
 
@@ -49,7 +49,7 @@ class AddClientRequest extends FormRequest
             'passport_no.issue_place' => 'required|string|max:100',
             'passport_no.birth_place' => 'required|string|max:100',
             'passport_no.issue_authority' => 'nullable|string|max:100',
-            'passport_no.passport_img' => 'required|string',
+            'passport_no.passport_img' => 'string',
             //'passport.passport_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Passport photo
 
             // client info

@@ -30,7 +30,7 @@ class CreateCompanyRequest extends FormRequest
             'phone' => 'nullable|string|max:20',
             'note' => 'nullable|string',
             //'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'logo' => 'required|string',
+            'logo' => 'nullable|string',
             'data' => 'nullable|array',
             'active' => 'required|boolean',
             'season' => 'required|integer',
