@@ -185,7 +185,7 @@ class PackageController extends Controller
 
         $package->clearMediaCollection('images');
 
-        $file = $request->file('file');
+        $file = $request->file('image');
         $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
 
         $media = $package

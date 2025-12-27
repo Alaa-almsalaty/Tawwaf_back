@@ -147,7 +147,7 @@ class TenantController extends Controller
 
         $tenant->clearMediaCollection('logos');
 
-        $file = $request->file('file');
+        $file = $request->file('logo');
         $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
         $media = $tenant
             ->addMedia($request->file('logo'))
