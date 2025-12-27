@@ -154,6 +154,8 @@ class TenantController extends Controller
             ->usingFileName($filename)
             ->toMediaCollection('logos');
 
+        $tenant->update(['data->logo' => $media->getUrl()]);
+
         return response()->json([
             'url'       => $media->getUrl(),
             'thumb'     => $media->getUrl('thumb')

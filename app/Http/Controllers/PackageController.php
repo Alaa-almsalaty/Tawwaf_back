@@ -193,6 +193,7 @@ class PackageController extends Controller
             ->usingFileName($filename)
             ->toMediaCollection('images');
 
+        $package->update(['image' => $media->getUrl()]);
         return response()->json([
             'url'       => $media->getUrl(),
             'thumb'     => $media->getUrl('thumb')
