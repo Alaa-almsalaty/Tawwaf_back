@@ -82,6 +82,7 @@ Route::middleware([
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('all-users', UserController::class);
     Route::post('/upload/logo', [TenantController::class, 'uploadLogo']);
+    Route::put('/tenant/update', [TenantController::class, 'update']);
     //Route::get('/auth/validate', [AuthController::class, 'validateUser']);
     //Route::post('/logout-all', [AuthController::class, 'logoutAll']);
     Route::put('/reset-password/{user}', [UserController::class, 'resetPassword']);

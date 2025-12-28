@@ -91,6 +91,19 @@ class TenantController extends Controller
 
     public function update(UpdateCompanyRequest $request, Tenant $tenant)
     {
+        $user = $request->user();
+
+        if ($user->hasRole('manager')) {
+            $tenant = $user->tenant;
+        } else if ($user->isSuperAdmin()) {
+
+            if (!$tenant) {
+                return response()->json(['message' => 'Tenant not found'], 404);
+            }
+        } else {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         $tenantData = $request->UpdateCompany();
         $tenant->update($tenantData);
 
