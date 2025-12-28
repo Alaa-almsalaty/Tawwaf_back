@@ -50,7 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/validate', [AuthController::class, 'validateUser']);
 
     Route::apiResource('tenants', TenantController::class);
-    Route::post('/upload/logo', [TenantController::class, 'uploadLogo']);
+    // Route::post('/upload/logo', [TenantController::class, 'uploadLogo']);
     Route::get('/superdashboard', [DashboardController::class, 'getDashboardData']);
     Route::get('/reservation', [ReservationController::class, 'index']);
     //  Route::apiResource('reservations', ReservationController::class);
@@ -81,6 +81,7 @@ Route::middleware([
 ])->group(function () {
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('all-users', UserController::class);
+    Route::post('/upload/logo', [TenantController::class, 'uploadLogo']);
     //Route::get('/auth/validate', [AuthController::class, 'validateUser']);
     //Route::post('/logout-all', [AuthController::class, 'logoutAll']);
     Route::put('/reset-password/{user}', [UserController::class, 'resetPassword']);
