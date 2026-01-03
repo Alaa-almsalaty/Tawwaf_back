@@ -31,7 +31,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request, LoginService $loginService)
     {
-        $user = $request->authenticate();
+        $user = $request->authenticate()->load('tenant');
 
         $data = $loginService->handle($user, $request);
 

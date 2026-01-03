@@ -32,6 +32,7 @@ class UserResource extends JsonResource
                 'company_name' => $this->tenant->company_name,
                 'logo' => $this->tenant->getFirstMediaUrl('logos', 'thumb'),
                 'address' => $this->tenant->address,
+                'season' => $this->tenant->season,
                 'city' => $this->tenant->city,
                 'email' => $this->tenant->email,
                 'phone' => $this->tenant->phone,
